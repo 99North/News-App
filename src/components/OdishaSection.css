@@ -1,0 +1,243 @@
+.odisha-section {
+  width: 100%;
+  padding: 60px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.odisha-section.dark {
+  background-color: #0f0f0f;
+}
+
+.odisha-section.light {
+  background-color: #f5f5f5;
+}
+
+.odisha-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Section Header */
+.odisha-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.odisha-line {
+  flex: 1;
+  height: 2px;
+  background-color: #dc143c;
+}
+
+.odisha-title {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.odisha-section.dark .odisha-title {
+  color: #ffffff;
+}
+
+.odisha-section.light .odisha-title {
+  color: #1a1a1a;
+}
+
+/* Articles Grid - 2 rows x 3 columns */
+.odisha-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* Article Card */
+.odisha-card {
+  display: flex;
+  gap: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.odisha-section.dark .odisha-card {
+  background-color: #1a1a1a;
+}
+
+.odisha-section.light .odisha-card {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.odisha-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.2);
+}
+
+/* Article Image */
+.odisha-card-image {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.odisha-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.odisha-card:hover .odisha-card-image img {
+  transform: scale(1.1);
+}
+
+/* Premium Badge */
+.odisha-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #dc143c;
+  color: #ffffff;
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-radius: 3px;
+}
+
+/* Article Content */
+.odisha-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.odisha-card-title {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.odisha-section.dark .odisha-card-title {
+  color: #ffffff;
+}
+
+.odisha-section.light .odisha-card-title {
+  color: #1a1a1a;
+}
+
+.odisha-card:hover .odisha-card-title {
+  color: #dc143c;
+}
+
+/* Article Meta */
+.odisha-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.odisha-card-category {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.odisha-section.dark .odisha-card-category {
+  color: #ffffff;
+}
+
+.odisha-section.light .odisha-card-category {
+  color: #1a1a1a;
+}
+
+.odisha-card-date {
+  font-size: 12px;
+}
+
+.odisha-section.dark .odisha-card-date {
+  color: #999999;
+}
+
+.odisha-section.light .odisha-card-date {
+  color: #666666;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .odisha-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .odisha-section {
+    padding: 40px 15px;
+  }
+
+  .odisha-title {
+    font-size: 26px;
+  }
+
+  .odisha-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .odisha-card {
+    padding: 12px;
+  }
+
+  .odisha-card-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .odisha-card-title {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .odisha-header {
+    gap: 15px;
+  }
+
+  .odisha-title {
+    font-size: 22px;
+  }
+
+  .odisha-card-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .odisha-card-title {
+    font-size: 14px;
+  }
+
+  .odisha-card-meta {
+    gap: 8px;
+  }
+
+  .odisha-card-category,
+  .odisha-card-date {
+    font-size: 11px;
+  }
+}

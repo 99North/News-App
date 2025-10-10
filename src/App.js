@@ -84,13 +84,53 @@ function App() {
           badge: null,
           route: '/odisha/article2'
         },
-        // Repeat for pagination (30 articles total for 5 pages)
-        ...Array(28).fill(null).map((_, i) => ({
-          id: i + 3,
-          title: `Odisha Development Story ${i + 3}`,
+        {
+          id: 3,
+          title: 'Konark Sun Temple Restoration Project Completed Successfully',
+          excerpt: 'Historic temple undergoes major restoration work preserving ancient architecture...',
+          category: 'ODISHA',
+          date: 'March 12, 2022',
+          image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80',
+          badge: 'PREMIUM',
+          route: '/odisha/article1'
+        },
+        {
+          id: 4,
+          title: 'Odisha Launches Digital Healthcare Initiative for Rural Areas',
+          excerpt: 'Telemedicine program connects remote villages with specialist doctors...',
+          category: 'ODISHA',
+          date: 'March 13, 2022',
+          image: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80',
+          badge: null,
+          route: '/odisha/article2'
+        },
+        {
+          id: 5,
+          title: 'Chilika Lake Conservation Efforts Show Remarkable Results',
+          excerpt: 'Asia\'s largest brackish water lagoon sees biodiversity increase by 40%...',
+          category: 'ODISHA',
+          date: 'March 14, 2022',
+          image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&q=80',
+          badge: 'PREMIUM',
+          route: '/odisha/article1'
+        },
+        {
+          id: 6,
+          title: 'Odisha IT Park Attracts Major Global Tech Companies',
+          excerpt: 'State emerges as new IT destination with infrastructure rivaling Bengaluru...',
+          category: 'ODISHA',
+          date: 'March 15, 2022',
+          image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80',
+          badge: null,
+          route: '/odisha/article2'
+        },
+        // Placeholder articles (24 more for pagination)
+        ...Array(24).fill(null).map((_, i) => ({
+          id: i + 7,
+          title: `Odisha Development Story ${i + 7}`,
           excerpt: 'Ongoing developments transforming the state...',
           category: 'ODISHA',
-          date: 'March ' + (12 + i) + ', 2022',
+          date: 'March ' + (16 + i) + ', 2022',
           image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80',
           badge: i % 3 === 0 ? 'PREMIUM' : null,
           route: i < 2 ? `/odisha/article${i + 1}` : '/'
@@ -382,7 +422,6 @@ function App() {
           image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80',
           badge: i % 3 === 0 ? 'PREMIUM' : null,
           route: i < 2 ? `/environment/article${i + 1}` : '/'
-          
         }))
       ]
     }
@@ -393,8 +432,8 @@ function App() {
       <div className={`App ${theme}`}>
         <Navbar theme={theme} toggleTheme={toggleTheme} />
         <Routes>
-          {/* Home Route */}
-          <Route path="/" element={<HomePage theme={theme} />} />
+          {/* Home Route - Pass Odisha articles */}
+          <Route path="/" element={<HomePage theme={theme} odishaArticles={categoryData.odisha.articles} />} />
           
           {/* Category Routes */}
           <Route path="/odisha" element={<CategoryPage theme={theme} categoryData={categoryData.odisha} />} />
