@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
 
 const Navbar = ({ theme, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation(); // Get current route
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -14,38 +16,60 @@ const Navbar = ({ theme, toggleTheme }) => {
   };
 
   const menuItems = [
-    'Home',
-    'Odisha',
-    'National',
-    'International',
-    'Entertainment',
-    'Jobs',
-    'Education',
-    'Astrospeak',
-    'Health',
-    'Environment'
+    { name: 'Home', path: '/' },
+    { name: 'Odisha', path: '/odisha' },
+    { name: 'National', path: '/national' },
+    { name: 'International', path: '/international' },
+    { name: 'Entertainment', path: '/entertainment' },
+    { name: 'Jobs', path: '/jobs' },
+    { name: 'Education', path: '/education' },
+    { name: 'Astrospeak', path: '/astrospeak' },
+    { name: 'Health', path: '/health' },
+    { name: 'Environment', path: '/environment' }
   ];
+
+  // Function to check if menu item is active
+  const isActive = (path) => {
+    const currentPath = location.pathname;
+    
+    // For home page
+    if (path === '/' && currentPath === '/') {
+      return true;
+    }
+    
+    // For category pages and their articles
+    if (path !== '/' && currentPath.startsWith(path)) {
+      return true;
+    }
+    
+    // For home articles (article/1, article/2, etc.)
+    if (path === '/' && currentPath.startsWith('/article/')) {
+      return true;
+    }
+    
+    return false;
+  };
 
   return (
     <nav className={`navbar ${theme}`}>
       <div className="navbar-container">
         {/* Logo Section */}
-        <div className="navbar-logo">
+        <Link to="/" className="navbar-logo" onClick={closeMenu}>
           <div className="logo-icon">⚛</div>
           <span className="logo-text">NewsHub</span>
-        </div>
+        </Link>
 
         {/* Desktop Menu */}
         <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
           {menuItems.map((item, index) => (
             <li key={index} className="nav-item">
-              <a 
-                href={`#${item.toLowerCase()}`} 
-                className={`nav-link ${index === 0 ? 'active-link' : ''}`}
+              <Link 
+                to={item.path} 
+                className={`nav-link ${isActive(item.path) ? 'active-link' : ''}`}
                 onClick={closeMenu}
               >
-                {item}
-              </a>
+                {item.name}
+              </Link>
             </li>
           ))}
         </ul>

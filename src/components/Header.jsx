@@ -283,7 +283,7 @@ const Header = ({ theme }) => {
                 onClick={() => handleBreakingNewsClick(news.route)}
               >
                 {news.title}
-                <span className="news-separator">|</span>
+                <span className="news-separator">||</span>
               </span>
             ))}
           </div>
