@@ -6,7 +6,6 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 const Header = ({ theme }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
-  const [breakingNewsIndex, setBreakingNewsIndex] = useState(0);
   const itemsPerPage = 3;
   const totalPages = 5;
 
@@ -148,17 +147,6 @@ const Header = ({ theme }) => {
     }
   ];
 
-  // Auto-rotate breaking news every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBreakingNewsIndex((prevIndex) => 
-        (prevIndex + 1) % allTopNews.length
-      );
-    }, 5000); // Change news every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [allTopNews.length]);
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentNews = allTopNews.slice(indexOfFirstItem, indexOfLastItem);
@@ -198,12 +186,9 @@ const Header = ({ theme }) => {
     navigate(route);
   };
 
-  const handleBreakingNewsClick = () => {
-    navigate(allTopNews[breakingNewsIndex].route);
+  const handleBreakingNewsClick = (route) => {
+    navigate(route);
   };
-
-  // Dynamic breaking news from Top News array
-  const breakingNews = allTopNews[breakingNewsIndex].title;
 
   return (
     <header className={`header-section ${theme}`}>
@@ -285,17 +270,23 @@ const Header = ({ theme }) => {
         </div>
       </div>
 
-      {/* Breaking News Ticker - Now Dynamic and Clickable */}
-      <div 
-        className="breaking-news-ticker"
-        onClick={handleBreakingNewsClick}
-        style={{ cursor: 'pointer' }}
-      >
+      {/* Breaking News Ticker - Scrolling from Right to Left */}
+      <div className="breaking-news-ticker">
         <span className="breaking-label">BREAKING NEWS</span>
         <div className="breaking-content">
-          <p className="breaking-text" key={breakingNewsIndex}>
-            {breakingNews}
-          </p>
+          <div className="breaking-scroll">
+            {/* Duplicate the news array twice for seamless infinite scroll */}
+            {[...allTopNews, ...allTopNews].map((news, index) => (
+              <span 
+                key={index}
+                className="breaking-news-item"
+                onClick={() => handleBreakingNewsClick(news.route)}
+              >
+                {news.title}
+                <span className="news-separator">|</span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </header>
