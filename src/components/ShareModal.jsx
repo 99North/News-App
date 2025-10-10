@@ -2,7 +2,7 @@ import React from 'react';
 import './ShareModal.css';
 import { FaTimes, FaFacebook, FaInstagram, FaWhatsapp, FaTwitter, FaTelegram, FaFacebookMessenger, FaLink } from 'react-icons/fa';
 
-const ShareModal = ({ isOpen, onClose, articleUrl, articleTitle }) => {
+const ShareModal = ({ isOpen, onClose, articleUrl, articleTitle, theme }) => {
   if (!isOpen) return null;
 
   // Encode URL and title for sharing
@@ -16,12 +16,11 @@ const ShareModal = ({ isOpen, onClose, articleUrl, articleTitle }) => {
     whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
     telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
     messenger: `fb-messenger://share/?link=${encodedUrl}`,
-    instagram: `https://www.instagram.com/` // Instagram doesn't support direct sharing via URL
+    instagram: `https://www.instagram.com/`
   };
 
   const handleShare = (platform) => {
     if (platform === 'instagram') {
-      // Instagram requires app or manual sharing
       alert('Please open Instagram app and share manually');
       return;
     }
@@ -35,7 +34,7 @@ const ShareModal = ({ isOpen, onClose, articleUrl, articleTitle }) => {
 
   return (
     <div className="share-modal-overlay" onClick={onClose}>
-      <div className="share-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className={`share-modal-content ${theme}`} onClick={(e) => e.stopPropagation()}>
         {/* Modal Header */}
         <div className="share-modal-header">
           <h3 className="share-modal-title">Share this article</h3>
