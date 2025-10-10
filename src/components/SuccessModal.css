@@ -1,0 +1,214 @@
+/* Modal Overlay */
+.success-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content */
+.success-modal-content {
+  position: relative;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  padding: 50px 40px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+.success-modal-content.dark {
+  background-color: #1a1a1a;
+}
+
+.success-modal-content.light {
+  background-color: #ffffff;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Close Button */
+.success-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.success-modal-content.dark .success-modal-close {
+  color: #cccccc;
+}
+
+.success-modal-content.light .success-modal-close {
+  color: #666666;
+}
+
+.success-modal-content.dark .success-modal-close:hover {
+  background-color: #2a2a2a;
+  color: #dc143c;
+}
+
+.success-modal-content.light .success-modal-close:hover {
+  background-color: #f0f0f0;
+  color: #dc143c;
+}
+
+.success-modal-close:hover {
+  transform: rotate(90deg);
+}
+
+/* Success Icon */
+.success-icon-container {
+  margin-bottom: 30px;
+}
+
+.success-icon {
+  font-size: 80px;
+  color: #28a745;
+  animation: successPulse 0.6s ease;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Success Title */
+.success-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.success-modal-content.dark .success-title {
+  color: #ffffff;
+}
+
+.success-modal-content.light .success-title {
+  color: #1a1a1a;
+}
+
+/* Success Message */
+.success-message {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 35px;
+}
+
+.success-modal-content.dark .success-message {
+  color: #cccccc;
+}
+
+.success-modal-content.light .success-message {
+  color: #666666;
+}
+
+/* OK Button */
+.success-ok-button {
+  padding: 14px 50px;
+  background-color: #dc143c;
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.success-ok-button:hover {
+  background-color: #c81333;
+  transform: scale(1.05);
+}
+
+.success-ok-button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .success-modal-content {
+    width: 95%;
+    padding: 40px 30px;
+  }
+
+  .success-icon {
+    font-size: 70px;
+  }
+
+  .success-title {
+    font-size: 24px;
+  }
+
+  .success-message {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .success-modal-content {
+    padding: 35px 25px;
+  }
+
+  .success-icon {
+    font-size: 60px;
+  }
+
+  .success-title {
+    font-size: 22px;
+  }
+
+  .success-message {
+    font-size: 14px;
+  }
+
+  .success-ok-button {
+    padding: 12px 40px;
+    font-size: 15px;
+  }
+}
