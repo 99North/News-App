@@ -246,22 +246,27 @@
 
 
 
-/* Share Section */
+
+
+/* Enhanced Share Section */
 .article-share {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
   margin-top: 50px;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .article-page.dark .article-share {
   background-color: #1a1a1a;
   color: #ffffff;
+  border: 2px solid #333333;
 }
 
 .article-page.light .article-share {
@@ -270,27 +275,106 @@
   border: 2px solid #e0e0e0;
 }
 
+.article-share::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(220, 20, 60, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.article-share:hover::before {
+  left: 100%;
+}
+
 .article-share:hover {
   background-color: #dc143c;
   color: #ffffff;
-  transform: scale(1.02);
+  transform: translateY(-3px);
   border-color: #dc143c;
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
 }
 
+/* Fix icon color for both themes */
 .share-icon {
-  font-size: 20px;
-  line-height: 20px;
-  height: 20px;
-  width: 20px;
+  font-size: 22px;
+  line-height: 22px;
+  height: 22px;
+  width: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode icon */
+.article-page.dark .share-icon {
+  color: #ffffff;
+}
+
+/* Light mode icon */
+.article-page.light .share-icon {
+  color: #1a1a1a;
+}
+
+/* Icon on hover (both themes) */
+.article-share:hover .share-icon {
+  transform: scale(1.2) rotate(5deg);
+  color: #ffffff;
 }
 
 .article-share span {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
 }
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .article-share {
+    padding: 18px;
+  }
+
+  .share-icon {
+    font-size: 20px;
+    line-height: 20px;
+    height: 20px;
+    width: 20px;
+  }
+
+  .article-share span {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .article-share {
+    padding: 16px;
+  }
+
+  .share-icon {
+    font-size: 18px;
+    line-height: 18px;
+    height: 18px;
+    width: 18px;
+  }
+
+  .article-share span {
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
+
+
 
 
 
