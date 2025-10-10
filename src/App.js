@@ -443,6 +443,8 @@ function App() {
       odishaArticles={categoryData.odisha.articles}
       nationalArticles={categoryData.national.articles}
       internationalArticles={categoryData.international.articles}
+      environmentArticles={categoryData.environment.articles}
+      
     />
   } 
 />
