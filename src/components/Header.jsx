@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 const Header = ({ theme }) => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
+  const [breakingNewsIndex, setBreakingNewsIndex] = useState(0);
   const itemsPerPage = 3;
   const totalPages = 5;
 
@@ -147,6 +148,17 @@ const Header = ({ theme }) => {
     }
   ];
 
+  // Auto-rotate breaking news every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBreakingNewsIndex((prevIndex) => 
+        (prevIndex + 1) % allTopNews.length
+      );
+    }, 5000); // Change news every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [allTopNews.length]);
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentNews = allTopNews.slice(indexOfFirstItem, indexOfLastItem);
@@ -186,7 +198,12 @@ const Header = ({ theme }) => {
     navigate(route);
   };
 
-  const breakingNews = "Tiny living machines called xenobots can create copies of themselves";
+  const handleBreakingNewsClick = () => {
+    navigate(allTopNews[breakingNewsIndex].route);
+  };
+
+  // Dynamic breaking news from Top News array
+  const breakingNews = allTopNews[breakingNewsIndex].title;
 
   return (
     <header className={`header-section ${theme}`}>
@@ -268,10 +285,17 @@ const Header = ({ theme }) => {
         </div>
       </div>
 
-      <div className="breaking-news-ticker">
+      {/* Breaking News Ticker - Now Dynamic and Clickable */}
+      <div 
+        className="breaking-news-ticker"
+        onClick={handleBreakingNewsClick}
+        style={{ cursor: 'pointer' }}
+      >
         <span className="breaking-label">BREAKING NEWS</span>
         <div className="breaking-content">
-          <p className="breaking-text">{breakingNews}</p>
+          <p className="breaking-text" key={breakingNewsIndex}>
+            {breakingNews}
+          </p>
         </div>
       </div>
     </header>
