@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
@@ -10,61 +9,39 @@ const Header = ({ theme }) => {
   const itemsPerPage = 3;
   const totalPages = 5;
 
-=======
-import React from 'react';
-import './Header.css';
-
-const Header = ({ theme }) => {
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
   const featuredArticle = {
     category: 'BUSSINESS',
     badge: 'PREMIUM',
     title: "Target thinks it can keep growing sales, here's how the retailer will do it",
     excerpt: "It is a daily ritual for millions of Australians, but if you have noticed the price of your morning flat white or soy latte increase,...",
     date: 'March 4, 2022',
-<<<<<<< HEAD
     image: 'https://images.unsplash.com/photo-1554224311-beee2091fde0?w=800&q=80'
   };
 
-  // All top news items with route links
+  // All 15 top news items with their routes
   const allTopNews = [
     // Page 1
-=======
-    image: 'https://demo.tagdiv.com/newspaper_news_hub_pro/wp-content/uploads/2022/03/30-696x469.jpg'
-  };
-
-  const topNews = [
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
     {
       id: 1,
       badge: null,
       title: 'A newfound quasicrystal formed in the first atomic bomb testest in US',
       category: 'SCIENCE',
-<<<<<<< HEAD
       date: 'March 4, 2022',
       route: '/article/1'
-=======
-      date: 'March 4, 2022'
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
     },
     {
       id: 2,
       badge: 'PREMIUM',
       title: "How omicron's mutations make it the most infectious coronavirus variant",
       category: 'SCIENCE',
-<<<<<<< HEAD
       date: 'March 4, 2022',
       route: '/article/2'
-=======
-      date: 'March 4, 2022'
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
     },
     {
       id: 3,
       badge: null,
       title: "Africa's fynbos plants hold their ground with the world's thinnest roots",
       category: 'SCIENCE',
-<<<<<<< HEAD
       date: 'March 4, 2022',
       route: '/article/3'
     },
@@ -91,7 +68,7 @@ const Header = ({ theme }) => {
       title: 'Tech giants announce major investments in renewable energy',
       category: 'TECHNOLOGY',
       date: 'March 5, 2022',
-      route: '/'
+      route: '/article/6'
     },
     // Page 3
     {
@@ -100,7 +77,7 @@ const Header = ({ theme }) => {
       title: 'India launches ambitious space mission to explore lunar south pole',
       category: 'NATIONAL',
       date: 'March 6, 2022',
-      route: '/'
+      route: '/article/7'
     },
     {
       id: 8,
@@ -108,7 +85,7 @@ const Header = ({ theme }) => {
       title: 'Global markets surge amid positive economic indicators',
       category: 'BUSINESS',
       date: 'March 6, 2022',
-      route: '/'
+      route: '/article/8'
     },
     {
       id: 9,
@@ -116,7 +93,7 @@ const Header = ({ theme }) => {
       title: 'Revolutionary AI system achieves breakthrough in medical diagnosis',
       category: 'TECHNOLOGY',
       date: 'March 6, 2022',
-      route: '/'
+      route: '/article/9'
     },
     // Page 4
     {
@@ -125,7 +102,7 @@ const Header = ({ theme }) => {
       title: 'UNESCO declares new world heritage sites across five continents',
       category: 'INTERNATIONAL',
       date: 'March 7, 2022',
-      route: '/'
+      route: '/article/10'
     },
     {
       id: 11,
@@ -133,7 +110,7 @@ const Header = ({ theme }) => {
       title: 'Breakthrough in cancer research offers new hope for patients',
       category: 'HEALTH',
       date: 'March 7, 2022',
-      route: '/'
+      route: '/article/11'
     },
     {
       id: 12,
@@ -141,7 +118,7 @@ const Header = ({ theme }) => {
       title: 'Electric vehicle sales hit record high in global markets',
       category: 'BUSINESS',
       date: 'March 7, 2022',
-      route: '/'
+      route: '/article/12'
     },
     // Page 5
     {
@@ -150,7 +127,7 @@ const Header = ({ theme }) => {
       title: 'Ancient civilization discovered in remote Amazon rainforest',
       category: 'SCIENCE',
       date: 'March 8, 2022',
-      route: '/'
+      route: '/article/13'
     },
     {
       id: 14,
@@ -158,7 +135,7 @@ const Header = ({ theme }) => {
       title: 'Major education reform announced to boost digital literacy',
       category: 'EDUCATION',
       date: 'March 8, 2022',
-      route: '/'
+      route: '/article/14'
     },
     {
       id: 15,
@@ -166,7 +143,7 @@ const Header = ({ theme }) => {
       title: 'Astronomers detect mysterious signals from distant galaxy',
       category: 'SCIENCE',
       date: 'March 8, 2022',
-      route: '/'
+      route: '/article/15'
     }
   ];
 
@@ -210,25 +187,10 @@ const Header = ({ theme }) => {
   };
 
   const breakingNews = "Tiny living machines called xenobots can create copies of themselves";
-=======
-      date: 'March 4, 2022'
-    }
-  ];
-
-  const breakingNews = [
-    "A fast radio burst’s unlikely source may be a cluster of old stars. |  ",
-    "A newfound quasicrystal formed in the first atomic bomb test in US. |  ",
-    "Tiny living machines called xenobots can create copies of themselves.  |  "
-  ];
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
 
   return (
     <header className={`header-section ${theme}`}>
       <div className="header-container">
-<<<<<<< HEAD
-=======
-        {/* Featured Article - Left Side */}
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
         <div className="featured-article">
           <div className="featured-image">
             <img src={featuredArticle.image} alt={featuredArticle.title} />
@@ -246,10 +208,6 @@ const Header = ({ theme }) => {
           </div>
         </div>
 
-<<<<<<< HEAD
-=======
-        {/* Top News - Right Side */}
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
         <div className="top-news-section">
           <div className="top-news-header">
             <h2 className="section-title">Top News</h2>
@@ -257,7 +215,6 @@ const Header = ({ theme }) => {
           </div>
 
           <div className="top-news-list">
-<<<<<<< HEAD
             {currentNews.map((news) => (
               <div 
                 key={news.id} 
@@ -265,10 +222,6 @@ const Header = ({ theme }) => {
                 onClick={() => handleNewsClick(news.route)}
                 style={{ cursor: 'pointer' }}
               >
-=======
-            {topNews.map((news) => (
-              <div key={news.id} className="news-item">
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
                 {news.badge && (
                   <span className="news-premium-badge">{news.badge}</span>
                 )}
@@ -280,7 +233,6 @@ const Header = ({ theme }) => {
               </div>
             ))}
           </div>
-<<<<<<< HEAD
 
           <div className="pagination">
             <button
@@ -316,12 +268,6 @@ const Header = ({ theme }) => {
         </div>
       </div>
 
-=======
-        </div>
-      </div>
-
-      {/* Breaking News Ticker */}
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
       <div className="breaking-news-ticker">
         <span className="breaking-label">BREAKING NEWS</span>
         <div className="breaking-content">
