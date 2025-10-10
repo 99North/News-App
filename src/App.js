@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
@@ -10,21 +11,38 @@ import Article5 from './pages/Article5';
 import './App.css';
 
 function App() {
+=======
+import Navbar from './components/Navbar';
+import './App.css';
+import Header from './components/Header';
+
+function App() {
+  // Initialize theme from localStorage or default to 'dark'
+>>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme || 'dark';
   });
 
+<<<<<<< HEAD
+=======
+  // Toggle theme function
+>>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
   };
 
+<<<<<<< HEAD
+=======
+  // Save theme to localStorage and apply to body
+>>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
   useEffect(() => {
     localStorage.setItem('theme', theme);
     document.body.className = theme;
   }, [theme]);
 
   return (
+<<<<<<< HEAD
     <Router>
       <div className={`App ${theme}`}>
         <Navbar theme={theme} toggleTheme={toggleTheme} />
@@ -38,6 +56,13 @@ function App() {
         </Routes>
       </div>
     </Router>
+=======
+    <div className={`App ${theme}`}>
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      
+      <Header theme={theme} />
+    </div>
+>>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
   );
 }
 
