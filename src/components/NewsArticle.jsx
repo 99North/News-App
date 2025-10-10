@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './NewsArticle.css';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaClock, FaUser, FaShareAlt } from 'react-icons/fa';
+import ShareModal from './ShareModal';
 
 const NewsArticle = ({ theme, article }) => {
   const navigate = useNavigate();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const handleBack = () => {
-    navigate('/');
+    navigate(-1); // Go back to previous page
   };
+
+  const handleShareClick = () => {
+    setIsShareModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsShareModalOpen(false);
+  };
+
+  // Get current article URL
+  const articleUrl = window.location.href;
 
   return (
     <div className={`article-page ${theme}`}>
       <div className="article-container">
         {/* Back Button */}
         <button className="back-button" onClick={handleBack}>
-          <FaArrowLeft /> Back to Home
+          <FaArrowLeft /> Back
         </button>
 
         {/* Article Header */}
@@ -91,11 +104,19 @@ const NewsArticle = ({ theme, article }) => {
         </div>
 
         {/* Share Section */}
-        <div className="article-share">
+        <div className="article-share" onClick={handleShareClick}>
           <FaShareAlt className="share-icon" />
           <span>Share this article</span>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal 
+        isOpen={isShareModalOpen}
+        onClose={handleCloseModal}
+        articleUrl={articleUrl}
+        articleTitle={article.title}
+      />
     </div>
   );
 };
