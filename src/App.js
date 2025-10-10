@@ -433,7 +433,29 @@ function App() {
         <Navbar theme={theme} toggleTheme={toggleTheme} />
         <Routes>
           {/* Home Route - Pass Odisha articles */}
-          <Route path="/" element={<HomePage theme={theme} odishaArticles={categoryData.odisha.articles} />} />
+
+
+          <Route 
+  path="/" 
+  element={
+    <HomePage 
+      theme={theme} 
+      odishaArticles={categoryData.odisha.articles}
+      nationalArticles={categoryData.national.articles}
+      internationalArticles={categoryData.international.articles}
+    />
+  } 
+/>
+
+
+
+
+
+
+
+
+
+          {/* <Route path="/" element={<HomePage theme={theme} odishaArticles={categoryData.odisha.articles} />} /> */}
           
           {/* Category Routes */}
           <Route path="/odisha" element={<CategoryPage theme={theme} categoryData={categoryData.odisha} />} />
