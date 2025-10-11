@@ -5,6 +5,8 @@ import NationalInternationalSection from '../components/NationalInternationalSec
 import SubscribeSection from '../components/SubscribeSection';
 import EnvironmentSection from '../components/EnvironmentSection';
 import EducationHealthSection from '../components/EducationHealthSection';
+import EntertainmentSection from '../components/EntertainmentSection';
+import ArchiveSearchSection from '../components/ArchiveSearchSection';
 
 const HomePage = ({ 
   theme, 
@@ -13,7 +15,9 @@ const HomePage = ({
   internationalArticles, 
   environmentArticles,
   educationArticles,
-  healthArticles
+  healthArticles,
+  entertainmentArticles,
+  allArticles
 }) => {
   return (
     <div>
@@ -31,6 +35,11 @@ const HomePage = ({
         educationArticles={educationArticles}
         healthArticles={healthArticles}
       />
+      <EntertainmentSection 
+        theme={theme}
+        entertainmentArticles={entertainmentArticles}
+      />
+      <ArchiveSearchSection theme={theme} allArticles={allArticles} />
     </div>
   );
 };
