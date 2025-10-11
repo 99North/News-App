@@ -253,3 +253,44 @@
     font-size: 16px;
   }
 }
+
+
+/* ========== ANIMATED BORDER FOR SPECIAL LINKS ========== */
+
+.footer-link-animated {
+  position: relative;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+/* Bottom border animation */
+.footer-link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #000000 0%, #dc143c 50%, #000000 100%);
+  transition: width 0.4s ease;
+}
+
+/* Dark theme border */
+.footer.dark .footer-link-animated::after {
+  background: linear-gradient(90deg, #1a1a1a 0%, #dc143c 50%, #1a1a1a 100%);
+}
+
+/* Light theme border */
+.footer.light .footer-link-animated::after {
+  background: linear-gradient(90deg, #e8e8e8 0%, #dc143c 50%, #e8e8e8 100%);
+}
+
+/* Animate on hover */
+.footer-link-animated:hover::after {
+  width: 100%;
+}
+
+/* Optional: Add a subtle scale effect */
+.footer-link-animated:hover {
+  transform: translateX(5px) scale(1.05);
+}

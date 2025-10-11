@@ -49,12 +49,12 @@ const Footer = ({ theme }) => {
           <Link to="/environment" className="footer-link">Environment</Link>
         </div>
 
-        {/* Column 4 - About Links */}
+        {/* Column 4 - About Links with Animation */}
         <div className="footer-column">
-          <Link to="/about" className="footer-link">About NewsHub</Link>
-          <Link to="/contact" className="footer-link">Contact Us</Link>
-          <Link to="/privacy-policy" className="footer-link">Privacy Policy</Link>
-          <Link to="/terms" className="footer-link">Terms of Use</Link>
+          <Link to="/about" className="footer-link footer-link-animated">About NewsHub</Link>
+          <Link to="/contact" className="footer-link footer-link-animated">Contact Us</Link>
+          <Link to="/privacy-policy" className="footer-link footer-link-animated">Privacy Policy</Link>
+          <Link to="/terms" className="footer-link footer-link-animated">Terms of Use</Link>
         </div>
       </div>
 
