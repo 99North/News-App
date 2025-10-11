@@ -33,7 +33,6 @@ const ArchiveSearchSection = ({ theme, allArticles = [] }) => {
   const generateArchives = () => {
     const archives = {};
     
-    // Group articles by month/year
     allArticles.forEach(article => {
       if (article.date) {
         const date = new Date(article.date);
@@ -45,7 +44,6 @@ const ArchiveSearchSection = ({ theme, allArticles = [] }) => {
       }
     });
 
-    // Convert to array and sort by date (newest first)
     return Object.entries(archives)
       .map(([monthYear, count]) => ({ monthYear, count }))
       .sort((a, b) => {
@@ -70,96 +68,92 @@ const ArchiveSearchSection = ({ theme, allArticles = [] }) => {
   };
 
   return (
-    <section className={`archive-search-section ${theme}`}>
-      <div className="archive-search-container">
-        {/* Calendar Widget */}
-        <div className="widget-box calendar-widget">
-          <h3 className="widget-title">Calendar</h3>
-          <div className="calendar-content">
-            {/* Calendar Header */}
-            <div className="calendar-header">
-              <button className="calendar-nav" onClick={() => changeMonth(-1)}>
-                <FaChevronLeft />
-              </button>
-              <span className="calendar-month">
-                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-              </span>
-              <button className="calendar-nav" onClick={() => changeMonth(1)}>
-                <FaChevronRight />
-              </button>
-            </div>
-
-            {/* Calendar Days */}
-            <div className="calendar-days-header">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="calendar-day-name">{day}</div>
-              ))}
-            </div>
-
-            <div className="calendar-grid">
-              {/* Empty cells for days before month starts */}
-              {Array(startingDayOfWeek).fill(null).map((_, index) => (
-                <div key={`empty-${index}`} className="calendar-day empty"></div>
-              ))}
-              
-              {/* Days of the month */}
-              {Array(daysInMonth).fill(null).map((_, index) => {
-                const day = index + 1;
-                const isToday = day === new Date().getDate() && 
-                               currentDate.getMonth() === new Date().getMonth() &&
-                               currentDate.getFullYear() === new Date().getFullYear();
-                
-                return (
-                  <div 
-                    key={day} 
-                    className={`calendar-day ${isToday ? 'today' : ''}`}
-                  >
-                    {day}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Search Box */}
-        <div className="widget-box search-widget">
-          <form onSubmit={handleSearch} className="search-form">
-            <input
-              type="text"
-              placeholder="Search articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            <button type="submit" className="search-button">
-              <FaSearch />
+    <div className={`archive-search-inner ${theme}`}>
+      {/* Calendar Widget */}
+      <div className="widget-box calendar-widget">
+        <h3 className="widget-title">Calendar</h3>
+        <div className="calendar-content">
+          {/* Calendar Header */}
+          <div className="calendar-header">
+            <button className="calendar-nav" onClick={() => changeMonth(-1)}>
+              <FaChevronLeft />
             </button>
-          </form>
-        </div>
+            <span className="calendar-month">
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </span>
+            <button className="calendar-nav" onClick={() => changeMonth(1)}>
+              <FaChevronRight />
+            </button>
+          </div>
 
-        {/* Archives Widget */}
-        <div className="widget-box archives-widget">
-          <h3 className="widget-title">Archives</h3>
-          <div className="archives-list">
-            {archives.length > 0 ? (
-              archives.map((archive, index) => (
+          {/* Calendar Days */}
+          <div className="calendar-days-header">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+              <div key={day} className="calendar-day-name">{day}</div>
+            ))}
+          </div>
+
+          <div className="calendar-grid">
+            {Array(startingDayOfWeek).fill(null).map((_, index) => (
+              <div key={`empty-${index}`} className="calendar-day empty"></div>
+            ))}
+            
+            {Array(daysInMonth).fill(null).map((_, index) => {
+              const day = index + 1;
+              const isToday = day === new Date().getDate() && 
+                             currentDate.getMonth() === new Date().getMonth() &&
+                             currentDate.getFullYear() === new Date().getFullYear();
+              
+              return (
                 <div 
-                  key={index} 
-                  className="archive-item"
-                  onClick={() => handleArchiveClick(archive.monthYear)}
+                  key={day} 
+                  className={`calendar-day ${isToday ? 'today' : ''}`}
                 >
-                  <span className="archive-month">{archive.monthYear}</span>
-                  <span className="archive-count">({archive.count})</span>
+                  {day}
                 </div>
-              ))
-            ) : (
-              <p className="no-archives">No archives available</p>
-            )}
+              );
+            })}
           </div>
         </div>
       </div>
-    </section>
+
+      {/* Search Box */}
+      <div className="widget-box search-widget">
+        <form onSubmit={handleSearch} className="search-form">
+          <input
+            type="text"
+            placeholder="Search articles..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+          <button type="submit" className="search-button">
+            <FaSearch />
+          </button>
+        </form>
+      </div>
+
+      {/* Archives Widget */}
+      <div className="widget-box archives-widget">
+        <h3 className="widget-title">Archives</h3>
+        <div className="archives-list">
+          {archives.length > 0 ? (
+            archives.map((archive, index) => (
+              <div 
+                key={index} 
+                className="archive-item"
+                onClick={() => handleArchiveClick(archive.monthYear)}
+              >
+                <span className="archive-month">{archive.monthYear}</span>
+                <span className="archive-count">({archive.count})</span>
+              </div>
+            ))
+          ) : (
+            <p className="no-archives">No archives available</p>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

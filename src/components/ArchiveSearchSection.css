@@ -1,20 +1,6 @@
-.archive-search-section {
+/* Archive & Search Section - Independent Component */
+.archive-search-inner {
   width: 100%;
-  padding: 60px 20px;
-  transition: background-color 0.3s ease;
-}
-
-.archive-search-section.dark {
-  background-color: #0f0f0f;
-}
-
-.archive-search-section.light {
-  background-color: #f5f5f5;
-}
-
-.archive-search-container {
-  max-width: 400px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -27,11 +13,11 @@
   transition: all 0.3s ease;
 }
 
-.archive-search-section.dark .widget-box {
+.archive-search-inner.dark .widget-box {
   background-color: #1a1a1a;
 }
 
-.archive-search-section.light .widget-box {
+.archive-search-inner.light .widget-box {
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -45,11 +31,11 @@
   border-bottom: 2px solid #dc143c;
 }
 
-.archive-search-section.dark .widget-title {
+.archive-search-inner.dark .widget-title {
   color: #ffffff;
 }
 
-.archive-search-section.light .widget-title {
+.archive-search-inner.light .widget-title {
   color: #1a1a1a;
 }
 
@@ -74,11 +60,11 @@
   font-weight: 600;
 }
 
-.archive-search-section.dark .calendar-month {
+.archive-search-inner.dark .calendar-month {
   color: #ffffff;
 }
 
-.archive-search-section.light .calendar-month {
+.archive-search-inner.light .calendar-month {
   color: #1a1a1a;
 }
 
@@ -92,11 +78,11 @@
   transition: all 0.3s ease;
 }
 
-.archive-search-section.dark .calendar-nav {
+.archive-search-inner.dark .calendar-nav {
   color: #ffffff;
 }
 
-.archive-search-section.light .calendar-nav {
+.archive-search-inner.light .calendar-nav {
   color: #1a1a1a;
 }
 
@@ -120,11 +106,11 @@
   padding: 5px;
 }
 
-.archive-search-section.dark .calendar-day-name {
+.archive-search-inner.dark .calendar-day-name {
   color: #999999;
 }
 
-.archive-search-section.light .calendar-day-name {
+.archive-search-inner.light .calendar-day-name {
   color: #666666;
 }
 
@@ -146,11 +132,11 @@
   cursor: pointer;
 }
 
-.archive-search-section.dark .calendar-day {
+.archive-search-inner.dark .calendar-day {
   color: #cccccc;
 }
 
-.archive-search-section.light .calendar-day {
+.archive-search-inner.light .calendar-day {
   color: #333333;
 }
 
@@ -186,13 +172,13 @@
   transition: all 0.3s ease;
 }
 
-.archive-search-section.dark .search-input {
+.archive-search-inner.dark .search-input {
   background-color: #2a2a2a;
   border-color: #444444;
   color: #ffffff;
 }
 
-.archive-search-section.light .search-input {
+.archive-search-inner.light .search-input {
   background-color: #f5f5f5;
   border-color: #e0e0e0;
   color: #1a1a1a;
@@ -244,11 +230,11 @@
   transition: all 0.3s ease;
 }
 
-.archive-search-section.dark .archive-item {
+.archive-search-inner.dark .archive-item {
   background-color: #2a2a2a;
 }
 
-.archive-search-section.light .archive-item {
+.archive-search-inner.light .archive-item {
   background-color: #f8f8f8;
 }
 
@@ -257,24 +243,16 @@
   transform: translateX(5px);
 }
 
-.archive-search-section.dark .archive-item:hover {
-  background-color: #dc143c;
-}
-
-.archive-search-section.light .archive-item:hover {
-  background-color: #dc143c;
-}
-
 .archive-month {
   font-size: 14px;
   font-weight: 500;
 }
 
-.archive-search-section.dark .archive-month {
+.archive-search-inner.dark .archive-month {
   color: #ffffff;
 }
 
-.archive-search-section.light .archive-month {
+.archive-search-inner.light .archive-month {
   color: #1a1a1a;
 }
 
@@ -287,11 +265,11 @@
   font-size: 13px;
 }
 
-.archive-search-section.dark .archive-count {
+.archive-search-inner.dark .archive-count {
   color: #999999;
 }
 
-.archive-search-section.light .archive-count {
+.archive-search-inner.light .archive-count {
   color: #666666;
 }
 
@@ -301,42 +279,22 @@
   font-style: italic;
 }
 
-.archive-search-section.dark .no-archives {
+.archive-search-inner.dark .no-archives {
   color: #666666;
 }
 
-.archive-search-section.light .no-archives {
+.archive-search-inner.light .no-archives {
   color: #999999;
 }
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
-  .archive-search-section {
-    padding: 40px 15px;
-  }
-
-  .archive-search-container {
-    max-width: 100%;
-  }
-
   .widget-box {
     padding: 20px;
   }
 
   .widget-title {
     font-size: 18px;
-  }
-
-  .calendar-month {
-    font-size: 15px;
-  }
-
-  .calendar-day-name {
-    font-size: 11px;
-  }
-
-  .calendar-day {
-    font-size: 13px;
   }
 }
 
