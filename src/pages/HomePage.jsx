@@ -4,9 +4,17 @@ import OdishaSection from '../components/OdishaSection';
 import NationalInternationalSection from '../components/NationalInternationalSection';
 import SubscribeSection from '../components/SubscribeSection';
 import EnvironmentSection from '../components/EnvironmentSection';
+import EducationHealthSection from '../components/EducationHealthSection';
 
-
-const HomePage = ({ theme, odishaArticles, nationalArticles, internationalArticles, environmentArticles, healthArticles }) => {
+const HomePage = ({ 
+  theme, 
+  odishaArticles, 
+  nationalArticles, 
+  internationalArticles, 
+  environmentArticles,
+  educationArticles,
+  healthArticles
+}) => {
   return (
     <div>
       <Header theme={theme} />
@@ -18,7 +26,11 @@ const HomePage = ({ theme, odishaArticles, nationalArticles, internationalArticl
       />
       <SubscribeSection theme={theme} />
       <EnvironmentSection theme={theme} environmentArticles={environmentArticles} />
-      
+      <EducationHealthSection 
+        theme={theme}
+        educationArticles={educationArticles}
+        healthArticles={healthArticles}
+      />
     </div>
   );
 };

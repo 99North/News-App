@@ -444,6 +444,8 @@ function App() {
       nationalArticles={categoryData.national.articles}
       internationalArticles={categoryData.international.articles}
       environmentArticles={categoryData.environment.articles}
+      educationArticles={categoryData.education.articles}
+      healthArticles={categoryData.health.articles}
       
     />
   } 
