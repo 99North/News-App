@@ -61,7 +61,7 @@ const Footer = ({ theme }) => {
       {/* Copyright */}
       <div className="footer-bottom">
         <p className="footer-copyright">
-          © 2025 NewsHub. All rights reserved.
+          © 2025 Akruti Media. All rights reserved.
         </p>
       </div>
     </footer>
