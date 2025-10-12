@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
+import Logo from '../assets/images/akruti-logo.png';
 
 const Navbar = ({ theme, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,8 +56,8 @@ const Navbar = ({ theme, toggleTheme }) => {
       <div className="navbar-container">
         {/* Logo Section */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <div className="logo-icon">⚛</div>
-          <span className="logo-text">NewsHub</span>
+          <img className="brand-icon" src={Logo} />
+          <span className="logo-text">Akruti Media</span>
         </Link>
 
         {/* Desktop Menu */}

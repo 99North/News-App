@@ -54,14 +54,12 @@ a:visited {
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
   cursor: pointer;
 }
 
-.logo-icon {
-  color: #dc143c;
-  font-size: 28px;
-  font-weight: bold;
+img.brand-icon {
+  height: 60px;
 }
 
 .navbar.dark .logo-text {
@@ -73,11 +71,16 @@ a:visited {
 }
 
 .logo-text {
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-size: 25px;
   transition: color 0.3s ease;
+  font-family: poppins;
+  background: linear-gradient(to right, #f69118, #f71e04);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
+
 
 /* Navigation Menu */
 .nav-menu {
@@ -211,7 +214,7 @@ a:visited {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1300px) {
   .hamburger {
     display: block;
   }
@@ -276,14 +279,6 @@ a:visited {
 
   .nav-menu {
     top: 60px;
-  }
-
-  .logo-text {
-    font-size: 20px;
-  }
-
-  .logo-icon {
-    font-size: 24px;
   }
 
   .theme-toggle {

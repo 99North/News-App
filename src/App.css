@@ -25,11 +25,12 @@
   }
 
   /* Fix all containers */
-  [class*="container"] {
+  /* Uncomment the following if any issue */
+  /* [class*="container"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
     max-width: 100% !important;
-  }
+  } */
 
   /* Force dark mode elements to have no shadow */
   .dark [class*="card"],
@@ -61,6 +62,10 @@ body {
 .App {
   min-height: 100vh;
   transition: background-color 0.3s ease;
+}
+
+.App .main-container {
+  margin-bottom: 2rem;
 }
 
 /* Dark Theme */

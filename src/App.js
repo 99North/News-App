@@ -65,7 +65,8 @@ function AppContent({ theme, toggleTheme, categoryData }) {
   return (
     <div className={`App ${theme}`}>
       <Navbar theme={theme} toggleTheme={toggleTheme} />
-      <Routes>
+      <main className="main-container">
+        <Routes>
         {/* Home Route */}
         <Route
           path="/"
@@ -179,6 +180,8 @@ function AppContent({ theme, toggleTheme, categoryData }) {
         {/* 404 Route - Must be LAST */}
         <Route path="*" element={<NotFoundPage theme={theme} />} />
       </Routes>
+      </main>
+      
 
       {/* Conditionally render Footer - NOT on 404 page */}
       {showFooter && <Footer theme={theme} />}

@@ -51,16 +51,6 @@
   margin-bottom: 20px;
 }
 
-.logo-icon {
-  font-size: 32px;
-}
-
-.logo-text {
-  font-size: 28px;
-  font-weight: bold;
-  color: #dc143c;
-}
-
 /* Footer Links */
 .footer-link {
   font-size: 14px;
@@ -306,14 +296,6 @@
     justify-content: center;
   }
 
-  .logo-text {
-    font-size: 24px;
-  }
-
-  .logo-icon {
-    font-size: 28px;
-  }
-
   .footer-social {
     align-items: center;
   }
@@ -367,14 +349,6 @@
 
   .footer-logo {
     justify-content: center;
-  }
-
-  .logo-text {
-    font-size: 22px;
-  }
-
-  .logo-icon {
-    font-size: 24px;
   }
 
   .footer-link {
@@ -455,14 +429,6 @@
 
   .social-icon svg {
     font-size: 16px;
-  }
-
-  .logo-text {
-    font-size: 20px;
-  }
-
-  .logo-icon {
-    font-size: 22px;
   }
 
   /* About links smaller */

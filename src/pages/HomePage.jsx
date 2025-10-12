@@ -19,7 +19,7 @@ const HomePage = ({
   allArticles
 }) => {
   return (
-    <div>
+    <div >
       <Header theme={theme} />
       <OdishaSection theme={theme} odishaArticles={odishaArticles} />
       <NationalInternationalSection 
