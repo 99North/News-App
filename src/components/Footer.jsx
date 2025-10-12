@@ -9,10 +9,10 @@ const Footer = ({ theme }) => {
       <div className="footer-container">
         {/* Column 1 - Logo & Social */}
         <div className="footer-column">
-          <div className="footer-logo">
+          {/* <div className="footer-logo">
             <span className="logo-icon">📰</span>
             <span className="logo-text">NewsHub</span>
-          </div>
+          </div> */}
 
           {/* Social Media Icons */}
           <div className="footer-social">
@@ -51,10 +51,10 @@ const Footer = ({ theme }) => {
 
         {/* Column 4 - About Links with Animation */}
         <div className="footer-column">
-          <Link to="/about" className="footer-link footer-link-animated">About NewsHub</Link>
+          <Link to="/about" className="footer-link footer-link-animated">About Us</Link>
           <Link to="/contact" className="footer-link footer-link-animated">Contact Us</Link>
           <Link to="/privacy-policy" className="footer-link footer-link-animated">Privacy Policy</Link>
-          <Link to="/terms" className="footer-link footer-link-animated">Terms of Use</Link>
+          
         </div>
       </div>
 
