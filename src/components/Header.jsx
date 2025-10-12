@@ -154,7 +154,7 @@ const Header = ({ theme }) => {
     navigate(route);
   };
 
-  const currentArticle = carouselArticles[currentSlide];
+  // const currentArticle = carouselArticles[currentSlide];
 
   return (
     <header className={`header-section ${theme}`}>

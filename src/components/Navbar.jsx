@@ -56,7 +56,7 @@ const Navbar = ({ theme, toggleTheme }) => {
       <div className="navbar-container">
         {/* Logo Section */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <img className="brand-icon" src={Logo} />
+          <img className="brand-icon" src={Logo} alt="Site logo"/>
           <span className="logo-text">Akruti Media</span>
         </Link>
 
