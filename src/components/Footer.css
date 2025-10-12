@@ -82,6 +82,7 @@
   transform: translateX(5px);
 }
 
+
 /* Social Media Icons */
 .footer-social {
   display: flex;
@@ -98,24 +99,90 @@
   text-decoration: none;
   transition: all 0.3s ease;
   width: fit-content;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: transparent;
 }
 
+/* Default colors for dark theme */
 .footer.dark .social-icon {
   color: #ffffff;
 }
 
+/* Default colors for light theme */
 .footer.light .social-icon {
   color: #333333;
 }
 
 .social-icon svg {
-  font-size: 18px;
+  font-size: 20px;
+  transition: transform 0.3s ease;
 }
 
-.social-icon:hover {
-  color: #dc143c;
-  transform: translateX(5px);
+/* Facebook - Blue */
+.social-icon:nth-child(1) {
+  color: #1877f2;
 }
+
+.social-icon:nth-child(1):hover {
+  background-color: rgba(24, 119, 242, 0.1);
+  color: #1877f2;
+  transform: translateX(10px) scale(1.05);
+}
+
+.social-icon:nth-child(1):hover svg {
+  transform: scale(1.2);
+}
+
+/* Instagram - Gradient (Pink/Orange) */
+.social-icon:nth-child(2) {
+  color: #e4405f;
+}
+
+.social-icon:nth-child(2):hover {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-color: rgba(228, 64, 95, 0.1);
+  transform: translateX(10px) scale(1.05);
+}
+
+.social-icon:nth-child(2):hover svg {
+  transform: scale(1.2) rotate(5deg);
+}
+
+/* Twitter - Light Blue */
+.social-icon:nth-child(3) {
+  color: #1da1f2;
+}
+
+.social-icon:nth-child(3):hover {
+  background-color: rgba(29, 161, 242, 0.1);
+  color: #1da1f2;
+  transform: translateX(10px) scale(1.05);
+}
+
+.social-icon:nth-child(3):hover svg {
+  transform: scale(1.2);
+}
+
+/* Youtube - Red */
+.social-icon:nth-child(4) {
+  color: #ff0000;
+}
+
+.social-icon:nth-child(4):hover {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff0000;
+  transform: translateX(10px) scale(1.05);
+}
+
+.social-icon:nth-child(4):hover svg {
+  transform: scale(1.2);
+}
+
+
 
 /* ========== FOOTER BOTTOM - COPYRIGHT ========== */
 
