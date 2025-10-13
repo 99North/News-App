@@ -10,12 +10,11 @@ const Header = ({ theme }) => {
   const itemsPerPage = 3;
   const totalPages = 5;
 
-  // All 15 top news items with their routes
+  // All 15 top news items with their routes (NO badge property)
   const allTopNews = [
     // Page 1
     {
       id: 1,
-      badge: null,
       title: 'A newfound quasicrystal formed in the first atomic bomb testest in US',
       category: 'SCIENCE',
       date: 'March 4, 2022',
@@ -25,7 +24,6 @@ const Header = ({ theme }) => {
     },
     {
       id: 2,
-      badge: 'PREMIUM',
       title: "How omicron's mutations make it the most infectious coronavirus variant",
       category: 'SCIENCE',
       date: 'March 4, 2022',
@@ -35,7 +33,6 @@ const Header = ({ theme }) => {
     },
     {
       id: 3,
-      badge: null,
       title: "Africa's fynbos plants hold their ground with the world's thinnest roots",
       category: 'SCIENCE',
       date: 'March 4, 2022',
@@ -46,17 +43,15 @@ const Header = ({ theme }) => {
     // Page 2
     {
       id: 4,
-      badge: 'PREMIUM',
       title: 'Climate change is accelerating faster than scientists predicted',
       category: 'ENVIRONMENT',
       date: 'March 5, 2022',
       route: '/article/4',
-      image: 'https://images.pexels.com/photos/60013/desert-drought-dehydrated-clay-soil-60013.jpeg',
+      image: 'https://images.unsplash.com/photo-1569163139394-de4798aa62b6?w=800&q=80',
       excerpt: 'Latest data shows unprecedented rates of global temperature increase...'
     },
     {
       id: 5,
-      badge: null,
       title: 'New study reveals the benefits of Mediterranean diet on longevity',
       category: 'HEALTH',
       date: 'March 5, 2022',
@@ -66,7 +61,6 @@ const Header = ({ theme }) => {
     },
     {
       id: 6,
-      badge: null,
       title: 'Tech giants announce major investments in renewable energy',
       category: 'TECHNOLOGY',
       date: 'March 5, 2022',
@@ -77,22 +71,106 @@ const Header = ({ theme }) => {
     // Page 3
     {
       id: 7,
-      badge: 'PREMIUM',
       title: 'India launches ambitious space mission to explore lunar south pole',
       category: 'NATIONAL',
       date: 'March 6, 2022',
       route: '/article/7',
       image: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&q=80',
       excerpt: 'Historic mission aims to unlock secrets of water ice on the Moon...'
+    },
+    {
+      id: 8,
+      title: 'Global markets surge amid positive economic indicators',
+      category: 'BUSINESS',
+      date: 'March 6, 2022',
+      route: '/article/8',
+      image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80',
+      excerpt: 'Stock markets reach new highs as economic recovery gains momentum...'
+    },
+    {
+      id: 9,
+      title: 'Revolutionary AI system achieves breakthrough in medical diagnosis',
+      category: 'TECHNOLOGY',
+      date: 'March 6, 2022',
+      route: '/article/9',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80',
+      excerpt: 'New artificial intelligence platform demonstrates unprecedented accuracy...'
+    },
+    // Page 4
+    {
+      id: 10,
+      title: 'UNESCO declares new world heritage sites across five continents',
+      category: 'INTERNATIONAL',
+      date: 'March 7, 2022',
+      route: '/article/10',
+      image: 'https://images.unsplash.com/photo-1563789031959-4c02bcb41319?w=800&q=80',
+      excerpt: 'Historic landmarks receive global recognition for cultural significance...'
+    },
+    {
+      id: 11,
+      title: 'Breakthrough in cancer research offers new hope for patients',
+      category: 'HEALTH',
+      date: 'March 7, 2022',
+      route: '/article/11',
+      image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&q=80',
+      excerpt: 'Scientists develop innovative treatment targeting specific cancer cells...'
+    },
+    {
+      id: 12,
+      title: 'Electric vehicle sales hit record high in global markets',
+      category: 'BUSINESS',
+      date: 'March 7, 2022',
+      route: '/article/12',
+      image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=80',
+      excerpt: 'EV adoption accelerates as prices drop and charging infrastructure expands...'
+    },
+    // Page 5
+    {
+      id: 13,
+      title: 'Ancient civilization discovered in remote Amazon rainforest',
+      category: 'SCIENCE',
+      date: 'March 8, 2022',
+      route: '/article/13',
+      image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=80',
+      excerpt: 'Archaeologists uncover evidence of sophisticated pre-Columbian society...'
+    },
+    {
+      id: 14,
+      title: 'Major education reform announced to boost digital literacy',
+      category: 'EDUCATION',
+      date: 'March 8, 2022',
+      route: '/article/14',
+      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
+      excerpt: 'Government unveils comprehensive plan to modernize school curriculum...'
+    },
+    {
+      id: 15,
+      title: 'Astronomers detect mysterious signals from distant galaxy',
+      category: 'SCIENCE',
+      date: 'March 8, 2022',
+      route: '/article/15',
+      image: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80',
+      excerpt: 'Telescopes capture unusual radio waves from deep space source...'
     }
   ];
 
+  // Function to add "LATEST" badge to first 5 articles automatically
+  const addLatestBadge = (articles) => {
+    return articles.map((article, index) => ({
+      ...article,
+      badge: index < 5 ? 'LATEST' : null // First 5 get LATEST badge
+    }));
+  };
+
+  // Apply LATEST badge to first 5 articles
+  const topNewsWithBadges = addLatestBadge(allTopNews);
+
   // Get first 7 articles for carousel
-  const carouselArticles = allTopNews.slice(0, 7);
+  const carouselArticles = topNewsWithBadges.slice(0, 7);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentNews = allTopNews.slice(indexOfFirstItem, indexOfLastItem);
+  const currentNews = topNewsWithBadges.slice(indexOfFirstItem, indexOfLastItem);
 
   // Auto-play carousel
   useEffect(() => {
@@ -154,7 +232,7 @@ const Header = ({ theme }) => {
     navigate(route);
   };
 
-  // const currentArticle = carouselArticles[currentSlide];
+  
 
   return (
     <header className={`header-section ${theme}`}>
@@ -175,7 +253,7 @@ const Header = ({ theme }) => {
                   <img src={article.image} alt={article.title} />
                   <div className="featured-overlay">
                     {article.badge && (
-                      <span className="premium-badge">{article.badge}</span>
+                      <span className="latest-badge">{article.badge}</span>
                     )}
                     <h1 className="featured-title">{article.title}</h1>
                     <div className="featured-meta">
@@ -248,7 +326,7 @@ const Header = ({ theme }) => {
                 style={{ cursor: 'pointer' }}
               >
                 {news.badge && (
-                  <span className="news-premium-badge">{news.badge}</span>
+                  <span className="news-latest-badge">{news.badge}</span>
                 )}
                 <h3 className="news-title">{news.title}</h3>
                 <div className="news-meta">
@@ -298,7 +376,7 @@ const Header = ({ theme }) => {
         <span className="breaking-label">BREAKING NEWS</span>
         <div className="breaking-content">
           <div className="breaking-scroll">
-            {[...allTopNews, ...allTopNews].map((news, index) => (
+            {[...topNewsWithBadges, ...topNewsWithBadges].map((news, index) => (
               <span 
                 key={index}
                 className="breaking-news-item"

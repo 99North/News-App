@@ -67,121 +67,120 @@ function AppContent({ theme, toggleTheme, categoryData }) {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <main className="main-container">
         <Routes>
-        {/* Home Route */}
-        <Route
-          path="/"
-          element={
-            <HomePage
-              theme={theme}
-              odishaArticles={categoryData.odisha.articles}
-              nationalArticles={categoryData.national.articles}
-              internationalArticles={categoryData.international.articles}
-              environmentArticles={categoryData.environment.articles}
-              educationArticles={categoryData.education.articles}
-              healthArticles={categoryData.health.articles}
-              entertainmentArticles={categoryData.entertainment.articles}
-            />
-          }
-        />
+          {/* Home Route */}
+          <Route
+            path="/"
+            element={
+              <HomePage
+                theme={theme}
+                odishaArticles={categoryData.odisha.articles}
+                nationalArticles={categoryData.national.articles}
+                internationalArticles={categoryData.international.articles}
+                environmentArticles={categoryData.environment.articles}
+                educationArticles={categoryData.education.articles}
+                healthArticles={categoryData.health.articles}
+                entertainmentArticles={categoryData.entertainment.articles}
+              />
+            }
+          />
 
-        {/* Category Routes */}
-        <Route
-          path="/odisha"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.odisha} />
-          }
-        />
-        <Route
-          path="/national"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.national} />
-          }
-        />
-        <Route
-          path="/international"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.international} />
-          }
-        />
-        <Route
-          path="/entertainment"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.entertainment} />
-          }
-        />
-        <Route
-          path="/jobs"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.jobs} />
-          }
-        />
-        <Route
-          path="/education"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.education} />
-          }
-        />
-        <Route
-          path="/astrospeak"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.astrospeak} />
-          }
-        />
-        <Route
-          path="/health"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.health} />
-          }
-        />
-        <Route
-          path="/environment"
-          element={
-            <CategoryPage theme={theme} categoryData={categoryData.environment} />
-          }
-        />
+          {/* Category Routes */}
+          <Route
+            path="/odisha"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.odisha} />
+            }
+          />
+          <Route
+            path="/national"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.national} />
+            }
+          />
+          <Route
+            path="/international"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.international} />
+            }
+          />
+          <Route
+            path="/entertainment"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.entertainment} />
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.jobs} />
+            }
+          />
+          <Route
+            path="/education"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.education} />
+            }
+          />
+          <Route
+            path="/astrospeak"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.astrospeak} />
+            }
+          />
+          <Route
+            path="/health"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.health} />
+            }
+          />
+          <Route
+            path="/environment"
+            element={
+              <CategoryPage theme={theme} categoryData={categoryData.environment} />
+            }
+          />
 
-        {/* Home Articles */}
-        <Route path="/article/1" element={<Article1 theme={theme} />} />
-        <Route path="/article/2" element={<Article2 theme={theme} />} />
-        <Route path="/article/3" element={<Article3 theme={theme} />} />
-        <Route path="/article/4" element={<Article4 theme={theme} />} />
-        <Route path="/article/5" element={<Article5 theme={theme} />} />
-        <Route path="/article/6" element={<Article6 theme={theme} />} />
-        <Route path="/article/7" element={<Article7 theme={theme} />} />
-        <Route path="/article/8" element={<Article8 theme={theme} />} />
-        <Route path="/article/9" element={<Article9 theme={theme} />} />
-        <Route path="/article/10" element={<Article10 theme={theme} />} />
-        <Route path="/article/11" element={<Article11 theme={theme} />} />
-        <Route path="/article/12" element={<Article12 theme={theme} />} />
-        <Route path="/article/13" element={<Article13 theme={theme} />} />
-        <Route path="/article/14" element={<Article14 theme={theme} />} />
-        <Route path="/article/15" element={<Article15 theme={theme} />} />
+          {/* Home Articles */}
+          <Route path="/article/1" element={<Article1 theme={theme} />} />
+          <Route path="/article/2" element={<Article2 theme={theme} />} />
+          <Route path="/article/3" element={<Article3 theme={theme} />} />
+          <Route path="/article/4" element={<Article4 theme={theme} />} />
+          <Route path="/article/5" element={<Article5 theme={theme} />} />
+          <Route path="/article/6" element={<Article6 theme={theme} />} />
+          <Route path="/article/7" element={<Article7 theme={theme} />} />
+          <Route path="/article/8" element={<Article8 theme={theme} />} />
+          <Route path="/article/9" element={<Article9 theme={theme} />} />
+          <Route path="/article/10" element={<Article10 theme={theme} />} />
+          <Route path="/article/11" element={<Article11 theme={theme} />} />
+          <Route path="/article/12" element={<Article12 theme={theme} />} />
+          <Route path="/article/13" element={<Article13 theme={theme} />} />
+          <Route path="/article/14" element={<Article14 theme={theme} />} />
+          <Route path="/article/15" element={<Article15 theme={theme} />} />
 
-        {/* Category Article Routes */}
-        <Route path="/odisha/article1" element={<OdishaArticle1 theme={theme} />} />
-        <Route path="/odisha/article2" element={<OdishaArticle2 theme={theme} />} />
-        <Route path="/national/article1" element={<NationalArticle1 theme={theme} />} />
-        <Route path="/national/article2" element={<NationalArticle2 theme={theme} />} />
-        <Route path="/international/article1" element={<InternationalArticle1 theme={theme} />} />
-        <Route path="/international/article2" element={<InternationalArticle2 theme={theme} />} />
-        <Route path="/entertainment/article1" element={<EntertainmentArticle1 theme={theme} />} />
-        <Route path="/entertainment/article2" element={<EntertainmentArticle2 theme={theme} />} />
-        <Route path="/jobs/article1" element={<JobsArticle1 theme={theme} />} />
-        <Route path="/jobs/article2" element={<JobsArticle2 theme={theme} />} />
-        <Route path="/education/article1" element={<EducationArticle1 theme={theme} />} />
-        <Route path="/education/article2" element={<EducationArticle2 theme={theme} />} />
-        <Route path="/astrospeak/article1" element={<AstrospeakArticle1 theme={theme} />} />
-        <Route path="/astrospeak/article2" element={<AstrospeakArticle2 theme={theme} />} />
-        <Route path="/health/article1" element={<HealthArticle1 theme={theme} />} />
-        <Route path="/health/article2" element={<HealthArticle2 theme={theme} />} />
-        <Route path="/environment/article1" element={<EnvironmentArticle1 theme={theme} />} />
-        <Route path="/environment/article2" element={<EnvironmentArticle2 theme={theme} />} />
+          {/* Category Article Routes */}
+          <Route path="/odisha/article1" element={<OdishaArticle1 theme={theme} />} />
+          <Route path="/odisha/article2" element={<OdishaArticle2 theme={theme} />} />
+          <Route path="/national/article1" element={<NationalArticle1 theme={theme} />} />
+          <Route path="/national/article2" element={<NationalArticle2 theme={theme} />} />
+          <Route path="/international/article1" element={<InternationalArticle1 theme={theme} />} />
+          <Route path="/international/article2" element={<InternationalArticle2 theme={theme} />} />
+          <Route path="/entertainment/article1" element={<EntertainmentArticle1 theme={theme} />} />
+          <Route path="/entertainment/article2" element={<EntertainmentArticle2 theme={theme} />} />
+          <Route path="/jobs/article1" element={<JobsArticle1 theme={theme} />} />
+          <Route path="/jobs/article2" element={<JobsArticle2 theme={theme} />} />
+          <Route path="/education/article1" element={<EducationArticle1 theme={theme} />} />
+          <Route path="/education/article2" element={<EducationArticle2 theme={theme} />} />
+          <Route path="/astrospeak/article1" element={<AstrospeakArticle1 theme={theme} />} />
+          <Route path="/astrospeak/article2" element={<AstrospeakArticle2 theme={theme} />} />
+          <Route path="/health/article1" element={<HealthArticle1 theme={theme} />} />
+          <Route path="/health/article2" element={<HealthArticle2 theme={theme} />} />
+          <Route path="/environment/article1" element={<EnvironmentArticle1 theme={theme} />} />
+          <Route path="/environment/article2" element={<EnvironmentArticle2 theme={theme} />} />
 
-        {/* 404 Route - Must be LAST */}
-        <Route path="*" element={<NotFoundPage theme={theme} />} />
-      </Routes>
+          {/* 404 Route - Must be LAST */}
+          <Route path="*" element={<NotFoundPage theme={theme} />} />
+        </Routes>
       </main>
-      
 
       {/* Conditionally render Footer - NOT on 404 page */}
       {showFooter && <Footer theme={theme} />}
@@ -204,12 +203,21 @@ function App() {
     document.body.className = theme;
   }, [theme]);
 
+  // Universal function to add LATEST badge to first N articles
+  const addLatestBadge = (articles, count = 3) => {
+    return articles.map((article, index) => ({
+      ...article,
+      badge: index < count ? 'LATEST' : null
+    }));
+  };
+
   // Category data for each section
   const categoryData = {
+    // ODISHA - First 3 articles get LATEST badge
     odisha: {
       name: "Odisha",
       description: "Latest news and updates from Odisha state",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "Bhubaneswar Smart City Project Wins International Recognition",
@@ -217,7 +225,6 @@ function App() {
           category: "ODISHA",
           date: "March 10, 2022",
           image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80",
-          badge: "PREMIUM",
           route: "/odisha/article1",
         },
         {
@@ -227,7 +234,6 @@ function App() {
           category: "ODISHA",
           date: "March 11, 2022",
           image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
-          badge: null,
           route: "/odisha/article2",
         },
         {
@@ -237,7 +243,6 @@ function App() {
           category: "ODISHA",
           date: "March 12, 2022",
           image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80",
-          badge: "PREMIUM",
           route: "/odisha/article1",
         },
         {
@@ -247,7 +252,6 @@ function App() {
           category: "ODISHA",
           date: "March 13, 2022",
           image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
-          badge: null,
           route: "/odisha/article2",
         },
         {
@@ -257,7 +261,6 @@ function App() {
           category: "ODISHA",
           date: "March 14, 2022",
           image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&q=80",
-          badge: "PREMIUM",
           route: "/odisha/article1",
         },
         {
@@ -267,7 +270,6 @@ function App() {
           category: "ODISHA",
           date: "March 15, 2022",
           image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80",
-          badge: null,
           route: "/odisha/article2",
         },
         ...Array(24).fill(null).map((_, i) => ({
@@ -277,15 +279,16 @@ function App() {
           category: "ODISHA",
           date: "March " + (16 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/odisha/article${i + 1}` : "/",
         })),
-      ],
+      ], 3), // First 3 get LATEST badge
     },
+
+    // NATIONAL - First 2 articles get LATEST badge
     national: {
       name: "National",
       description: "Breaking news from across India",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "India Becomes Third Largest Economy Overtaking Japan and Germany",
@@ -293,7 +296,6 @@ function App() {
           category: "NATIONAL",
           date: "March 12, 2022",
           image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80",
-          badge: "PREMIUM",
           route: "/national/article1",
         },
         {
@@ -303,7 +305,6 @@ function App() {
           category: "NATIONAL",
           date: "March 13, 2022",
           image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80",
-          badge: null,
           route: "/national/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -313,15 +314,16 @@ function App() {
           category: "NATIONAL",
           date: "March " + (14 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/national/article${i + 1}` : "/",
         })),
-      ],
+      ], 2), // First 2 get LATEST badge
     },
+
+    // INTERNATIONAL - First 2 articles get LATEST badge
     international: {
       name: "International",
       description: "Global news and international affairs",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "Global Leaders Reach Historic Climate Agreement at Summit",
@@ -329,7 +331,6 @@ function App() {
           category: "INTERNATIONAL",
           date: "March 14, 2022",
           image: "https://images.unsplash.com/photo-1569163139394-de4798aa62b6?w=600&q=80",
-          badge: "PREMIUM",
           route: "/international/article1",
         },
         {
@@ -339,7 +340,6 @@ function App() {
           category: "INTERNATIONAL",
           date: "March 15, 2022",
           image: "https://images.unsplash.com/photo-1640340434855-6084b1f4901c?w=600&q=80",
-          badge: null,
           route: "/international/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -349,15 +349,16 @@ function App() {
           category: "INTERNATIONAL",
           date: "March " + (16 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1569163139394-de4798aa62b6?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/international/article${i + 1}` : "/",
         })),
-      ],
+      ], 2), // First 2 get LATEST badge
     },
+
+    // ENTERTAINMENT - First 4 articles get LATEST badge
     entertainment: {
       name: "Entertainment",
       description: "Latest from movies, music, and celebrities",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "Bollywood Film Breaks Global Box Office Records Worldwide",
@@ -365,7 +366,6 @@ function App() {
           category: "ENTERTAINMENT",
           date: "March 16, 2022",
           image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80",
-          badge: "PREMIUM",
           route: "/entertainment/article1",
         },
         {
@@ -375,7 +375,6 @@ function App() {
           category: "ENTERTAINMENT",
           date: "March 17, 2022",
           image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=600&q=80",
-          badge: null,
           route: "/entertainment/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -385,11 +384,12 @@ function App() {
           category: "ENTERTAINMENT",
           date: "March " + (18 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/entertainment/article${i + 1}` : "/",
         })),
-      ],
+      ], 4), // First 4 get LATEST badge
     },
+
+    // JOBS - Keep PREMIUM badges (no LATEST)
     jobs: {
       name: "Jobs",
       description: "Career opportunities and employment news",
@@ -426,10 +426,12 @@ function App() {
         })),
       ],
     },
+
+    // EDUCATION - First 2 articles get LATEST badge
     education: {
       name: "Education",
       description: "Educational news, updates, and opportunities",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "New Education Policy Transforms Indian Schools",
@@ -437,7 +439,6 @@ function App() {
           category: "EDUCATION",
           date: "March 20, 2022",
           image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
-          badge: "PREMIUM",
           route: "/education/article1",
         },
         {
@@ -447,7 +448,6 @@ function App() {
           category: "EDUCATION",
           date: "March 21, 2022",
           image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80",
-          badge: null,
           route: "/education/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -457,11 +457,12 @@ function App() {
           category: "EDUCATION",
           date: "March " + (22 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/education/article${i + 1}` : "/",
         })),
-      ],
+      ], 2), // First 2 get LATEST badge
     },
+
+    // ASTROSPEAK - Keep PREMIUM badges (no LATEST)
     astrospeak: {
       name: "Astrospeak",
       description: "Astrology, cosmic events, and spiritual insights",
@@ -498,10 +499,12 @@ function App() {
         })),
       ],
     },
+
+    // HEALTH - First 2 articles get LATEST badge
     health: {
       name: "Health",
       description: "Health news, wellness tips, and medical breakthroughs",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "India Achieves Universal Healthcare Coverage",
@@ -509,7 +512,6 @@ function App() {
           category: "HEALTH",
           date: "March 24, 2022",
           image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
-          badge: "PREMIUM",
           route: "/health/article1",
         },
         {
@@ -519,7 +521,6 @@ function App() {
           category: "HEALTH",
           date: "March 25, 2022",
           image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80",
-          badge: null,
           route: "/health/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -529,15 +530,16 @@ function App() {
           category: "HEALTH",
           date: "March " + (26 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/health/article${i + 1}` : "/",
         })),
-      ],
+      ], 2), // First 2 get LATEST badge
     },
+
+    // ENVIRONMENT - First 3 articles get LATEST badge
     environment: {
       name: "Environment",
       description: "Environmental news, climate change, and sustainability",
-      articles: [
+      articles: addLatestBadge([
         {
           id: 1,
           title: "India Plants 500 Million Trees in Reforestation Campaign",
@@ -545,7 +547,6 @@ function App() {
           category: "ENVIRONMENT",
           date: "March 26, 2022",
           image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
-          badge: "PREMIUM",
           route: "/environment/article1",
         },
         {
@@ -555,7 +556,6 @@ function App() {
           category: "ENVIRONMENT",
           date: "March 27, 2022",
           image: "https://images.unsplash.com/photo-1528323273322-d81458248d40?w=600&q=80",
-          badge: null,
           route: "/environment/article2",
         },
         ...Array(28).fill(null).map((_, i) => ({
@@ -565,10 +565,9 @@ function App() {
           category: "ENVIRONMENT",
           date: "March " + (28 + i) + ", 2022",
           image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
-          badge: i % 3 === 0 ? "PREMIUM" : null,
           route: i < 2 ? `/environment/article${i + 1}` : "/",
         })),
-      ],
+      ], 3), // First 3 get LATEST badge
     },
   };
 
