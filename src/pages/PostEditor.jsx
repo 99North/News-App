@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import './PostEditor.css';
-import { 
-  FaBold, FaItalic, FaUnderline, FaStrikethrough, 
-  FaListUl, FaListOl, FaAlignLeft, FaAlignCenter, 
-  FaAlignRight, FaLink, FaImage, FaTimes, FaEye, 
+import {
+  FaBold, FaItalic, FaUnderline, FaStrikethrough,
+  FaListUl, FaListOl, FaAlignLeft, FaAlignCenter,
+  FaAlignRight, FaLink, FaImage, FaTimes, FaEye,
   FaPaperPlane, FaQuoteLeft, FaCode
 } from 'react-icons/fa';
+
+import { createArticle } from '../services/articleServices';
 
 const PostEditor = ({ theme }) => {
   const [postTitle, setPostTitle] = useState('');
@@ -15,12 +17,14 @@ const PostEditor = ({ theme }) => {
   const [editorContent, setEditorContent] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const editorRef = useRef(null);
 
   // Available sections from navbar
   const sections = [
     'Odisha',
-    'National', 
+    'National',
     'International',
     'Entertainment',
     'Jobs',
@@ -75,9 +79,9 @@ const PostEditor = ({ theme }) => {
     setShowPreview(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!postTitle || !postDescription || !postSection || !editorContent) {
       alert('Please fill in all required fields!');
       return;
@@ -90,24 +94,53 @@ const PostEditor = ({ theme }) => {
       content: editorContent,
       tag: selectedTag || 'None',
       images: selectedImages,
-      date: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      date: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       }),
     };
-    
-    console.log('Post Data:', postData);
-    console.log(`This post will be displayed in: ${postSection} section`);
+
+    // console.log('Post Data:', postData);
+    // console.log(`This post will be displayed in: ${postSection} section`);
+
+    try {
+      const response = await createArticle(postData);
+
+      if (response.success) {
+        alert(`Post submitted successfully to ${postSection} section!`);
+
+        // Reset form
+        setPostTitle('');
+        setPostDescription('');
+        setPostSection('');
+        setEditorContent('');
+        setSelectedTag('');
+        setSelectedImages([]);
+
+        if (editorRef.current) {
+          editorRef.current.innerHTML = '';
+        }
+      } else {
+        throw new Error(response.message || 'Failed to create article');
+      }
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      alert(`Error submitting post: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+
     alert(`Post submitted successfully to ${postSection} section!`);
-    
+
     // Reset form
-    setPostTitle('');
-    setPostDescription('');
-    setPostSection('');
-    setEditorContent('');
-    setSelectedTag('');
-    setSelectedImages([]);
+    // setPostTitle('');
+    // setPostDescription('');
+    // setPostSection('');
+    // setEditorContent('');
+    // setSelectedTag('');
+    // setSelectedImages([]);
+
     if (editorRef.current) {
       editorRef.current.innerHTML = '';
     }
@@ -431,9 +464,9 @@ const PostEditor = ({ theme }) => {
 
           {/* Action Buttons */}
           <div className="form-actions">
-            <button 
-              type="button" 
-              onClick={handlePreview} 
+            <button
+              type="button"
+              onClick={handlePreview}
               className="preview-btn"
             >
               <FaEye /> Preview Post
@@ -449,13 +482,13 @@ const PostEditor = ({ theme }) => {
       {showPreview && (
         <div className="preview-modal-overlay" onClick={() => setShowPreview(false)}>
           <div className="preview-modal" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="modal-close-btn" 
+            <button
+              className="modal-close-btn"
               onClick={() => setShowPreview(false)}
             >
               <FaTimes />
             </button>
-            
+
             <div className="modal-content">
               <div className="preview-header">
                 <h2 className="preview-title-heading">Post Preview</h2>
@@ -471,7 +504,7 @@ const PostEditor = ({ theme }) => {
 
               <article className="preview-article">
                 <h1 className="preview-post-title">{postTitle}</h1>
-                
+
                 <p className="preview-post-description">{postDescription}</p>
 
                 {selectedImages.length > 0 && (
@@ -480,7 +513,7 @@ const PostEditor = ({ theme }) => {
                   </div>
                 )}
 
-                <div 
+                <div
                   className="preview-post-content"
                   dangerouslySetInnerHTML={{ __html: editorContent }}
                 />
@@ -495,10 +528,10 @@ const PostEditor = ({ theme }) => {
 
                 <div className="preview-footer">
                   <p className="preview-date">
-                    Published: {new Date().toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
+                    Published: {new Date().toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
                     })}
                   </p>
                 </div>
