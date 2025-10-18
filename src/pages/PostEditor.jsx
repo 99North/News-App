@@ -10,7 +10,7 @@ import {
 const PostEditor = ({ theme }) => {
   const [postTitle, setPostTitle] = useState('');
   const [postDescription, setPostDescription] = useState('');
-  const [postSection, setPostSection] = useState(''); // NEW: Post Section
+  const [postSection, setPostSection] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [editorContent, setEditorContent] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
@@ -86,7 +86,7 @@ const PostEditor = ({ theme }) => {
     const postData = {
       title: postTitle,
       description: postDescription,
-      section: postSection,  // NEW: Section field
+      section: postSection,
       content: editorContent,
       tag: selectedTag || 'None',
       images: selectedImages,
@@ -153,7 +153,7 @@ const PostEditor = ({ theme }) => {
             />
           </div>
 
-          {/* POST SECTION DROPDOWN - NEW FIELD */}
+          {/* Post Section Dropdown */}
           <div className="form-section">
             <label htmlFor="post-section" className="form-label">
               Post Section <span className="required">*</span>
@@ -273,14 +273,12 @@ const PostEditor = ({ theme }) => {
                   className="toolbar-color"
                   title="Text Color"
                 />
-
-                {/* This functionality was hidden for future reference */}
-                {/* <input
+                <input
                   type="color"
                   onChange={(e) => executeCommand('backColor', e.target.value)}
                   className="toolbar-color"
                   title="Background Color"
-                /> */}
+                />
               </div>
 
               {/* Lists */}
@@ -372,7 +370,7 @@ const PostEditor = ({ theme }) => {
               </div>
 
               {/* Clear Formatting */}
-              <div className="toolbar-group">
+              <div className="toolbar-group toolbar-group-last">
                 <button
                   type="button"
                   onClick={() => executeCommand('removeFormat')}
