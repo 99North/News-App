@@ -51,6 +51,7 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import Footer from "./components/Footer.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import LoginPage from "./pages/LogInPage.jsx";
+import PostEditor from "./pages/PostEditor.jsx";
 
 // Component to handle Footer visibility
 function AppContent({ theme, toggleTheme, categoryData }) {
@@ -167,6 +168,7 @@ function AppContent({ theme, toggleTheme, categoryData }) {
           />
           <Route path="/signup" element={<SignUpPage theme={theme} />} />
           <Route path="/login" element={<LoginPage theme={theme} />} />
+          <Route path="/post-editor" element={<PostEditor theme={theme} />} />
 
           {/* Home Articles */}
           <Route path="/article/1" element={<Article1 theme={theme} />} />
