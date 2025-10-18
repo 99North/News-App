@@ -1,21 +1,34 @@
 import React, { useState, useRef } from 'react';
 import './PostEditor.css';
 import { 
-    // FaHeading was deleted as it is not used & showing eslint warning
   FaBold, FaItalic, FaUnderline, FaStrikethrough, 
   FaListUl, FaListOl, FaAlignLeft, FaAlignCenter, 
   FaAlignRight, FaLink, FaImage, FaTimes, FaEye, 
-  FaPaperPlane, FaQuoteLeft, FaCode, 
+  FaPaperPlane, FaQuoteLeft, FaCode
 } from 'react-icons/fa';
 
 const PostEditor = ({ theme }) => {
   const [postTitle, setPostTitle] = useState('');
   const [postDescription, setPostDescription] = useState('');
+  const [postSection, setPostSection] = useState(''); // NEW: Post Section
   const [selectedTag, setSelectedTag] = useState('');
   const [editorContent, setEditorContent] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
   const editorRef = useRef(null);
+
+  // Available sections from navbar
+  const sections = [
+    'Odisha',
+    'National', 
+    'International',
+    'Entertainment',
+    'Jobs',
+    'Education',
+    'Astrospeak',
+    'Health',
+    'Environment'
+  ];
 
   // Rich Text Editor Commands
   const executeCommand = (command, value = null) => {
@@ -55,8 +68,8 @@ const PostEditor = ({ theme }) => {
   };
 
   const handlePreview = () => {
-    if (!postTitle || !postDescription || !editorContent) {
-      alert('Please fill in Post Title, Description, and Content before previewing!');
+    if (!postTitle || !postDescription || !postSection || !editorContent) {
+      alert('Please fill in Post Title, Description, Section, and Content before previewing!');
       return;
     }
     setShowPreview(true);
@@ -65,7 +78,7 @@ const PostEditor = ({ theme }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!postTitle || !postDescription || !editorContent) {
+    if (!postTitle || !postDescription || !postSection || !editorContent) {
       alert('Please fill in all required fields!');
       return;
     }
@@ -73,6 +86,7 @@ const PostEditor = ({ theme }) => {
     const postData = {
       title: postTitle,
       description: postDescription,
+      section: postSection,  // NEW: Section field
       content: editorContent,
       tag: selectedTag || 'None',
       images: selectedImages,
@@ -84,11 +98,13 @@ const PostEditor = ({ theme }) => {
     };
     
     console.log('Post Data:', postData);
-    alert('Post submitted successfully!');
+    console.log(`This post will be displayed in: ${postSection} section`);
+    alert(`Post submitted successfully to ${postSection} section!`);
     
     // Reset form
     setPostTitle('');
     setPostDescription('');
+    setPostSection('');
     setEditorContent('');
     setSelectedTag('');
     setSelectedImages([]);
@@ -135,6 +151,28 @@ const PostEditor = ({ theme }) => {
               rows="4"
               required
             />
+          </div>
+
+          {/* POST SECTION DROPDOWN - NEW FIELD */}
+          <div className="form-section">
+            <label htmlFor="post-section" className="form-label">
+              Post Section <span className="required">*</span>
+            </label>
+            <select
+              id="post-section"
+              value={postSection}
+              onChange={(e) => setPostSection(e.target.value)}
+              className="form-select"
+              required
+            >
+              <option value="">Select Section</option>
+              {sections.map((section) => (
+                <option key={section} value={section}>
+                  {section}
+                </option>
+              ))}
+            </select>
+            <p className="helper-text">Choose which section this post will appear in</p>
           </div>
 
           {/* Tags Dropdown */}
@@ -236,14 +274,13 @@ const PostEditor = ({ theme }) => {
                   title="Text Color"
                 />
 
-                {/* Background color feature is currently not required */}
+                {/* This functionality was hidden for future reference */}
                 {/* <input
                   type="color"
                   onChange={(e) => executeCommand('backColor', e.target.value)}
                   className="toolbar-color"
                   title="Background Color"
                 /> */}
-                
               </div>
 
               {/* Lists */}
@@ -424,9 +461,14 @@ const PostEditor = ({ theme }) => {
             <div className="modal-content">
               <div className="preview-header">
                 <h2 className="preview-title-heading">Post Preview</h2>
-                {selectedTag && (
-                  <span className="preview-tag-badge">{selectedTag}</span>
-                )}
+                <div className="preview-badges">
+                  {postSection && (
+                    <span className="preview-section-badge">{postSection}</span>
+                  )}
+                  {selectedTag && (
+                    <span className="preview-tag-badge">{selectedTag}</span>
+                  )}
+                </div>
               </div>
 
               <article className="preview-article">
