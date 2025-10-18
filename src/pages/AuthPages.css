@@ -1,6 +1,6 @@
 /* Auth Pages - Login & SignUp */
 .auth-page {
-  min-height: 100vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .logo-icon {
