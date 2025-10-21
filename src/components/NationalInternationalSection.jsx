@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NationalInternationalSection.css';
 import { FaArrowRight } from 'react-icons/fa';
+import { articleService } from '../services/articleServices';
 
-const NationalInternationalSection = ({ theme, nationalArticles, internationalArticles }) => {
+const NationalInternationalSection = ({ theme }) => {
   const navigate = useNavigate();
 
-  // Get first 3 articles from each category
-  const displayNational = nationalArticles.slice(0, 3);
-  const displayInternational = internationalArticles.slice(0, 3);
+  const [nationalArticles, setNationalArticles] = useState([]);
+  const [internationalArticles, setInternationalArticles] = useState([]);
 
-  const handleReadMore = (route) => {
-    navigate(route);
+  useEffect(() => {
+    articleService.getArticlesBySection('national', { limit: 3 })
+      .then((res) => {
+        if (res.success){
+          setNationalArticles(res.data);
+        }
+      })
+      .catch((err) => {
+        // Handle error case
+      });
+
+    articleService.getArticlesBySection('international', { limit: 3 })
+      .then((res) => {
+        if (res.success){
+          setInternationalArticles(res.data);
+        }
+      })
+      .catch((err) => {
+        // Handle error case
+      });
+  }, []);
+
+  const handleReadMore = (article) => {
+    navigate(`/${article.id}`, { state: { article } });
   };
 
   return (
@@ -28,32 +50,31 @@ const NationalInternationalSection = ({ theme, nationalArticles, internationalAr
 
           {/* National Articles */}
           <div className="articles-list">
-            {displayNational.map((article) => (
-              <div 
-                key={article.id} 
+            {nationalArticles.map((article) => (
+              <div
+                key={article.id}
                 className="article-item"
               >
                 {/* Premium Badge */}
-                {article.badge && (
-                  <span className="article-badge">{article.badge}</span>
-                )}
-                
+                {/* {article.tag && (
+                  <span className="article-badge">{article.tag}</span>
+                )} */}
+
                 {/* Article Title */}
                 <h3 className="article-title">{article.title}</h3>
 
                 {/* Article Meta */}
                 <div className="article-meta">
-                  <span className="article-category">{article.category}</span>
-                  <span className="article-date">{article.date}</span>
+                  <span className="article-date">{article.created_at}</span>
                 </div>
 
-                {/* Article Excerpt */}
-                <p className="article-excerpt">{article.excerpt}</p>
+                {/* Article Description */}
+                <p className="article-excerpt">{article.description}</p>
 
                 {/* Read More Button */}
-                <button 
+                <button
                   className="read-more-btn"
-                  onClick={() => handleReadMore(article.route)}
+                  onClick={() => handleReadMore(article)}
                 >
                   Read More <FaArrowRight className="arrow-icon" />
                 </button>
@@ -73,32 +94,31 @@ const NationalInternationalSection = ({ theme, nationalArticles, internationalAr
 
           {/* International Articles */}
           <div className="articles-list">
-            {displayInternational.map((article) => (
-              <div 
-                key={article.id} 
+            {internationalArticles.map((article) => (
+              <div
+                key={article.id}
                 className="article-item"
               >
                 {/* Premium Badge */}
-                {article.badge && (
-                  <span className="article-badge">{article.badge}</span>
-                )}
-                
+                {/* {article.tag && (
+                  <span className="article-badge">{article.tag}</span>
+                )} */}
+
                 {/* Article Title */}
                 <h3 className="article-title">{article.title}</h3>
 
                 {/* Article Meta */}
                 <div className="article-meta">
-                  <span className="article-category">{article.category}</span>
-                  <span className="article-date">{article.date}</span>
+                  <span className="article-date">{article.created_at}</span>
                 </div>
 
-                {/* Article Excerpt */}
-                <p className="article-excerpt">{article.excerpt}</p>
+                {/* Article Description */}
+                <p className="article-excerpt">{article.description}</p>
 
                 {/* Read More Button */}
-                <button 
+                <button
                   className="read-more-btn"
-                  onClick={() => handleReadMore(article.route)}
+                  onClick={() => handleReadMore(article)}
                 >
                   Read More <FaArrowRight className="arrow-icon" />
                 </button>

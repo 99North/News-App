@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './PostEditor.css';
 import {
   FaBold, FaItalic, FaUnderline, FaStrikethrough,
@@ -7,14 +7,18 @@ import {
   FaPaperPlane, FaQuoteLeft, FaCode
 } from 'react-icons/fa';
 
-import { createArticle } from '../services/articleServices';
+import { createArticle, updateArticle } from '../services/articleServices';
+import { useLocation } from 'react-router-dom';
 
 const PostEditor = ({ theme }) => {
-  const [postTitle, setPostTitle] = useState('');
-  const [postDescription, setPostDescription] = useState('');
-  const [postSection, setPostSection] = useState('');
-  const [selectedTag, setSelectedTag] = useState('');
-  const [editorContent, setEditorContent] = useState('');
+  const location = useLocation();
+  const { article = {} } = location.state || {};
+
+  const [postTitle, setPostTitle] = useState(article.title || '');
+  const [postDescription, setPostDescription] = useState(article.description || '');
+  const [postSection, setPostSection] = useState(article.section || '');
+  const [selectedTag, setSelectedTag] = useState(article.tag || '');
+  const [editorContent, setEditorContent] = useState(article.content || '');
   const [selectedImages, setSelectedImages] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,6 +37,19 @@ const PostEditor = ({ theme }) => {
     'Health',
     'Environment'
   ];
+
+  // Prefill the editor with article content when component mounts or article changes
+  useEffect(() => {
+    if (editorRef.current) {
+      if (article.content) {
+        editorRef.current.innerHTML = article.content;
+        setEditorContent(article.content);
+      } else {
+        editorRef.current.innerHTML = '';
+        setEditorContent('');
+      }
+    }
+  }, [article.content]);
 
   // Rich Text Editor Commands
   const executeCommand = (command, value = null) => {
@@ -81,9 +98,11 @@ const PostEditor = ({ theme }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     if (!postTitle || !postDescription || !postSection || !editorContent) {
       alert('Please fill in all required fields!');
+      setIsSubmitting(false);
       return;
     }
 
@@ -101,28 +120,29 @@ const PostEditor = ({ theme }) => {
       }),
     };
 
-    // console.log('Post Data:', postData);
-    // console.log(`This post will be displayed in: ${postSection} section`);
-
     try {
-      const response = await createArticle(postData);
+      const response = article.id
+        ? await updateArticle(article.id, postData)
+        : await createArticle(postData);
 
       if (response.success) {
-        alert(`Post submitted successfully to ${postSection} section!`);
+        alert(`Post ${article.id ? 'updated' : 'submitted'} successfully to ${postSection} section!`);
 
-        // Reset form
-        setPostTitle('');
-        setPostDescription('');
-        setPostSection('');
-        setEditorContent('');
-        setSelectedTag('');
-        setSelectedImages([]);
+        // Only reset form if creating new article
+        if (!article.id) {
+          setPostTitle('');
+          setPostDescription('');
+          setPostSection('');
+          setEditorContent('');
+          setSelectedTag('');
+          setSelectedImages([]);
 
-        if (editorRef.current) {
-          editorRef.current.innerHTML = '';
+          if (editorRef.current) {
+            editorRef.current.innerHTML = '';
+          }
         }
       } else {
-        throw new Error(response.message || 'Failed to create article');
+        throw new Error(response.message || `Failed to ${article.id ? 'update' : 'create'} article`);
       }
     } catch (error) {
       console.error('Error submitting post:', error);
@@ -130,27 +150,15 @@ const PostEditor = ({ theme }) => {
     } finally {
       setIsSubmitting(false);
     }
-
-    alert(`Post submitted successfully to ${postSection} section!`);
-
-    // Reset form
-    // setPostTitle('');
-    // setPostDescription('');
-    // setPostSection('');
-    // setEditorContent('');
-    // setSelectedTag('');
-    // setSelectedImages([]);
-
-    if (editorRef.current) {
-      editorRef.current.innerHTML = '';
-    }
   };
 
   return (
     <div className={`post-editor-page ${theme}`}>
       <div className="editor-container">
         <div className="editor-header">
-          <h1 className="editor-title">Create New Post</h1>
+          <h1 className="editor-title">
+            {article.id ? 'Edit Post' : 'Create New Post'}
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="editor-form">
@@ -427,7 +435,7 @@ const PostEditor = ({ theme }) => {
 
           {/* Image Upload Section */}
           <div className="form-section">
-            <label className="form-label">Upload Images</label>
+            {/* <label className="form-label">Upload Images</label>
             <div className="image-upload-area">
               <input
                 type="file"
@@ -441,7 +449,7 @@ const PostEditor = ({ theme }) => {
                 <FaImage className="upload-icon" />
                 <span>Click to upload images</span>
               </label>
-            </div>
+            </div> */}
 
             {/* Preview Uploaded Images */}
             {selectedImages.length > 0 && (
@@ -468,11 +476,12 @@ const PostEditor = ({ theme }) => {
               type="button"
               onClick={handlePreview}
               className="preview-btn"
+              disabled={isSubmitting}
             >
               <FaEye /> Preview Post
             </button>
-            <button type="submit" className="submit-btn">
-              <FaPaperPlane /> Submit Post
+            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              <FaPaperPlane /> {isSubmitting ? 'Submitting...' : (article.id ? 'Update Post' : 'Submit Post')}
             </button>
           </div>
         </form>
@@ -508,7 +517,7 @@ const PostEditor = ({ theme }) => {
                 <p className="preview-post-description">{postDescription}</p>
 
                 {selectedImages.length > 0 && (
-                  <div className="preview-featured-image">
+                  <div className="article-featured-image">
                     <img src={selectedImages[0]} alt="Featured" />
                   </div>
                 )}

@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EnvironmentSection.css';
 import { FaArrowRight } from 'react-icons/fa';
-import { articleService } from '../services/articleServices';
-import getFirstImageSrc from '../lib/get_image_src';
 
-const EnvironmentSection = ({ theme }) => {
+const _EnvironmentSection = ({ theme, environmentArticles }) => {
   const navigate = useNavigate();
-  const [articles, setArticles] = useState([]);
 
-  useEffect(() => {
-    articleService.getArticlesBySection('environment', { limit: 4 })
-      .then((res) => {
-        if (res.success){
-          setArticles(res.data);
-        }
-      })
-      .catch((err) => {
-        // Handle error case
-      });
-  }, []);
+  // Get first 4 articles from Environment
+  const displayArticles = environmentArticles.slice(0, 4);
 
-  const handleReadMore = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+  const handleReadMore = (route) => {
+    navigate(route);
   };
 
   return (
@@ -37,16 +25,16 @@ const EnvironmentSection = ({ theme }) => {
 
         {/* Articles Grid */}
         <div className="environment-grid">
-          {articles.map((article) => (
+          {displayArticles.map((article) => (
             <div
               key={article.id}
               className="environment-card"
             >
               {/* Article Image */}
               <div className="environment-card-image">
-                <img src={getFirstImageSrc(article.content)} alt={article.title} />
-                {article.tag && (
-                  <span className="environment-badge">{article.tag}</span>
+                <img src={article.image} alt={article.title} />
+                {article.badge && (
+                  <span className="environment-badge">{article.badge}</span>
                 )}
               </div>
 
@@ -54,17 +42,17 @@ const EnvironmentSection = ({ theme }) => {
               <div className="environment-card-content">
                 <h3 className="environment-card-title">{article.title}</h3>
 
-                <p className="environment-card-excerpt">{article.description}</p>
+                <p className="environment-card-excerpt">{article.excerpt}</p>
 
                 <div className="environment-card-footer">
                   <div className="environment-card-meta">
-                    <span className="environment-card-category">{article.section}</span>
-                    <span className="environment-card-date">{article.created_at}</span>
+                    <span className="environment-card-category">{article.category}</span>
+                    <span className="environment-card-date">{article.date}</span>
                   </div>
 
                   <button
                     className="environment-read-more"
-                    onClick={() => handleReadMore(article)}
+                    onClick={() => handleReadMore(article.route)}
                   >
                     Read More <FaArrowRight className="arrow-icon" />
                   </button>
@@ -78,4 +66,4 @@ const EnvironmentSection = ({ theme }) => {
   );
 };
 
-export default EnvironmentSection;
+export default _EnvironmentSection;

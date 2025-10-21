@@ -52,6 +52,8 @@ import Footer from "./components/Footer.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import LoginPage from "./pages/LogInPage.jsx";
 import PostEditor from "./pages/PostEditor.jsx";
+import Section from "./components/Section";
+import Article from "./components/Article.jsx";
 
 // Component to handle Footer visibility
 function AppContent({ theme, toggleTheme, categoryData }) {
@@ -94,70 +96,41 @@ function AppContent({ theme, toggleTheme, categoryData }) {
           />
 
           {/* Category Routes */}
+          {['odisha', 'national', 'international', 'health', 'environment'].map((route) => (
+            <Route
+              key={route}
+              path={`/${route}`}
+              element={
+                <Section section={route} theme={theme} />
+              }
+            />
+          ))}
+
           <Route
-            path="/odisha"
+            path="/:id"
             element={
-              <CategoryPage theme={theme} categoryData={categoryData.odisha} />
+              <Article theme={theme} />
             }
           />
+
           <Route
-            path="/national"
+            path="/:id/edit"
             element={
-              <CategoryPage
-                theme={theme}
-                categoryData={categoryData.national}
-              />
+              <PostEditor theme={theme} />
             }
           />
-          <Route
-            path="/international"
-            element={
-              <CategoryPage
-                theme={theme}
-                categoryData={categoryData.international}
-              />
-            }
-          />
-          <Route
-            path="/entertainment"
-            element={
-              <CategoryPage
-                theme={theme}
-                categoryData={categoryData.entertainment}
-              />
-            }
-          />
-          <Route
-            path="/jobs"
-            element={
-              <CategoryPage theme={theme} categoryData={categoryData.jobs} />
-            }
-          />
-          <Route
-            path="/education"
-            element={
-              <CategoryPage
-                theme={theme}
-                categoryData={categoryData.education}
-              />
-            }
-          />
-          <Route
-            path="/astrospeak"
-            element={
-              <CategoryPage
-                theme={theme}
-                categoryData={categoryData.astrospeak}
-              />
-            }
-          />
-          <Route
-            path="/health"
-            element={
-              <CategoryPage theme={theme} categoryData={categoryData.health} />
-            }
-          />
-          <Route
+
+          {['odisha', 'national', 'international', 'health', 'environment'].map((route) => (
+            <Route
+              key={route}
+              path={`/${route}/:id`}
+              element={
+                <Article section={route} theme={theme} />
+              }
+            />
+          ))}
+
+          {/* <Route
             path="/environment"
             element={
               <CategoryPage
@@ -165,7 +138,9 @@ function AppContent({ theme, toggleTheme, categoryData }) {
                 categoryData={categoryData.environment}
               />
             }
-          />
+          /> */}
+
+          {/* Auth Routes */}
           <Route path="/signup" element={<SignUpPage theme={theme} />} />
           <Route path="/login" element={<LoginPage theme={theme} />} />
           <Route path="/post-editor" element={<PostEditor theme={theme} />} />

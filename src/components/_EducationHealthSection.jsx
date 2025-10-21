@@ -1,45 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EducationHealthSection.css';
 import { FaArrowRight } from 'react-icons/fa';
-import { articleService } from '../services/articleServices';
 
-const EducationHealthSection = ({ theme }) => {
+const _EducationHealthSection = ({ theme, educationArticles = [], healthArticles = [] }) => {
   const navigate = useNavigate();
-  const [educationArticles, setEducationArticles] = useState([]);
-  const [healthArticles, setHealthArticles] = useState([]);
 
-  useEffect(() => {
-    articleService.getArticlesBySection('education', { limit: 3 })
-      .then((res) => {
-        if (res.success){
-          setEducationArticles(res.data);
-        }
-      })
-      .catch((err) => {
-        // Handle error case
-      });
+  // Get first 3 articles from each category
+  const displayEducation = educationArticles.slice(0, 3);
+  const displayHealth = healthArticles.slice(0, 3);
 
-    articleService.getArticlesBySection('health', { limit: 3 })
-      .then((res) => {
-        if (res.success){
-          setHealthArticles(res.data);
-        }
-      })
-      .catch((err) => {
-        // Handle error case
-      });
-  }, []);
-
-  const handleReadMore = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+  const handleReadMore = (route) => {
+    navigate(route);
   };
+
+  // Don't render if no articles
+  if (displayEducation.length === 0 && displayHealth.length === 0) {
+    return null;
+  }
 
   return (
     <section className={`edu-health-section ${theme}`}>
       <div className="edu-health-container">
         {/* Education Section (Left) */}
-        {educationArticles.length > 0 && (
+        {displayEducation.length > 0 && (
           <div className="section-column">
             {/* Section Header */}
             <div className="section-header">
@@ -50,14 +34,14 @@ const EducationHealthSection = ({ theme }) => {
 
             {/* Education Articles */}
             <div className="articles-list">
-              {educationArticles.map((article) => (
+              {displayEducation.map((article) => (
                 <div
                   key={article.id}
                   className="article-item"
                 >
                   {/* Premium Badge */}
-                  {article.tag && (
-                    <span className="article-badge">{article.tag}</span>
+                  {article.badge && (
+                    <span className="article-badge">{article.badge}</span>
                   )}
 
                   {/* Article Title */}
@@ -65,17 +49,17 @@ const EducationHealthSection = ({ theme }) => {
 
                   {/* Article Meta */}
                   <div className="article-meta">
-                    <span className="article-category">{article.section}</span>
-                    <span className="article-date">{article.created_at}</span>
+                    <span className="article-category">{article.category}</span>
+                    <span className="article-date">{article.date}</span>
                   </div>
 
                   {/* Article Excerpt */}
-                  <p className="article-excerpt">{article.description}</p>
+                  <p className="article-excerpt">{article.excerpt}</p>
 
                   {/* Read More Button */}
                   <button
                     className="read-more-btn"
-                    onClick={() => handleReadMore(article)}
+                    onClick={() => handleReadMore(article.route)}
                   >
                     Read More <FaArrowRight className="arrow-icon" />
                   </button>
@@ -86,7 +70,7 @@ const EducationHealthSection = ({ theme }) => {
         )}
 
         {/* Health Section (Right) */}
-        {healthArticles.length > 0 && (
+        {displayHealth.length > 0 && (
           <div className="section-column">
             {/* Section Header */}
             <div className="section-header">
@@ -97,14 +81,14 @@ const EducationHealthSection = ({ theme }) => {
 
             {/* Health Articles */}
             <div className="articles-list">
-              {healthArticles.map((article) => (
+              {displayHealth.map((article) => (
                 <div
                   key={article.id}
                   className="article-item"
                 >
                   {/* Premium Badge */}
-                  {article.tag && (
-                    <span className="article-badge">{article.tag}</span>
+                  {article.badge && (
+                    <span className="article-badge">{article.badge}</span>
                   )}
 
                   {/* Article Title */}
@@ -112,17 +96,17 @@ const EducationHealthSection = ({ theme }) => {
 
                   {/* Article Meta */}
                   <div className="article-meta">
-                    <span className="article-category">{article.section}</span>
-                    <span className="article-date">{article.created_at}</span>
+                    <span className="article-category">{article.category}</span>
+                    <span className="article-date">{article.date}</span>
                   </div>
 
                   {/* Article Excerpt */}
-                  <p className="article-excerpt">{article.description}</p>
+                  <p className="article-excerpt">{article.excerpt}</p>
 
                   {/* Read More Button */}
                   <button
                     className="read-more-btn"
-                    onClick={() => handleReadMore(article)}
+                    onClick={() => handleReadMore(article.route)}
                   >
                     Read More <FaArrowRight className="arrow-icon" />
                   </button>
@@ -136,4 +120,4 @@ const EducationHealthSection = ({ theme }) => {
   );
 };
 
-export default EducationHealthSection;
+export default _EducationHealthSection;

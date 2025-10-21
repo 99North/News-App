@@ -17,14 +17,11 @@ const Navbar = ({ theme, toggleTheme }) => {
   };
 
   const menuItems = [
-    { name: 'Home', path: '/' },
+    // { name: 'Home', path: '/' },
     { name: 'Odisha', path: '/odisha' },
     { name: 'National', path: '/national' },
     { name: 'International', path: '/international' },
-    { name: 'Entertainment', path: '/entertainment' },
-    { name: 'Jobs', path: '/jobs' },
-    { name: 'Education', path: '/education' },
-    { name: 'Astrospeak', path: '/astrospeak' },
+    // { name: 'Entertainment', path: '/entertainment' },
     { name: 'Health', path: '/health' },
     { name: 'Environment', path: '/environment' }
   ];
@@ -32,22 +29,22 @@ const Navbar = ({ theme, toggleTheme }) => {
   // Function to check if menu item is active
   const isActive = (path) => {
     const currentPath = location.pathname;
-    
+
     // For home page
     if (path === '/' && currentPath === '/') {
       return true;
     }
-    
+
     // For category pages and their articles
     if (path !== '/' && currentPath.startsWith(path)) {
       return true;
     }
-    
+
     // For home articles (article/1, article/2, etc.)
     if (path === '/' && currentPath.startsWith('/article/')) {
       return true;
     }
-    
+
     return false;
   };
 
@@ -64,8 +61,8 @@ const Navbar = ({ theme, toggleTheme }) => {
         <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
           {menuItems.map((item, index) => (
             <li key={index} className="nav-item">
-              <Link 
-                to={item.path} 
+              <Link
+                to={item.path}
                 className={`nav-link ${isActive(item.path) ? 'active-link' : ''}`}
                 onClick={closeMenu}
               >

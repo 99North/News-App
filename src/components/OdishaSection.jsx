@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './OdishaSection.css';
+import { articleService } from '../services/articleServices';
 
-const OdishaSection = ({ theme, odishaArticles }) => {
+const OdishaSection = ({ theme }) => {
   const navigate = useNavigate();
+  const [articles, setArticles] = useState([]);
 
-  // Get first 6 articles from Odisha
-  const displayArticles = odishaArticles.slice(0, 6);
+  useEffect(() => {
+    articleService.getArticlesBySection('odisha', { limit: 6 })
+      .then((res) => {
+        if (res.success){
+          setArticles(res.data);
+        }
+      })
+      .catch((err) => {
+        // Handle error case
+      });
+  }, []);
 
-  const handleArticleClick = (route) => {
-    navigate(route);
+  const handleArticleClick = (article) => {
+    navigate(`/odisha/${article.id}`, { state: { article } });
   };
 
   return (
@@ -24,17 +35,17 @@ const OdishaSection = ({ theme, odishaArticles }) => {
 
         {/* Articles Grid */}
         <div className="odisha-grid">
-          {displayArticles.map((article) => (
-            <div 
-              key={article.id} 
+          {articles.map((article) => (
+            <div
+              key={article.id}
               className="odisha-card"
-              onClick={() => handleArticleClick(article.route)}
+              onClick={() => handleArticleClick(article)}
             >
               {/* Article Image */}
               <div className="odisha-card-image">
                 <img src={article.image} alt={article.title} />
-                {article.badge && (
-                  <span className="odisha-badge">{article.badge}</span>
+                {article.tag && (
+                  <span className="odisha-badge">{article.tag}</span>
                 )}
               </div>
 

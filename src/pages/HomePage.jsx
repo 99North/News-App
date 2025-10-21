@@ -6,12 +6,15 @@ import SubscribeSection from '../components/SubscribeSection';
 import EnvironmentSection from '../components/EnvironmentSection';
 import EducationHealthSection from '../components/EducationHealthSection';
 import EntertainmentWithSidebar from '../components/EntertainmentWithSidebar';
+// Deprecated Components
+import DepEnvironmentSection from '../components/_EnvironmentSection';
+import DepEducationHealthSection from '../components/_EducationHealthSection';
 
-const HomePage = ({ 
-  theme, 
-  odishaArticles, 
-  nationalArticles, 
-  internationalArticles, 
+const HomePage = ({
+  theme,
+  odishaArticles,
+  nationalArticles,
+  internationalArticles,
   environmentArticles,
   educationArticles,
   healthArticles,
@@ -21,24 +24,19 @@ const HomePage = ({
   return (
     <div >
       <Header theme={theme} />
-      <OdishaSection theme={theme} odishaArticles={odishaArticles} />
-      <NationalInternationalSection 
-        theme={theme} 
-        nationalArticles={nationalArticles}
-        internationalArticles={internationalArticles}
-      />
-      <SubscribeSection theme={theme} />
-      <EnvironmentSection theme={theme} environmentArticles={environmentArticles} />
-      <EducationHealthSection 
+      <OdishaSection theme={theme} />
+      <NationalInternationalSection theme={theme} />
+      <DepEnvironmentSection theme={theme} environmentArticles={environmentArticles} />
+      <EnvironmentSection theme={theme} />
+      {/* <DepEducationHealthSection
         theme={theme}
         educationArticles={educationArticles}
         healthArticles={healthArticles}
-      />
-      <EntertainmentWithSidebar 
-        theme={theme}
-        entertainmentArticles={entertainmentArticles}
-        allArticles={allArticles}
-      />
+      /> */}
+      <EducationHealthSection theme={theme} />
+      {/* FIX ME: For later */}
+      {/* <EntertainmentWithSidebar theme={theme} /> */}
+      <SubscribeSection theme={theme} />
     </div>
   );
 };
