@@ -57,3 +57,19 @@ cd -
 ls
 git add .
 git status
+ls
+git reset
+git add News-App/ uni-server/
+git status
+git commit -m "Initial server setup with login credential and setting up postgresSQL"
+git git config --global user.name "99North"
+git config --global user.name "99North"
+git config --global user.email "systemmail150@gmail.com"
+git config --list
+git remote add origin https://github.com/99North/News-App.git
+git remote -v
+git branch -a
+git checkout -b dev-debi
+git branch
+git add .
+git commit -m "Initial server setup with login credential and setting up postgresSQL"
