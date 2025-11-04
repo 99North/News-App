@@ -1,0 +1,264 @@
+/* Entertainment Section - Independent Component */
+.entertainment-section-inner {
+  width: 100%;
+}
+
+/* Section Header (Odisha Style with Red Lines) */
+.entertainment-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.entertainment-line {
+  flex: 1;
+  height: 2px;
+  background-color: #dc143c;
+}
+
+.entertainment-title {
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.entertainment-section-inner.dark .entertainment-title {
+  color: #ffffff;
+}
+
+.entertainment-section-inner.light .entertainment-title {
+  color: #1a1a1a;
+}
+
+/* Cards Grid - 2 columns */
+.entertainment-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+/* Entertainment Card */
+.entertainment-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.entertainment-section-inner.dark .entertainment-card {
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+.entertainment-section-inner.light .entertainment-card {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.entertainment-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(220, 20, 60, 0.3);
+}
+
+.entertainment-section-inner.dark .entertainment-card:hover {
+  border-color: #dc143c;
+}
+
+.entertainment-section-inner.light .entertainment-card:hover {
+  border-color: #dc143c;
+}
+
+/* Premium Badge - Small and Compact */
+.entertainment-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #dc143c;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+/* Card Title */
+.entertainment-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  padding-right: 60px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 50px;
+}
+
+.entertainment-section-inner.dark .entertainment-card-title {
+  color: #ffffff;
+}
+
+.entertainment-section-inner.light .entertainment-card-title {
+  color: #1a1a1a;
+}
+
+.entertainment-card:hover .entertainment-card-title {
+  color: #dc143c;
+}
+
+/* Card Meta */
+.entertainment-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.entertainment-card-category {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.entertainment-section-inner.dark .entertainment-card-category {
+  color: #ffffff;
+}
+
+.entertainment-section-inner.light .entertainment-card-category {
+  color: #1a1a1a;
+}
+
+.entertainment-card-date {
+  font-size: 11px;
+}
+
+.entertainment-section-inner.dark .entertainment-card-date {
+  color: #999999;
+}
+
+.entertainment-section-inner.light .entertainment-card-date {
+  color: #666666;
+}
+
+/* Card Excerpt */
+.entertainment-card-excerpt {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.entertainment-section-inner.dark .entertainment-card-excerpt {
+  color: #cccccc;
+}
+
+.entertainment-section-inner.light .entertainment-card-excerpt {
+  color: #666666;
+}
+
+/* Read More Button */
+.entertainment-read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 2px solid #dc143c;
+  color: #dc143c;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  margin-top: auto;
+}
+
+.entertainment-read-more:hover {
+  background-color: #dc143c;
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.arrow-icon {
+  font-size: 11px;
+  transition: transform 0.3s ease;
+}
+
+.entertainment-read-more:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 900px) {
+  .entertainment-cards-grid {
+    gap: 20px;
+  }
+
+  .entertainment-card {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .entertainment-title {
+    font-size: 26px;
+  }
+
+  .entertainment-header {
+    margin-bottom: 30px;
+  }
+
+  .entertainment-cards-grid {
+    gap: 18px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* Single column on mobile */
+  .entertainment-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .entertainment-header {
+    gap: 15px;
+  }
+
+  .entertainment-title {
+    font-size: 22px;
+  }
+
+  .entertainment-card {
+    padding: 18px;
+  }
+
+  .entertainment-card-title {
+    font-size: 17px;
+    padding-right: 55px;
+    min-height: auto;
+  }
+
+  .entertainment-card-excerpt {
+    font-size: 13px;
+  }
+
+  .entertainment-read-more {
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+}

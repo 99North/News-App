@@ -1,0 +1,316 @@
+/* Archive & Search Section - Independent Component */
+.archive-search-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Widget Box Styling */
+.widget-box {
+  padding: 25px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.archive-search-inner.dark .widget-box {
+  background-color: #1a1a1a;
+}
+
+.archive-search-inner.light .widget-box {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Widget Title */
+.widget-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dc143c;
+}
+
+.archive-search-inner.dark .widget-title {
+  color: #ffffff;
+}
+
+.archive-search-inner.light .widget-title {
+  color: #1a1a1a;
+}
+
+/* ============ CALENDAR WIDGET ============ */
+
+.calendar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Calendar Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-month {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.archive-search-inner.dark .calendar-month {
+  color: #ffffff;
+}
+
+.archive-search-inner.light .calendar-month {
+  color: #1a1a1a;
+}
+
+.calendar-nav {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.archive-search-inner.dark .calendar-nav {
+  color: #ffffff;
+}
+
+.archive-search-inner.light .calendar-nav {
+  color: #1a1a1a;
+}
+
+.calendar-nav:hover {
+  background-color: #dc143c;
+  color: #ffffff;
+}
+
+/* Calendar Days Header */
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px;
+}
+
+.archive-search-inner.dark .calendar-day-name {
+  color: #999999;
+}
+
+.archive-search-inner.light .calendar-day-name {
+  color: #666666;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.archive-search-inner.dark .calendar-day {
+  color: #cccccc;
+}
+
+.archive-search-inner.light .calendar-day {
+  color: #333333;
+}
+
+.calendar-day:hover:not(.empty) {
+  background-color: #dc143c;
+  color: #ffffff;
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day.today {
+  background-color: #dc143c;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* ============ SEARCH WIDGET ============ */
+
+.search-form {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 15px;
+  border: 2px solid;
+  border-radius: 30px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.archive-search-inner.dark .search-input {
+  background-color: #2a2a2a;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+.archive-search-inner.light .search-input {
+  background-color: #f5f5f5;
+  border-color: #e0e0e0;
+  color: #1a1a1a;
+}
+
+.search-input::placeholder {
+  color: #999999;
+}
+
+.search-input:focus {
+  border-color: #dc143c;
+}
+
+.search-button {
+  width: 50px;
+  height: 50px;
+  background-color: #dc143c;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #c81333;
+  transform: scale(1.1);
+}
+
+/* ============ ARCHIVES WIDGET ============ */
+
+.archives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.archive-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.archive-search-inner.dark .archive-item {
+  background-color: #2a2a2a;
+}
+
+.archive-search-inner.light .archive-item {
+  background-color: #f8f8f8;
+}
+
+.archive-item:hover {
+  background-color: #dc143c;
+  transform: translateX(5px);
+}
+
+.archive-month {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.archive-search-inner.dark .archive-month {
+  color: #ffffff;
+}
+
+.archive-search-inner.light .archive-month {
+  color: #1a1a1a;
+}
+
+.archive-item:hover .archive-month,
+.archive-item:hover .archive-count {
+  color: #ffffff;
+}
+
+.archive-count {
+  font-size: 13px;
+}
+
+.archive-search-inner.dark .archive-count {
+  color: #999999;
+}
+
+.archive-search-inner.light .archive-count {
+  color: #666666;
+}
+
+.no-archives {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.archive-search-inner.dark .no-archives {
+  color: #666666;
+}
+
+.archive-search-inner.light .no-archives {
+  color: #999999;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .widget-box {
+    padding: 20px;
+  }
+
+  .widget-title {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .search-form {
+    gap: 8px;
+  }
+
+  .search-input {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .search-button {
+    width: 45px;
+    height: 45px;
+    font-size: 16px;
+  }
+}
