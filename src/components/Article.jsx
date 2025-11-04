@@ -4,11 +4,14 @@ import { FaArrowLeft, FaClock, FaEdit } from 'react-icons/fa';
 import { HiOutlineShare } from 'react-icons/hi'; // New elegant share icon
 
 import ShareModal from './ShareModal';
+import { useAuth } from '../context/AuthContext';
 import './Article.css';
 
 const Article = ({ theme }) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { isAuthenticated } = useAuth();
 
   const { article } = location.state;
 
@@ -41,9 +44,11 @@ const Article = ({ theme }) => {
             <FaArrowLeft /> Back
           </button>
 
-          <button className="edit-button" onClick={handleEdit}>
-            <FaEdit /> Edit
-          </button>
+          {isAuthenticated && (
+            <button className="edit-button" onClick={handleEdit}>
+              <FaEdit /> Edit
+            </button>
+          )}
         </div>
 
         {/* Article Header */}

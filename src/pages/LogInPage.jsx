@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../pages/AuthPages.css';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import './AuthPages.css';
 
 const LoginPage = ({ theme }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,19 +10,62 @@ const LoginPage = ({ theme }) => {
     emailOrUsername: '',
     password: '',
   });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: '',
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.emailOrUsername.trim()) {
+      newErrors.emailOrUsername = 'Email or username is required';
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login data:', formData);
-    // Add your login logic here
-    // Example: navigate('/') after successful login
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      await login(formData.emailOrUsername, formData.password);
+      navigate(from, { replace: true });
+    } catch (error) {
+      setErrors({
+        submit: error.message || 'Login failed. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -44,6 +88,20 @@ const LoginPage = ({ theme }) => {
             <p className="auth-subtitle">Login to access your account</p>
           </div>
 
+          {/* Error Display */}
+          {errors.submit && (
+            <div className="error-message" style={{
+              background: '#fee',
+              border: '1px solid #fcc',
+              color: '#c33',
+              padding: '10px',
+              borderRadius: '4px',
+              marginBottom: '1rem'
+            }}>
+              {errors.submit}
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleSubmit} className="auth-form">
             {/* Email/Username Field */}
@@ -60,10 +118,16 @@ const LoginPage = ({ theme }) => {
                   value={formData.emailOrUsername}
                   onChange={handleChange}
                   placeholder="Enter email or username"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.emailOrUsername ? 'error' : ''}`}
+                  disabled={isLoading}
+                  style={{ paddingLeft: '40px' }}
                 />
               </div>
+              {errors.emailOrUsername && (
+                <span className="error-text" style={{ color: '#c33', fontSize: '0.85rem' }}>
+                  {errors.emailOrUsername}
+                </span>
+              )}
             </div>
 
             {/* Password Field */}
@@ -80,30 +144,38 @@ const LoginPage = ({ theme }) => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
-                  className="form-input"
-                  required
+                  className={`form-input ${errors.password ? 'error' : ''}`}
+                  disabled={isLoading}
+                  style={{ paddingLeft: '40px' }}
                 />
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
                   className="password-toggle"
                   aria-label="Toggle password visibility"
+                  disabled={isLoading}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-            </div>
-
-            {/* Forgot Password */}
-            <div className="form-footer">
-              <Link to="/forgot-password" className="forgot-link">
-                Forgot Password?
-              </Link>
+              {errors.password && (
+                <span className="error-text" style={{ color: '#c33', fontSize: '0.85rem' }}>
+                  {errors.password}
+                </span>
+              )}
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className="submit-button">
-              Login
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isLoading}
+              style={{
+                opacity: isLoading ? 0.6 : 1,
+                cursor: isLoading ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
