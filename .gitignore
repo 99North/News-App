@@ -1,0 +1,6 @@
+News-App/node_modules
+News-App/.env
+
+uni-server/node_modules
+uni-server/.env
+uni-server/.env-dev
