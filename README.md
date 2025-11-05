@@ -151,7 +151,7 @@ sudo docker run -d \
  --network akruti-network \
  -e POSTGRES_USER=postgres \
  -e POSTGRES_PASSWORD=postgres \
- -e POSTGRES_DB=akruti-dev \
+ -e POSTGRES_DB=akrutidev \
  -v pgdata:/var/lib/postgresql/data \
  -v ./db-init:/docker-entrypoint-initdb.d \
  -p 5432:5432 \
