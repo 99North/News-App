@@ -1,69 +1,11 @@
 
-
-
-
-
-docker build \
---build-arg REACT_APP_API_URL=http://65.0.5.20:3001 \
--t frontend-app ./News-App
-
-
-
-curl -X POST http://localhost:3001/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "test",
-    "email": "test@gmail.com",
-    "password": "testpass",
-    "firstName": "Test",
-    "lastName": "User"
-  }'
-
-
-
-
-docker exec -it postgres-db psql -U debi -d akrutidev
-
-psql -U debi -d akrutidev
-
-\ls
-
-\c akrutidev    : to connetc to sepeific databse
-
-SELECT to_regclass('public.users');
-
-
-
-
-
-
-
-
-
-====================================
-
-
-RUN IN DOCKER
-====================================================================
-
-
-
-create a file name 01-seed-user.sql  inside  News-App/db-init folder and past this
-
--- db-init/01-seed-user.sql
--- Create default user on first DB creation
-
-INSERT INTO users (username, email, password, firstname, lastname)
-VALUES ('debi', 'debi@gmail.com', '123456', 'Debi', 'Prasad')
-ON CONFLICT (email) DO NOTHING;
-
-
-
-
-
 ======================
-read me file
+RUN in DOCKER
 =====================
+
+
+
+
 First Update the ip here with your ec2 instance ip
 root@ip-172-31-7-172:/home/ubuntu/News-App# cat backend/.env 
 # Database Configuration for development environment, make sure to update these values as per your local setup -RKS
