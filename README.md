@@ -118,17 +118,7 @@ docker run -d  -p 3001:3001  --env-file ./uni-server/.env  --name backend backen
 
 then run this to create an backend container
 
-docker run -d \
- --name backend \
- --network akruti-network \
- -e DB_HOST=postgres-db \
- -e DB_PORT=5432 \
- -e DB_USER=postgres \
- -e DB_PASSWORD=postgres \
- -e DB_NAME=akruti-dev \
- -e SERVER_PORT=3001 \
- -p 3001:3001 \
- backend-app
+
 
 
 
