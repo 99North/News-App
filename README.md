@@ -139,8 +139,8 @@ sudo docker network create akruti-network
 sudo docker run -d \
  --name postgres-db \
  --network akruti-network \
- -e POSTGRES_USER=postgres \
- -e POSTGRES_PASSWORD=postgres \
+ -e POSTGRES_USER=debi \
+ -e POSTGRES_PASSWORD=9090 \
  -e POSTGRES_DB=akrutidev \
  -v pgdata:/var/lib/postgresql/data \
  -v ./db-init:/docker-entrypoint-initdb.d \
