@@ -75,6 +75,8 @@ docker build \
  -t frontend-app ./News-App
 
 
+
+
 run this to cretae an frintend container from the image
 docker run -d \
  --name frontend \
@@ -111,6 +113,8 @@ CMD ["node", "app.js"]
 
 
 docker run -d  -p 3001:3001  --env-file ./uni-server/.env  --name backend backend-app  : run to create image 
+
+
 
 then run this to create an backend container
 
