@@ -1,81 +1,155 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# News-App
-A news website for displaying news
-=======
-=======
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+=====================================================
+HOW TO RUN THIS APP IN DOCKER
+=====================================================
 
-## Available Scripts
 
-In the project directory, you can run:
+=>First Update the ip here with your ec2 instance ip backend/.env 
+# Database Configuration for development environment, make sure to update these values as per your local setup -RKS
+DB_USER=debi
+DB_PASSWORD=9090
+DB_HOST=postgres-db
+DB_PORT=5432
+DB_NAME=akrutidev
+# Note: JWT Configuration generate it using any online tool or library -RKS
+JWT_SECRET=419461bae0350d7058bbb6629f88813c9dfd5498da471466c64caa4e14269c2b27e681f8897c6bf2664fa9bd22408cc0c0937728d13201aff27080dcf8f37d56
+JWT_EXPIRES_IN=24h
+# Server Port
+PORT=3001
+#update the ip with your ec2 instance ip
+FRONTEND_URL=http://13.235.81.177
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+=>Also update the ip here in /frontend/.env  file
+REACT_APP_API_URL=http://13.235.81.177:3001     //backend url 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+=>Now create docker volume & docker network for persistent storage & connection setup
+docker volume create pgdb
+docker network create akruti-network
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+===============================================================
+=>Create Dockerfile inside  News-App/frontend and paste it
 
-### `npm run build`
+# ---- Stage 1: Build React app ----
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+FROM node:20-slim AS builder
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+WORKDIR /app
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Copy package files first
 
-### `npm run eject`
+COPY package*.json ./
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Install all deps including devDependencies (important for ESLint/react-scripts)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+ENV NODE_ENV=development
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+RUN npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# Copy the full source
 
-## Learn More
+COPY . .
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Add build argument + environment variable
+ARG REACT_APP_API_URL=http://13.235.247.22:3001
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Run build command
 
-### Code Splitting
+RUN npm run build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# ---- Stage 2: Serve using Nginx ----
 
-### Analyzing the Bundle Size
+FROM nginx:alpine
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+COPY --from=builder /app/build /usr/share/nginx/html
 
-### Making a Progressive Web App
+EXPOSE 80
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+CMD ["nginx", "-g", "daemon off;"]
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+=>Now Run this to create frontend image   and update your instance ip in the ip bellow  before running the script
+docker build-t frontend-app ./frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+=>Now run this to create an frontend container from the image
+docker run -d \
+ --name frontend \
+ --network akruti-network \
+ -p 80:80 \
+ frontend-app
 
-### `npm run build` fails to minify
+===============================================
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-<<<<<<< HEAD
->>>>>>> 84496a7 (Navbar & Header Section is added)
-=======
->>>>>>> 84496a77925cb4d239ac4055b4c7a85d79740003
+=>Now crate a Dockerfile inside News-App/backend and paste it
+
+# server/Dockerfile
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 3001
+
+CMD ["node", "app.js"]
+
+
+=>Now run this to build backend image
+docker build -t backend-app ./backend
+
+=>Now run this to create a docker container from the build image
+docker run -d  -p 3001:3001 --network akruti-network --env-file ./backend/.env  --name backend backend-app
+
+==================================================
+
+=>Now go inside News-App/backend  folder and run this command
+
+docker run -d \
+  --name postgres-db \
+  --network akruti-network \
+  --env-file ./pg-cred \
+  -v pgdata:/var/lib/postgresql/data \
+  -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql" \
+  -p 5432:5432 \
+  postgres:16
+
+
+
+
+
+=================================================
+
+=>Now run these command to verify 
+docker exec -it postgres-db psql -U debi -d akrutidev -c "\dt"   : the tables were created:
+docker exec -it postgres-db psql -U debi -d akrutidev -c "SELECT * FROM users;"   :to check all users & their roles
+====================================
+=>If you want to add new user credential then update the bellow format and directly run in your /backend ec2 instance
+
+curl -X POST http://localhost:3001/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "test",
+    "email": "test@gmail.com",
+    "password": "testpass",
+    "firstName": "Test",
+    "lastName": "User"
+  }'
+
+=============================================================================
+=>If anything wrong you can run these command as per need
+
+docker volume rm pgdata
+
+docker kill <psotegress_container_id>
+docker rm <postgress_container_id>
+docker system prune -af
+
+
+Then again run the postgress conatiner creation command

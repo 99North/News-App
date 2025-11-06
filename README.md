@@ -1,13 +1,10 @@
 
-======================
-RUN in DOCKER
-=====================
+=====================================================
+HOW TO RUN THIS APP IN DOCKER
+=====================================================
 
 
-
-
-First Update the ip here with your ec2 instance ip
-root@ip-172-31-7-172:/home/ubuntu/News-App# cat backend/.env 
+=>First Update the ip here with your ec2 instance ip backend/.env 
 # Database Configuration for development environment, make sure to update these values as per your local setup -RKS
 DB_USER=debi
 DB_PASSWORD=9090
@@ -19,30 +16,24 @@ JWT_SECRET=419461bae0350d7058bbb6629f88813c9dfd5498da471466c64caa4e14269c2b27e68
 JWT_EXPIRES_IN=24h
 # Server Port
 PORT=3001
-
 #update the ip with your ec2 instance ip
 FRONTEND_URL=http://13.235.81.177
 
- 
-Also update the ip here 
-root@ip-172-31-7-172:/home/ubuntu/News-App# cat frontend/.env 
+
+=>Also update the ip here in /frontend/.env  file
 REACT_APP_API_URL=http://13.235.81.177:3001     //backend url 
 
+=>Now create docker volume & docker network for persistent storage & connection setup
+docker volume create pgdb
+docker network create akruti-network
 
 
-
-
-
-
-Create Dockerfile inside  News-App/frontend and paste it
+===============================================================
+=>Create Dockerfile inside  News-App/frontend and paste it
 
 # ---- Stage 1: Build React app ----
 
 FROM node:20-slim AS builder
-
-# Install build tools to fix some missing peer deps in slim image
-
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -60,6 +51,10 @@ RUN npm install
 
 COPY . .
 
+# Add build argument + environment variable
+ARG REACT_APP_API_URL=http://13.235.247.22:3001
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 # Run build command
 
 RUN npm run build
@@ -76,34 +71,21 @@ CMD ["nginx", "-g", "daemon off;"]
 
 
 
+=>Now Run this to create frontend image   and update your instance ip in the ip bellow  before running the script
+docker build-t frontend-app ./frontend
 
-
-
-Now Run this to create frontend image   and update your instance ip in the ip bellow  before running the script
-docker build \
-  --build-arg REACT_APP_API_URL=http://13.235.81.177:3001 \
-  -t frontend-app ./frontend
-
-
-
-
-run this to cretae an frontend container from the image
+=>Now run this to create an frontend container from the image
 docker run -d \
  --name frontend \
  --network akruti-network \
  -p 80:80 \
  frontend-app
 
+===============================================
 
-
-
-
-============================
-
-crate a Dockerfile inside News-App/uni-server and paste it
+=>Now crate a Dockerfile inside News-App/backend and paste it
 
 # server/Dockerfile
-
 FROM node:20-slim
 
 WORKDIR /app
@@ -119,43 +101,36 @@ EXPOSE 3001
 CMD ["node", "app.js"]
 
 
+=>Now run this to build backend image
+docker build -t backend-app ./backend
 
+=>Now run this to create a docker container from the build image
+docker run -d  -p 3001:3001 --network akruti-network --env-file ./backend/.env  --name backend backend-app
 
+==================================================
 
-docker run -d  -p 3001:3001  --env-file ./backend/.env  --name backend backend-app  : run to create image 
+=>Now go inside News-App/backend  folder and run this command
 
-
-
-======================================
-
-Run these commands one by one 
-
-docker volume create pgdata    :to create a persistent volume
-
-docker network create akruti-network:   to create a network
-
-
-Now go inside News-App/backend      folder and run this command
 docker run -d \
   --name postgres-db \
   --network akruti-network \
-  -e POSTGRES_USER=debi \
-  -e POSTGRES_PASSWORD=9090 \
-  -e POSTGRES_DB=akrutidev \
+  --env-file ./pg-cred \
   -v pgdata:/var/lib/postgresql/data \
-  -v $(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql \
+  -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql" \
   -p 5432:5432 \
   postgres:16
 
 
 
 
-===============================
 
-sudo docker exec -it postgres-db psql -U postgres -d akruti-dev   then run  SELECT * FROM users  :to verify the login credential is added  or not inside the database
+=================================================
 
+=>Now run these command to verify 
+docker exec -it postgres-db psql -U debi -d akrutidev -c "\dt"   : the tables were created:
+docker exec -it postgres-db psql -U debi -d akrutidev -c "SELECT * FROM users;"   :to check all users & their roles
 ====================================
-to add a new user credential
+=>If you want to add new user credential then update the bellow format and directly run in your /backend ec2 instance
 
 curl -X POST http://localhost:3001/auth/register \
   -H "Content-Type: application/json" \
@@ -168,35 +143,13 @@ curl -X POST http://localhost:3001/auth/register \
   }'
 
 =============================================================================
-if anything wrong you can run these command as per need
+=>If anything wrong you can run these command as per need
 
 docker volume rm pgdata
 
 docker kill <psotegress_container_id>
 docker rm <postgress_container_id>
-
-again run the postgress conatiner creation command
-
+docker system prune -af
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Then again run the postgress conatiner creation command

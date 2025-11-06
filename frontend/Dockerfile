@@ -1,9 +1,6 @@
 # ---- Stage 1: Build React app ----
 FROM node:20-slim AS builder
 
-# Install build tools to fix some missing peer deps in slim image
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 # Copy package files first
@@ -17,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Add build argument + environment variable
-ARG REACT_APP_API_URL
+ARG REACT_APP_API_URL=http://13.235.247.22:3001
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 
@@ -25,10 +22,18 @@ ENV REACT_APP_API_URL=$REACT_APP_API_URL
 # Run build command
 RUN npm run build
 
+
 # ---- Stage 2: Serve using Nginx ----
 FROM nginx:alpine
+
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built app
 COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-

@@ -62,5 +62,4 @@ CREATE INDEX IF NOT EXISTS idx_articles_author_id ON articles(author_id);
 -- ==========================
 INSERT INTO users (username, email, password, first_name, last_name, role, is_active)
 VALUES ('debi', 'debi@gmail.com', '123456', 'Debi', 'Prasad', 'admin', true)
-ON CONFLICT (email) DO NOTHING;
 
