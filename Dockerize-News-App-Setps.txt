@@ -1,0 +1,158 @@
+
+=====================================================
+HOW TO RUN THIS APP IN DOCKER
+=====================================================
+
+
+=>First Update the ip here with your ec2 instance ip backend/.env 
+# Database Configuration for development environment, make sure to update these values as per your local setup -RKS
+DB_USER=debi
+DB_PASSWORD=9090
+DB_HOST=postgres-db
+DB_PORT=5432
+DB_NAME=akrutidev
+# Note: JWT Configuration generate it using any online tool or library -RKS
+JWT_SECRET=419461bae0350d7058bbb6629f88813c9dfd5498da471466c64caa4e14269c2b27e681f8897c6bf2664fa9bd22408cc0c0937728d13201aff27080dcf8f37d56
+JWT_EXPIRES_IN=24h
+# Server Port
+PORT=3001
+#update the ip with your ec2 instance ip
+FRONTEND_URL=http://13.235.81.177
+
+
+=>Also update the ip here in /frontend/.env  file
+REACT_APP_API_URL=http://13.235.81.177:3001     //backend url 
+
+=>Now create docker volume & docker network for persistent storage & connection setup
+docker volume create pgdb
+docker network create akruti-network
+
+
+===============================================================
+=>Create Dockerfile inside  News-App/frontend and paste it
+
+# ---- Stage 1: Build React app ----
+
+FROM node:20-slim AS builder
+
+WORKDIR /app
+
+# Copy package files first
+
+COPY package*.json ./
+
+# Install all deps including devDependencies (important for ESLint/react-scripts)
+
+ENV NODE_ENV=development
+
+RUN npm install
+
+# Copy the full source
+
+COPY . .
+
+# Add build argument + environment variable
+ARG REACT_APP_API_URL=http://13.235.247.22:3001
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
+# Run build command
+
+RUN npm run build
+
+# ---- Stage 2: Serve using Nginx ----
+
+FROM nginx:alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+=>Now Run this to create frontend image   and update your instance ip in the ip bellow  before running the script
+docker build-t frontend-app ./frontend
+
+=>Now run this to create an frontend container from the image
+docker run -d \
+ --name frontend \
+ --network akruti-network \
+ -p 80:80 \
+ frontend-app
+
+===============================================
+
+=>Now crate a Dockerfile inside News-App/backend and paste it
+
+# server/Dockerfile
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --only=production
+
+COPY . .
+
+EXPOSE 3001
+
+CMD ["node", "app.js"]
+
+
+=>Now run this to build backend image
+docker build -t backend-app ./backend
+
+=>Now run this to create a docker container from the build image
+docker run -d  -p 3001:3001 --network akruti-network --env-file ./backend/.env  --name backend backend-app
+
+==================================================
+
+=>Now go inside News-App/backend  folder and run this command
+
+docker run -d \
+  --name postgres-db \
+  --network akruti-network \
+  --env-file ./pg-cred \
+  -v pgdata:/var/lib/postgresql/data \
+  -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql" \
+  -p 5432:5432 \
+  postgres:16
+
+
+
+
+
+=================================================
+
+=>Now run these command to verify 
+docker exec -it postgres-db psql -U debi -d akrutidev -c "\dt"   : the tables were created:
+docker exec -it postgres-db psql -U debi -d akrutidev -c "SELECT * FROM users;"   :to check all users & their roles
+====================================
+=>If you want to add new user credential then update the bellow format and directly run in your /backend ec2 instance
+
+curl -X POST http://localhost:3001/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "test",
+    "email": "test@gmail.com",
+    "password": "testpass",
+    "firstName": "Test",
+    "lastName": "User"
+  }'
+
+=============================================================================
+=>If anything wrong you can run these command as per need
+
+docker volume rm pgdata
+
+docker kill <psotegress_container_id>
+docker rm <postgress_container_id>
+docker system prune -af
+
+
+Then again run the postgress conatiner creation commands
+
+
+
