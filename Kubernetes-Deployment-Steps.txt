@@ -56,6 +56,15 @@ docker build -t news-frontend:latest
 docker tag news-frontend:latest <your_aws_account_id>.dkr.ecr.ap-south-1.amazonaws.com/news-app/frontend:latest    : to tag docker image 
 docker push <your_aws_account_id>.dkr.ecr.ap-south-1.amazonaws.com/news-app/frontend:latest     :to push the image to aws ecr
 
+
+
+ALTERNATIVE WAY
+NOTE: If you are using docker login then run these commands
+docker login -u <docker_username>
+docker build docker build -t news-frontend:latest .
+docker tag news-frontend:latest systemail150/news-frontend:latest
+docker push systemail150/news-frontend:latest
+
 ===================================================================================================================================================================
 =>Now create a Dockerfile inside   News-App/backend and paste this code
 # server/Dockerfile
@@ -75,6 +84,15 @@ CMD ["node", "app.js"]
 docker build -t news-backend:latest .   
 docker tag news-backend:latest 144631842666.dkr.ecr.ap-south-1.amazonaws.com/news-app/backend:latest
 docker push 144631842666.dkr.ecr.ap-south-1.amazonaws.com/news-app/backend:latest
+
+
+
+ALTERNATIVE WAY
+NOTE: If you are using docker login then run these commands
+docker login -u <docker_username>
+docker build docker build -t news-backend:latest .
+docker tag news-backend:latest systemail150/news-backend:latest
+docker push systemail150/news-backend:latest
 
 
 
@@ -287,7 +305,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: backend
-          image: 144631842666.dkr.ecr.ap-south-1.amazonaws.com/news-app/backend:latest
+          image: systemail150/news-backend:latest     
           ports:
             - containerPort: 3001
           envFrom:
@@ -358,7 +376,7 @@ spec:
         - name: ecr-secret
       containers:
         - name: frontend
-          image: 144631842666.dkr.ecr.ap-south-1.amazonaws.com/news-app/frontend:latest
+          image: systemail150/news-frontend:latest  
           ports:
             - containerPort: 80
           envFrom:
