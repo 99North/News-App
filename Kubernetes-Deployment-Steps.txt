@@ -403,17 +403,10 @@ spec:
 
 
 
-
-kubectl apply -f postgres-configmap.yaml
-kubectl apply -f postgres-secret.yaml
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f backend-deployment.yaml
 kubectl apply -f postgres-deployment.yaml
 
-kubectl apply -f backend-configmap.yaml
-kubectl apply -f backend-secret.yaml
-kubectl apply -f backend-deployment.yaml
-
-kubectl apply -f frontend-configmap.yaml
-kubectl apply -f frontend-deployment.yaml
 
 =>To check everything is working or not run this command
 kubectl get all --all-namespaces
