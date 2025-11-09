@@ -1,0 +1,28 @@
+sudo rm -f /etc/apt/sources.list.d/docker.list
+sudo rm -f /etc/apt/keyrings/docker.gpg
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+sudo apt install -y docker-buildx-plugin
+docker buildx create --use
+docker buildx ls
+docker buildx create --name multiarch --driver docker-container --use
+docker buildx inspect --bootstrap
+
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t systemail150/news-backend:latest \
+  --push .
+
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t systemail150/news-frontend:latest \
+  --push .
