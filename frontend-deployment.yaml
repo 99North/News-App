@@ -1,0 +1,82 @@
+# ==========================
+# 🧩 1. ConfigMap
+# ==========================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  DB_HOST: postgres-service
+  DB_PORT: "5432"
+  DB_NAME: newsdb
+  JWT_EXPIRES_IN: "24h"
+  FRONTEND_URL: "http://frontend-service"
+
+---
+# ==========================
+# 🔐 2. Secret
+# ==========================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+type: Opaque
+stringData:
+  DB_USER: "debi"
+  DB_PASSWORD: "debipass123"
+  JWT_SECRET: "419461bae0350d7058bbb6629f88813c9dfd5498da471466c64caa4e14269c2b27e681f8897c6bf2664fa9bd22408cc0c0937728d13201aff27080dcf8f37d56"
+
+---
+# ==========================
+# 🐱‍💻 3. Deployment
+# ==========================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: ecr-secret
+      containers:
+        - name: backend
+          image: systemail150/news-backend:latest     
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secret
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+
+---
+# ==========================
+# 🌐 4. Service
+# ==========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 32001
+  type: NodePort
