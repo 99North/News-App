@@ -1,39 +1,46 @@
-# ---- Stage 1: Build React app ----
+# ==========================
+# ⚙️ Stage 1: Build React App
+# ==========================
 FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Copy package files first
+# Copy dependency files
 COPY package*.json ./
 
-# Install all deps including devDependencies (important for ESLint/react-scripts)
-ENV NODE_ENV=development
+# Install dependencies (production)
+ENV NODE_ENV=production
 RUN npm install
 
-# Copy the full source
+# Copy source code
 COPY . .
 
-# Add build argument + environment variable
-ARG REACT_APP_API_URL=http://13.235.247.22:3001
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
-
-
-
-# Run build command
+# Build production bundle
 RUN npm run build
 
-
-# ---- Stage 2: Serve using Nginx ----
+# ==========================
+# 🌐 Stage 2: Serve with Nginx
+# ==========================
 FROM nginx:alpine
 
-# Remove default nginx config
-RUN rm /etc/nginx/conf.d/default.conf
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
+# Copy React build output
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Copy env-config.js template
+COPY public/env-config.js /usr/share/nginx/html/env-config.js
 
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built app
-COPY --from=builder /app/build /usr/share/nginx/html
-
+# Expose port 80
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Runtime env substitution + start Nginx
+CMD ["/bin/sh", "-c", "\
+  echo 'Substituting environment variables in env-config.js...'; \
+  envsubst < /usr/share/nginx/html/env-config.js > /usr/share/nginx/html/env-config.tmp && \
+  mv /usr/share/nginx/html/env-config.tmp /usr/share/nginx/html/env-config.js && \
+  nginx -g 'daemon off;'"]

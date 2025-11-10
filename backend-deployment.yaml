@@ -10,7 +10,7 @@ data:
   DB_PORT: "5432"
   DB_NAME: newsdb
   JWT_EXPIRES_IN: "24h"
-  FRONTEND_URL: "http://frontend-service"
+  FRONTEND_URL: "http://192.168.101.71:31500"
 
 ---
 # ==========================

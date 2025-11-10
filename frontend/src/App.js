@@ -20,7 +20,13 @@ import PostEditor from "./pages/PostEditor.jsx";
 import Section from "./components/Section";
 import Article from "./components/Article.jsx";
 
-const MAIN_ROUTES = ['odisha', 'national', 'international', 'health', 'environment'];
+const MAIN_ROUTES = [
+  "odisha",
+  "national",
+  "international",
+  "health",
+  "environment",
+];
 
 // Component to handle Footer visibility
 function AppContent({ theme, toggleTheme }) {
@@ -45,30 +51,18 @@ function AppContent({ theme, toggleTheme }) {
       <main className="main-container">
         <Routes>
           {/* Home Route */}
-          <Route
-            path="/"
-            element={
-              <HomePage theme={theme} />
-            }
-          />
+          <Route path="/" element={<HomePage theme={theme} />} />
 
           {/* Category Routes */}
           {MAIN_ROUTES.map((route) => (
             <Route
               key={route}
               path={`/${route}`}
-              element={
-                <Section section={route} theme={theme} />
-              }
+              element={<Section section={route} theme={theme} />}
             />
           ))}
 
-          <Route
-            path="/:id"
-            element={
-              <Article theme={theme} />
-            }
-          />
+          <Route path="/:id" element={<Article theme={theme} />} />
 
           <Route
             path="/:id/edit"
@@ -83,9 +77,7 @@ function AppContent({ theme, toggleTheme }) {
             <Route
               key={route}
               path={`/${route}/:id`}
-              element={
-                <Article section={route} theme={theme} />
-              }
+              element={<Article section={route} theme={theme} />}
             />
           ))}
 
@@ -93,7 +85,7 @@ function AppContent({ theme, toggleTheme }) {
           {/* NOTE: Uncomment next line when we add signup functionality - RKS */}
           {/* <Route path="/signup" element={<ProtectedRoute><SignUpPage theme={theme} /></ProtectedRoute>} /> */}
           <Route path="/login" element={<LoginPage theme={theme} />} />
-	  <Route path="/post-editor" element={<PostEditor theme={theme} />} />
+          <Route path="/post-editor" element={<PostEditor theme={theme} />} />
 
           {/* 404 Route - Must be LAST */}
           <Route path="*" element={<NotFoundPage theme={theme} />} />
