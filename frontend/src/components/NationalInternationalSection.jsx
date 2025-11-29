@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './NationalInternationalSection.css';
 import { FaArrowRight } from 'react-icons/fa';
+
+import DateTime from '../lib/date_time';
 import { articleService } from '../services/articleServices';
+import './NationalInternationalSection.css';
 
 const NationalInternationalSection = ({ theme }) => {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ const NationalInternationalSection = ({ theme }) => {
   }, []);
 
   const handleReadMore = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+    navigate(`/${article.section.toLowerCase()}/${article.id}`, { state: { article } });
   };
 
   return (
@@ -65,7 +67,7 @@ const NationalInternationalSection = ({ theme }) => {
 
                 {/* Article Meta */}
                 <div className="article-meta">
-                  <span className="article-date">{article.created_at}</span>
+                  <span className="article-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                 </div>
 
                 {/* Article Description */}
@@ -109,7 +111,7 @@ const NationalInternationalSection = ({ theme }) => {
 
                 {/* Article Meta */}
                 <div className="article-meta">
-                  <span className="article-date">{article.created_at}</span>
+                  <span className="article-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                 </div>
 
                 {/* Article Description */}

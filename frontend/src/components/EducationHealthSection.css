@@ -57,6 +57,7 @@
 
 /* Articles List */
 .articles-list {
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -64,6 +65,7 @@
 
 /* Article Item */
 .article-item {
+  height: 100%;
   position: relative;
   padding: 25px;
   border-radius: 8px;

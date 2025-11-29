@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './CategoryPage.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { articleService } from '../services/articleServices';
 import { capitalizeFirst } from 'ramda-extension';
-import NotFoundPage from '../pages/NotFoundPage';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
+import DateTime from '../lib/date_time';
 import getFirstImageSrc from '../lib/get_image_src';
+import NotFoundPage from '../pages/NotFoundPage';
+import { articleService } from '../services/articleServices';
+import './CategoryPage.css';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -26,7 +28,7 @@ const Section = ({ section, theme }) => {
         if (res.success){
           console.log(res);
 
-          setTotalPages(res.totalPages);
+          setTotalPages(res.totalPages || 1);
           setArticles(res.data);
         } else {
           // Handle error case
@@ -118,7 +120,7 @@ const Section = ({ section, theme }) => {
                 <h3 className="article-card-title">{article.title}</h3>
                 <p className="article-card-excerpt">{article.description}</p>
                 <div className="article-card-meta">
-                  <span className="article-card-date">{article.created_at}</span>
+                  <span className="article-card-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                   <span className="read-more">Read More →</span>
                 </div>
               </div>

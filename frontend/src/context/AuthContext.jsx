@@ -15,11 +15,11 @@ export const useAuth = () => {
 // const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 //New changes added
-const API_BASE_URL =
-  (window._env_ && window._env_.REACT_APP_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  'http://localhost:3001';
-
+const API_BASE_URL = (
+  (window._env_ && window._env_.REACT_APP_API_URL)
+  || process.env.REACT_APP_API_URL
+  || 'http://localhost:3001'
+);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

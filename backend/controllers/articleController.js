@@ -1,9 +1,30 @@
 const Article = require("../models/article");
 
+function getPagination(query){
+  if (query){
+    const { page, limit } = query;
+    return ({
+      limit: parseInt(limit, 10), offset: parseInt(page, 10) - 1, page: parseInt(page, 10)
+    });
+  }
+  return {};
+}
+
 const ArticleController = {
   getAllArticles(req, res){
-    Article.getAll().then(function(articles){
-      res.json({ success: true, message: 'All articles', data: articles });
+    const { query } = req;
+    const pagination = getPagination(query);
+
+    Article.getAll(pagination).then(function(articles){
+      if (pagination.limit){
+        Article.getCount().then((count) => {
+          res.json({ success: true, message: 'All articles', data: articles, totalPages: Math.ceil(count / pagination.limit) });
+        }).catch(function(err){
+          res.status(500).json({ success: false, message: 'Error getting articles', error: err });
+        });
+      } else {
+        res.json({ success: true, message: 'All articles', data: articles });
+      }
     }).catch(function(err){
       res.status(500).json({ success: false, message: 'Error getting articles', error: err });
     });
@@ -24,9 +45,19 @@ const ArticleController = {
 
   getArticlesBySection(req, res){
     const section = req.params.section;
+    const { query } = req;
+    const pagination = getPagination(query);
 
-    Article.getBySection(section).then(function(articles){
-      res.json({ success: true, message: `Articles from ${section} section`, data: articles });
+    Article.getBySection(section, pagination).then(function(articles){
+      if (pagination.limit){
+        Article.getCount().then((count) => {
+          res.json({ success: true, message: `Articles from ${section} section`, data: articles, totalPages: Math.ceil(count / pagination.limit) });
+        }).catch(function(err){
+          res.status(500).json({ success: false, message: 'Error getting articles by section', error: err });
+        });
+      } else {
+        res.json({ success: true, message: `Articles from ${section} section`, data: articles });
+      }
     }).catch(function(err){
       res.status(500).json({ success: false, message: 'Error getting articles by section', error: err });
     });
@@ -34,9 +65,19 @@ const ArticleController = {
 
   getArticlesByTag(req, res){
     const tag = req.params.tag;
+    const { query } = req;
+    const pagination = getPagination(query);
 
-    Article.getByTag(tag).then(function(articles){
-      res.json({ success: true, message: `Articles with ${tag} tag`, data: articles });
+    Article.getByTag(tag, pagination).then(function(articles){
+      if (pagination.limit){
+        Article.getCount().then((count) => {
+          res.json({ success: true, message: `Articles with ${tag} tag`, data: articles, totalPages: Math.ceil(count / pagination.limit) });
+        }).catch(function(err){
+          res.status(500).json({ success: false, message: 'Error getting articles by tag', error: err });
+        });
+      } else {
+        res.json({ success: true, message: `Articles with ${tag} tag`, data: articles });
+      }
     }).catch(function(err){
       res.status(500).json({ success: false, message: 'Error getting articles by tag', error: err });
     });

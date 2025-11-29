@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EnvironmentSection.css';
 import { FaArrowRight } from 'react-icons/fa';
-import { articleService } from '../services/articleServices';
+
+import DateTime from '../lib/date_time';
 import getFirstImageSrc from '../lib/get_image_src';
+import { articleService } from '../services/articleServices';
+import './EnvironmentSection.css';
 
 const EnvironmentSection = ({ theme }) => {
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ const EnvironmentSection = ({ theme }) => {
   }, []);
 
   const handleReadMore = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+    navigate(`/environment/${article.id}`, { state: { article } });
   };
 
   return (
@@ -59,7 +61,7 @@ const EnvironmentSection = ({ theme }) => {
                 <div className="environment-card-footer">
                   <div className="environment-card-meta">
                     <span className="environment-card-category">{article.section}</span>
-                    <span className="environment-card-date">{article.created_at}</span>
+                    <span className="environment-card-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                   </div>
 
                   <button

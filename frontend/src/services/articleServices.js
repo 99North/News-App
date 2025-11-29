@@ -3,10 +3,7 @@
 // const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 // Added this new configuration
-const API_BASE_URL =
-  (window._env_ && window._env_.REACT_APP_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import Logo from '../assets/images/akruti-logo.png';
 import { useAuth } from '../context/AuthContext';
 import './AuthPages.css';
 
@@ -78,7 +79,7 @@ const LoginPage = ({ theme }) => {
         <div className="auth-card">
           {/* Logo Section */}
           <div className="auth-logo">
-            <span className="logo-icon">📰</span>
+            <img className="brand-icon" src={Logo} alt="Site logo"/>
             <h1 className="logo-text">Akruti Media</h1>
           </div>
 
@@ -180,14 +181,14 @@ const LoginPage = ({ theme }) => {
           </form>
 
           {/* Footer */}
-          <div className="auth-footer">
+          {/* <div className="auth-footer">
             <p className="footer-text">
               Don't have an account?{' '}
               <Link to="/signup" className="footer-link">
                 Sign Up
               </Link>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

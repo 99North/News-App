@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './OdishaSection.css';
 import { articleService } from '../services/articleServices';
+import getFirstImageSrc from '../lib/get_image_src';
 
 const OdishaSection = ({ theme }) => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const OdishaSection = ({ theme }) => {
             >
               {/* Article Image */}
               <div className="odisha-card-image">
-                <img src={article.image} alt={article.title} />
+                <img src={getFirstImageSrc(article.content)} alt={article.title} />
                 {article.tag && (
                   <span className="odisha-badge">{article.tag}</span>
                 )}

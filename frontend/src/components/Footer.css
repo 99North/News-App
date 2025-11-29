@@ -19,7 +19,9 @@
 .footer-container {
   max-width: 1400px;
   margin: 0 auto;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
   gap: 40px;
   padding-bottom: 40px;

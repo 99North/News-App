@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EducationHealthSection.css';
 import { FaArrowRight } from 'react-icons/fa';
+
+import DateTime from '../lib/date_time';
 import { articleService } from '../services/articleServices';
+import './EducationHealthSection.css';
 
 const EducationHealthSection = ({ theme }) => {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const EducationHealthSection = ({ theme }) => {
   }, []);
 
   const handleReadMore = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+    navigate(`/${article.section.toLowerCase()}/${article.id}`, { state: { article } });
   };
 
   return (
@@ -66,7 +68,7 @@ const EducationHealthSection = ({ theme }) => {
                   {/* Article Meta */}
                   <div className="article-meta">
                     <span className="article-category">{article.section}</span>
-                    <span className="article-date">{article.created_at}</span>
+                    <span className="article-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                   </div>
 
                   {/* Article Excerpt */}
@@ -113,7 +115,7 @@ const EducationHealthSection = ({ theme }) => {
                   {/* Article Meta */}
                   <div className="article-meta">
                     <span className="article-category">{article.section}</span>
-                    <span className="article-date">{article.created_at}</span>
+                    <span className="article-date">{DateTime.formatDate(article.created_at, { showYear: true })}</span>
                   </div>
 
                   {/* Article Excerpt */}

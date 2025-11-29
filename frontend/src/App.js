@@ -24,8 +24,9 @@ const MAIN_ROUTES = [
   "odisha",
   "national",
   "international",
-  "health",
   "environment",
+  "education",
+  "health",
 ];
 
 // Component to handle Footer visibility
@@ -98,6 +99,16 @@ function AppContent({ theme, toggleTheme }) {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -115,6 +126,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <AppContent theme={theme} toggleTheme={toggleTheme} />
       </AuthProvider>

@@ -4,6 +4,7 @@ import './Header.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { articleService } from '../services/articleServices';
 import getFirstImageSrc from '../lib/get_image_src';
+import isPresent from '../lib/is_present';
 
 const MAX_ARTICLE_LIMIT = 15;
 const MAX_CAROUSEL_LIMIT = 7;
@@ -100,7 +101,12 @@ const Header = ({ theme }) => {
   };
 
   const handleNewsClick = (article) => {
-    navigate(`/${article.id}`, { state: { article } });
+    console.log(article);
+
+    navigate(
+      isPresent(article.section) ? `/${article.section.toLowerCase()}/${article.id}` : `/${article.id}`,
+      { state: { article } }
+    );
   };
 
   const handleBreakingNewsClick = (route) => {

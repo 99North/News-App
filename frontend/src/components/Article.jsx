@@ -5,13 +5,14 @@ import { HiOutlineShare } from 'react-icons/hi'; // New elegant share icon
 
 import ShareModal from './ShareModal';
 import { useAuth } from '../context/AuthContext';
+import DateTime from '../lib/date_time';
 import './Article.css';
 
 const Article = ({ theme }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { isAuthenticated } = useAuth();
+  const { isAdmin, isAuthenticated } = useAuth();
 
   const { article } = location.state;
 
@@ -44,7 +45,7 @@ const Article = ({ theme }) => {
             <FaArrowLeft /> Back
           </button>
 
-          {isAuthenticated && (
+          {isAdmin && isAuthenticated && (
             <button className="edit-button" onClick={handleEdit}>
               <FaEdit /> Edit
             </button>
@@ -64,9 +65,11 @@ const Article = ({ theme }) => {
               {/* <span>{article.author}</span> */}
               <p className="article-description">{article.description}</p>
             </div>
+          </div>
+          <div className="article-meta-info">
             <div className="meta-item">
               <FaClock className="meta-icon" />
-              <span>{article.created_at}</span>
+              <span>{DateTime.formatDate(article.created_at, { showYear: true })}</span>
             </div>
             <div className="meta-item category-badge">
               {article.section}

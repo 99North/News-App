@@ -14,8 +14,9 @@ async function getColumns(){
 }
 
 const Article = {
-  async getAll(){
-    const articles = await pool.query('SELECT * FROM articles ORDER BY created_at DESC');
+  async getAll(options){
+    const { limit, offset } = options;
+    const articles = await pool.query('SELECT * FROM articles ORDER BY created_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
     return articles.rows;
   },
 
@@ -24,13 +25,20 @@ const Article = {
     return article.rows[0];
   },
 
-  async getBySection(section){
-    const articles = await pool.query('SELECT * FROM articles WHERE section ILIKE $1 ORDER BY created_at DESC', [section]);
+  async getCount(){
+    const result = await pool.query("SELECT COUNT(*) AS count FROM articles");
+    return Number(result.rows[0].count);
+  },
+
+  async getBySection(section, options){
+    const { limit, offset } = options;
+    const articles = await pool.query('SELECT * FROM articles WHERE section ILIKE $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3', [section, limit, offset]);
     return articles.rows;
   },
 
-  async getByTag(tag){
-    const articles = await pool.query('SELECT * FROM articles WHERE tag ILIKE $1 ORDER BY created_at DESC', [tag]);
+  async getByTag(tag, options){
+    const { limit, offset } = options;
+    const articles = await pool.query('SELECT * FROM articles WHERE tag ILIKE $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3', [tag, limit, offset]);
     return articles.rows;
   },
 

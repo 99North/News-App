@@ -16,7 +16,6 @@ const Navbar = ({ theme, toggleTheme }) => {
 
   // Authentication context
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
-  console.log(user);
 
   // Ref for user menu to handle outside clicks
   const userMenuRef = useRef(null);
@@ -123,17 +122,14 @@ const Navbar = ({ theme, toggleTheme }) => {
                     {user?.role || 'User'}
                   </span>
                 </div>
-                <Link to="/profile" className="nav-link" onClick={closeMenu}>
+
+                {/* <Link to="/profile" className="nav-link" onClick={closeMenu}>
                   Profile
                 </Link>
                 <Link to="/my-articles" className="nav-link" onClick={closeMenu}>
                   My Articles
-                </Link>
-                {isAdmin && (
-                  <Link to="/admin" className="nav-link admin-link" onClick={closeMenu}>
-                    Admin Panel
-                  </Link>
-                )}
+                </Link> */}
+
                 <button
                   className="mobile-logout-btn"
                   onClick={handleLogout}
@@ -146,9 +142,9 @@ const Navbar = ({ theme, toggleTheme }) => {
                 <Link to="/login" className="nav-link auth-link" onClick={closeMenu}>
                   Login
                 </Link>
-                <Link to="/signup" className="nav-link auth-link signup-link" onClick={closeMenu}>
+                {/* <Link to="/signup" className="nav-link auth-link signup-link" onClick={closeMenu}>
                   Sign Up
-                </Link>
+                </Link> */}
               </>
             )}
           </div>
@@ -189,7 +185,7 @@ const Navbar = ({ theme, toggleTheme }) => {
                       </div>
                     </div>
 
-                    <div className="menu-divider"></div>
+                    {/* <div className="menu-divider"></div>
 
                     <div className="user-menu-items">
                       <Link
@@ -222,7 +218,7 @@ const Navbar = ({ theme, toggleTheme }) => {
                       )}
                     </div>
 
-                    <div className="menu-divider"></div>
+                    <div className="menu-divider"></div> */}
 
                     <button
                       className="dropdown-item logout-item"

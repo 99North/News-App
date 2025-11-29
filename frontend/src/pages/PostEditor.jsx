@@ -8,10 +8,13 @@ import {
 } from 'react-icons/fa';
 
 import { createArticle, updateArticle } from '../services/articleServices';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const PostEditor = ({ theme }) => {
+function PostEditor({ theme }){
   const location = useLocation();
+  const navigate = useNavigate();
+
   const { article = {} } = location.state || {};
 
   const [postTitle, setPostTitle] = useState(article.title || '');
@@ -22,6 +25,7 @@ const PostEditor = ({ theme }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedFontFamily, setSelectedFontFamily] = useState('');
 
   const editorRef = useRef(null);
 
@@ -37,6 +41,12 @@ const PostEditor = ({ theme }) => {
     'Health',
     'Environment'
   ];
+
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+
+  useEffect(() => {
+    !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
+  }, [isAuthenticated, isAdmin, loading]);
 
   // Prefill the editor with article content when component mounts or article changes
   useEffect(() => {
@@ -150,6 +160,19 @@ const PostEditor = ({ theme }) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Font Size Dropdown Handler
+  const handleFontSizeChange = (size) => {
+    if (size) {
+      const fontSizeValue = Math.min(7, Math.max(1, Math.round(size / 5)));
+      executeCommand("fontSize", fontSizeValue.toString());
+    }
+  };
+
+  const handleFontFamily = (family) => {
+    setSelectedFontFamily(family);
+    executeCommand("fontName", family);
   };
 
   return (
@@ -277,50 +300,44 @@ const PostEditor = ({ theme }) => {
                 </button>
               </div>
 
-              {/* Headings */}
-              <div className="toolbar-group">
-                <select
-                  onChange={(e) => executeCommand('formatBlock', e.target.value)}
-                  className="toolbar-select"
-                  defaultValue=""
-                >
-                  <option value="">Normal</option>
-                  <option value="h1">Heading 1</option>
-                  <option value="h2">Heading 2</option>
-                  <option value="h3">Heading 3</option>
-                  <option value="h4">Heading 4</option>
-                </select>
-              </div>
+                {/* Font Size Dropdown (8-30) */}
+                <div className="toolbar-group">
+                  <select
+                    className="toolbar-select"
+                    onChange={(e) => handleFontSizeChange(e.target.value)}
+                    defaultValue=""
+                  >
+                    <option value="">Font Size</option>
+                    <option value="8">8px</option>
+                    <option value="10">10px</option>
+                    <option value="12">12px</option>
+                    <option value="14">14px</option>
+                    <option value="16">16px</option>
+                    <option value="18">18px</option>
+                    <option value="20">20px</option>
+                    <option value="22">22px</option>
+                    <option value="24">24px</option>
+                    <option value="26">26px</option>
+                    <option value="28">28px</option>
+                    <option value="30">30px</option>
+                  </select>
+                </div>
 
-              {/* Font Size */}
-              <div className="toolbar-group">
-                <select
-                  onChange={(e) => executeCommand('fontSize', e.target.value)}
-                  className="toolbar-select"
-                  defaultValue="3"
-                >
-                  <option value="1">Small</option>
-                  <option value="3">Normal</option>
-                  <option value="5">Large</option>
-                  <option value="7">Huge</option>
-                </select>
-              </div>
-
-              {/* Text Color */}
-              <div className="toolbar-group">
-                <input
-                  type="color"
-                  onChange={(e) => executeCommand('foreColor', e.target.value)}
-                  className="toolbar-color"
-                  title="Text Color"
-                />
-                <input
-                  type="color"
-                  onChange={(e) => executeCommand('backColor', e.target.value)}
-                  className="toolbar-color"
-                  title="Background Color"
-                />
-              </div>
+                {/* Font Family */}
+                <div className="toolbar-group">
+                  <select
+                    className="toolbar-select"
+                    value={selectedFontFamily}
+                    onChange={(e) => handleFontFamily(e.target.value)}
+                  >
+                    <option value="">Font Family</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                </div>
 
               {/* Lists */}
               <div className="toolbar-group">
@@ -407,18 +424,6 @@ const PostEditor = ({ theme }) => {
                   title="Code Block"
                 >
                   <FaCode />
-                </button>
-              </div>
-
-              {/* Clear Formatting */}
-              <div className="toolbar-group toolbar-group-last">
-                <button
-                  type="button"
-                  onClick={() => executeCommand('removeFormat')}
-                  className="toolbar-btn"
-                  title="Clear Formatting"
-                >
-                  Clear
                 </button>
               </div>
             </div>
