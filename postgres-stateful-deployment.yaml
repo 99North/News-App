@@ -1,44 +1,11 @@
 # ==========================
-# 💽 1. Persistent Volume
-# ==========================
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: postgres-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
-  hostPath:
-    path: /mnt/data/postgres
-
----
-# ==========================
-# 💾 2. Persistent Volume Claim
-# ==========================
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: manual
-
----
-# ==========================
-# 🗄️ 3. ConfigMap for init.sql
+# 🗄️ 1. ConfigMap for init.sql
 # ==========================
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-initdb
+  namespace: news-app
 data:
   init.sql: |
     -- Users Table
@@ -71,14 +38,17 @@ data:
     );
 
 ---
+
 # ==========================
-# 🐘 4. Postgres Deployment
+# 💾 2. StatefulSet (with sealed secret)
 # ==========================
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
+  namespace: news-app
 spec:
+  serviceName: postgres-service
   replicas: 1
   selector:
     matchLabels:
@@ -97,34 +67,48 @@ spec:
             - name: POSTGRES_DB
               value: newsdb
             - name: POSTGRES_USER
-              value: debi
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
-              value: debipass123
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
             - name: initdb
               mountPath: /docker-entrypoint-initdb.d/
       volumes:
-        - name: postgres-storage
-          persistentVolumeClaim:
-            claimName: postgres-pvc
         - name: initdb
           configMap:
             name: postgres-initdb
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: local-path  # ✅ K3s default
 
 ---
+
 # ==========================
-# 🌐 5. Postgres Service
+# 🌐 3. Service
 # ==========================
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  namespace: news-app
 spec:
-  selector:
-    app: postgres
   ports:
     - port: 5432
       targetPort: 5432
-  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: postgres
