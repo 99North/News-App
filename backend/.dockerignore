@@ -8,6 +8,8 @@ yarn-error.log
 .env.local
 .env.dev
 .env.production
+.env-dev
+.env-prod
 
 # Build cache
 build
