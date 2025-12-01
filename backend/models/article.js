@@ -36,6 +36,11 @@ const Article = {
     return articles.rows;
   },
 
+  async getBySectionId(section, id){
+    const articles = await pool.query('SELECT * FROM articles WHERE section ILIKE $1 AND id = $2', [section, id]);
+    return articles.rows[0];
+  },
+
   async getByTag(tag, options){
     const { limit, offset } = options;
     const articles = await pool.query('SELECT * FROM articles WHERE tag ILIKE $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3', [tag, limit, offset]);

@@ -63,6 +63,19 @@ const ArticleController = {
     });
   },
 
+  getArticleBySectionId(req, res){
+    const { section, id } = req.params;
+
+    Article.getBySectionId(section, id).then(function(article){
+      if (!article){
+        return res.status(404).json({ success: false, message: 'Article not found' });
+      }
+      res.json({ success: true, message: 'Article found', data: article });
+    }).catch(function(err){
+      res.status(500).json({ success: false, message: 'Error getting article', error: err });
+    });
+  },
+
   getArticlesByTag(req, res){
     const tag = req.params.tag;
     const { query } = req;

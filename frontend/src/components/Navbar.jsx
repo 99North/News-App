@@ -125,10 +125,10 @@ const Navbar = ({ theme, toggleTheme }) => {
 
                 {/* <Link to="/profile" className="nav-link" onClick={closeMenu}>
                   Profile
-                </Link>
-                <Link to="/my-articles" className="nav-link" onClick={closeMenu}>
-                  My Articles
                 </Link> */}
+                <Link to="/post-editor" className="nav-link" onClick={closeMenu}>
+                  Create Post
+                </Link>
 
                 <button
                   className="mobile-logout-btn"
@@ -139,7 +139,7 @@ const Navbar = ({ theme, toggleTheme }) => {
               </>
             ) : (
               <>
-                <Link to="/login" className="nav-link auth-link" onClick={closeMenu}>
+                <Link to="/login" className="mobile-logout-btn" onClick={closeMenu}>
                   Login
                 </Link>
                 {/* <Link to="/signup" className="nav-link auth-link signup-link" onClick={closeMenu}>
@@ -219,6 +219,11 @@ const Navbar = ({ theme, toggleTheme }) => {
                     </div>
 
                     <div className="menu-divider"></div> */}
+
+                    <Link to="/post-editor" className="dropdown-item admin-item" onClick={closeMenu}>
+                      <span className="item-icon">📝</span>
+                      Create Post
+                    </Link>
 
                     <button
                       className="dropdown-item logout-item"
