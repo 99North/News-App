@@ -18,7 +18,7 @@ export const useAuth = () => {
 const API_BASE_URL = (
   (window._env_ && window._env_.REACT_APP_API_URL)
   || process.env.REACT_APP_API_URL
-  || 'http://localhost:3001'
+  || '/api'
 );
 
 export const AuthProvider = ({ children }) => {
@@ -147,6 +147,14 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [token]);
 
+
+
+
+
+
+
+
+	
   // Helper functions
   const isAuthenticated = () => !!user && !!token;
   const hasRole = (role) => user?.role === role;
@@ -165,6 +173,9 @@ export const AuthProvider = ({ children }) => {
     isAdmin: isAdmin(),
     apiRequest,
   };
+
+
+
 
   return (
     <AuthContext.Provider value={value}>
