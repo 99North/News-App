@@ -82,6 +82,13 @@ export const getArticlesBySection = async (section, paginationParams = {}) => {
   return await makeRequest(url);
 };
 
+export const getArticleBySectionId = async (section, id) => {
+  if (!id || !section) {
+    throw new Error('Article Section and ID is required');
+  }
+  return await makeRequest(`${API_BASE_URL}/articles/section/${section}/${id}`);
+};
+
 // Get articles by tag with pagination
 export const getArticlesByTag = async (tag, paginationParams = {}) => {
   if (!tag) {
@@ -146,6 +153,7 @@ export const articleService = {
   getAllArticles,
   getArticleById,
   getArticlesBySection,
+  getArticleBySectionId,
   getArticlesByTag,
   createArticle,
   updateArticle,

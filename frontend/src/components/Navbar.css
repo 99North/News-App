@@ -429,7 +429,7 @@ img.brand-icon {
   color: rgba(0, 0, 0, 0.6);
 }
 
-.mobile-logout-btn {
+.mobile-logout-btn, .mobile-login-btn {
   background: #dc143c;
   color: white;
   border: none;
@@ -443,7 +443,7 @@ img.brand-icon {
   margin: 0 16px;
 }
 
-.mobile-logout-btn:hover {
+.mobile-logout-btn:hover, .mobile-login-btn {
   background: #c81333;
 }
 
@@ -652,6 +652,10 @@ img.brand-icon {
 }
 
 @media screen and (max-width: 480px) {
+  .logo-text {
+    display: none;
+  }
+
   .navbar {
     height: 60px;
   }

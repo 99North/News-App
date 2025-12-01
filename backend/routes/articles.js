@@ -9,6 +9,8 @@ router.get('/:id', ArticleController.getArticleById);
 
 router.get('/section/:section', ArticleController.getArticlesBySection);
 
+router.get('/section/:section/:id', ArticleController.getArticleBySectionId);
+
 router.get('/tag/:tag', ArticleController.getArticlesByTag);
 
 router.post('/', ArticleController.createArticle);
