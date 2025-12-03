@@ -25,11 +25,14 @@ a:visited {
   top: 0;
   z-index: 999;
   transition: all 0.3s ease;
+  border-bottom: 3px solid #dc143c;
+  
 }
 
 /* Dark Theme */
 .navbar.dark {
-  background-color: #1a1a1a;
+  background-color: #000000;
+  /* background-color: #1a1a1a; */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -63,7 +66,7 @@ img.brand-icon {
 .logo-text {
   font-size: 25px;
   transition: color 0.3s ease;
-  font-family: poppins;
+  font-family: 'poppins';
   background: linear-gradient(to right, #f69118, #f71e04);
   -webkit-background-clip: text;
   background-clip: text;
@@ -613,7 +616,8 @@ img.brand-icon {
   }
 
   .navbar.dark .nav-menu {
-    background-color: #1a1a1a;
+    /* background-color: #1a1a1a; */
+    background-color: #000000;
     box-shadow: 0 10px 27px rgba(0, 0, 0, 0.5);
   }
 
