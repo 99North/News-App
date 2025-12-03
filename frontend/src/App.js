@@ -63,7 +63,7 @@ function AppContent({ theme, toggleTheme }) {
             />
           ))}
 
-          <Route path="/:id" element={<Article theme={theme} />} />
+          {/* <Route path="/:id" element={<Article theme={theme} />} /> */}
 
           <Route
             path="/:id/edit"
@@ -74,13 +74,7 @@ function AppContent({ theme, toggleTheme }) {
             }
           />
 
-          {MAIN_ROUTES.map((route) => (
-            <Route
-              key={route}
-              path={`/${route}/:id`}
-              element={<Article section={route} theme={theme} />}
-            />
-          ))}
+          <Route path={`/:section/:id`} element={<Article theme={theme} />} />
 
           {/* Auth Routes */}
           {/* NOTE: Uncomment next line when we add signup functionality - RKS */}

@@ -246,10 +246,10 @@
   .footer-logo {
     justify-content: center;
   }
-
+/*
   .footer-social {
     align-items: center;
-  }
+  } */
 }
 
 /* Tablets (768px and below) - Centered Columns 2 & 3 */
@@ -298,9 +298,9 @@
     justify-content: center;
   }
 
-  .footer-social {
+  /* .footer-social {
     align-items: center;
-  }
+  } */
 
   .social-icon {
     justify-content: center;

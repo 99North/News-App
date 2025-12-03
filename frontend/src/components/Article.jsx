@@ -1,22 +1,62 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FaArrowLeft, FaClock, FaEdit } from 'react-icons/fa';
 import { HiOutlineShare } from 'react-icons/hi'; // New elegant share icon
 
 import ShareModal from './ShareModal';
 import { useAuth } from '../context/AuthContext';
 import DateTime from '../lib/date_time';
+import isEmpty from '../lib/is_empty';
+import NotFoundPage from '../pages/NotFoundPage';
+import { articleService } from '../services/articleServices';
 import './Article.css';
 
 const Article = ({ theme }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const params = useParams();
 
   const { isAdmin, isAuthenticated } = useAuth();
 
-  const { article } = location.state;
-
+  const [article, setArticle] = useState(location.state?.article);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (isEmpty(article)){
+      if (isEmpty(params?.id)){
+        setShowError(true);
+      } else {
+        if (isEmpty(params?.section)){
+          articleService.getArticleById(params.id)
+            .then((res) => {
+              if (res.success){
+                setArticle(res.data);
+              } else {
+                setShowError(true);
+              }
+            })
+            .catch((err) => {
+              setShowError(true);
+            });
+        } else {
+          articleService.getArticleBySectionId(params.section, params.id)
+            .then((res) => {
+              if (res.success){
+                setArticle(res.data);
+              } else {
+                setShowError(true);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+
+              setShowError(true);
+            });
+        }
+      }
+    }
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -35,6 +75,14 @@ const Article = ({ theme }) => {
   };
 
   const articleUrl = window.location.href;
+
+  if (isEmpty(article) && !showError){
+    return <span>Loading...</span>;
+  }
+
+  if (showError){
+    return <NotFoundPage />
+  }
 
   return (
     <div className={`article-page ${theme}`}>
