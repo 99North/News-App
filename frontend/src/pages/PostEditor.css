@@ -51,6 +51,7 @@
   font-size: 32px;
   font-weight: bold;
   margin: 0;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .post-editor-page.dark .editor-title {

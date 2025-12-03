@@ -35,10 +35,10 @@ function PostEditor({ theme }){
     'Odisha',
     'National',
     'International',
-    'Entertainment',
-    'Jobs',
-    'Education',
-    'Astrospeak',
+    // 'Entertainment',
+    // 'Jobs',
+    // 'Education',
+    // 'Astrospeak',
     'Health',
     'Environment'
   ];
@@ -46,7 +46,7 @@ function PostEditor({ theme }){
   const { isAuthenticated, isAdmin, loading } = useAuth();
 
   useEffect(() => {
-    // !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
+    !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
   }, [isAuthenticated, isAdmin, loading]);
 
   useEffect(() => {
