@@ -4,7 +4,7 @@ import {
   FaBold, FaItalic, FaUnderline, FaStrikethrough,
   FaListUl, FaListOl, FaAlignLeft, FaAlignCenter,
   FaAlignRight, FaLink, FaImage, FaTimes, FaEye,
-  FaPaperPlane, FaQuoteLeft, FaCode
+  FaPaperPlane, FaQuoteLeft, FaCode, FaAlignJustify, FaPalette
 } from 'react-icons/fa';
 
 import { createArticle, updateArticle } from '../services/articleServices';
@@ -45,7 +45,7 @@ function PostEditor({ theme }){
   const { isAuthenticated, isAdmin, loading } = useAuth();
 
   useEffect(() => {
-    !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
+    // !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
   }, [isAuthenticated, isAdmin, loading]);
 
   // Prefill the editor with article content when component mounts or article changes
@@ -175,6 +175,15 @@ function PostEditor({ theme }){
     executeCommand("fontName", family);
   };
 
+  // Color picker handlers
+  const handleFontColorChange = (color) => {
+    executeCommand('foreColor', color);
+  };
+
+  const handleBackgroundColorChange = (color) => {
+    executeCommand('backColor', color);
+  };
+
   return (
     <div className={`post-editor-page ${theme}`}>
       <div className="editor-container">
@@ -300,44 +309,62 @@ function PostEditor({ theme }){
                 </button>
               </div>
 
-                {/* Font Size Dropdown (8-30) */}
-                <div className="toolbar-group">
-                  <select
-                    className="toolbar-select"
-                    onChange={(e) => handleFontSizeChange(e.target.value)}
-                    defaultValue=""
-                  >
-                    <option value="">Font Size</option>
-                    <option value="8">8px</option>
-                    <option value="10">10px</option>
-                    <option value="12">12px</option>
-                    <option value="14">14px</option>
-                    <option value="16">16px</option>
-                    <option value="18">18px</option>
-                    <option value="20">20px</option>
-                    <option value="22">22px</option>
-                    <option value="24">24px</option>
-                    <option value="26">26px</option>
-                    <option value="28">28px</option>
-                    <option value="30">30px</option>
-                  </select>
-                </div>
+              {/* Font Size Dropdown (8-30) */}
+              <div className="toolbar-group">
+                <select
+                  className="toolbar-select"
+                  onChange={(e) => handleFontSizeChange(e.target.value)}
+                  defaultValue=""
+                >
+                  <option value="">Font Size</option>
+                  <option value="8">8px</option>
+                  <option value="10">10px</option>
+                  <option value="12">12px</option>
+                  <option value="14">14px</option>
+                  <option value="16">16px</option>
+                  <option value="18">18px</option>
+                  <option value="20">20px</option>
+                  <option value="22">22px</option>
+                  <option value="24">24px</option>
+                  <option value="26">26px</option>
+                  <option value="28">28px</option>
+                  <option value="30">30px</option>
+                </select>
+              </div>
 
-                {/* Font Family */}
-                <div className="toolbar-group">
-                  <select
-                    className="toolbar-select"
-                    value={selectedFontFamily}
-                    onChange={(e) => handleFontFamily(e.target.value)}
-                  >
-                    <option value="">Font Family</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Courier New">Courier New</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Verdana">Verdana</option>
-                  </select>
-                </div>
+              {/* Font Family */}
+              <div className="toolbar-group">
+                <select
+                  className="toolbar-select"
+                  value={selectedFontFamily}
+                  onChange={(e) => handleFontFamily(e.target.value)}
+                >
+                  <option value="">Font Family</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+              </div>
+
+              {/* Color Controls - FC & BC */}
+              <div className="toolbar-group">
+                <label className="toolbar-label">FC</label>
+                <input
+                  type="color"
+                  className="toolbar-color"
+                  onChange={(e) => handleFontColorChange(e.target.value)}
+                  title="Font Color"
+                />
+                <label className="toolbar-label">BC</label>
+                <input
+                  type="color"
+                  className="toolbar-color"
+                  onChange={(e) => handleBackgroundColorChange(e.target.value)}
+                  title="Background Color"
+                />
+              </div>
 
               {/* Lists */}
               <div className="toolbar-group">
@@ -359,7 +386,7 @@ function PostEditor({ theme }){
                 </button>
               </div>
 
-              {/* Alignment */}
+              {/* Alignment + Justify */}
               <div className="toolbar-group">
                 <button
                   type="button"
@@ -384,6 +411,15 @@ function PostEditor({ theme }){
                   title="Align Right"
                 >
                   <FaAlignRight />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => executeCommand('justifyFull')}
+                  className="toolbar-btn"
+                  title="Justify"
+                >
+                  <FaAlignJustify/>
+                 
                 </button>
               </div>
 
@@ -440,22 +476,6 @@ function PostEditor({ theme }){
 
           {/* Image Upload Section */}
           <div className="form-section">
-            {/* <label className="form-label">Upload Images</label>
-            <div className="image-upload-area">
-              <input
-                type="file"
-                id="image-upload"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="image-input"
-              />
-              <label htmlFor="image-upload" className="upload-label">
-                <FaImage className="upload-icon" />
-                <span>Click to upload images</span>
-              </label>
-            </div> */}
-
             {/* Preview Uploaded Images */}
             {selectedImages.length > 0 && (
               <div className="image-preview-grid">

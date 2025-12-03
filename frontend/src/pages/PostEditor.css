@@ -224,16 +224,6 @@
 }
 
 /* Custom Toolbar - FIXED FOR MOBILE (NO HORIZONTAL SCROLLBAR) */
-/* .custom-toolbar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 8px;
-  padding: 15px;
-  border-radius: 8px 8px 0 0;
-  border: 2px solid;
-  border-bottom: none;
-} */
-
 .custom-toolbar {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -248,8 +238,7 @@
 }
 
 .custom-editor {
-  min-height: 300px;
-  max-height: 100%;
+  min-height: 400px;
   padding: 20px;
   border: 2px solid;
   border-radius: 0 0 8px 8px;
@@ -276,6 +265,7 @@
   border-radius: 6px;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 
 .post-editor-page.dark .toolbar-group {
@@ -343,12 +333,35 @@
   color: #1a1a1a;
 }
 
+/* NEW: Toolbar Labels for FC/BC */
+.toolbar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: inherit;
+  margin: 0;
+  padding: 4px 6px;
+  background: none;
+  border: none;
+  white-space: nowrap;
+}
+
+.post-editor-page.dark .toolbar-label {
+  color: #cccccc;
+}
+
+.post-editor-page.light .toolbar-label {
+  color: #666666;
+}
+
+/* Color Picker Styling */
 .toolbar-color {
-  width: 40px;
-  height: 35px;
+  width: 36px;
+  height: 32px;
   padding: 2px;
   cursor: pointer;
   border: 2px solid;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .post-editor-page.dark .toolbar-color {
@@ -359,18 +372,12 @@
   border-color: #cccccc;
 }
 
-/* Custom Editor (ContentEditable) */
-.custom-editor {
-  min-height: 400px;
-  padding: 20px;
-  border: 2px solid;
-  border-radius: 0 0 8px 8px;
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-y: auto;
-  transition: all 0.3s ease;
+.toolbar-color:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
 }
 
+/* Custom Editor (ContentEditable) */
 .post-editor-page.dark .custom-editor {
   background-color: #0f0f0f;
   border-color: #333333;
@@ -445,61 +452,6 @@
 .custom-editor h2 { font-size: 28px; }
 .custom-editor h3 { font-size: 24px; }
 .custom-editor h4 { font-size: 20px; }
-
-/* Image Upload Area */
-.image-upload-area {
-  position: relative;
-}
-
-.image-input {
-  display: none;
-}
-
-.upload-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 40px;
-  border: 2px dashed;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.post-editor-page.dark .upload-label {
-  border-color: #333333;
-  background-color: #0f0f0f;
-}
-
-.post-editor-page.light .upload-label {
-  border-color: #cccccc;
-  background-color: #f9f9f9;
-}
-
-.upload-label:hover {
-  border-color: #dc143c;
-  background-color: rgba(220, 20, 60, 0.05);
-}
-
-.upload-icon {
-  font-size: 48px;
-  color: #dc143c;
-}
-
-.upload-label span {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.post-editor-page.dark .upload-label span {
-  color: #cccccc;
-}
-
-.post-editor-page.light .upload-label span {
-  color: #666666;
-}
 
 /* Image Preview Grid */
 .image-preview-grid {
@@ -779,13 +731,14 @@
   color: #666666;
 }
 
-.preview-featured-image {
+.article-featured-image {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
+  margin: 20px 0;
 }
 
-.preview-featured-image img {
+.article-featured-image img {
   width: 100%;
   height: auto;
   max-height: 400px;
@@ -873,12 +826,30 @@
     font-size: 14px;
   }
 
-  .upload-label {
-    padding: 30px 20px;
+  .toolbar-group {
+    gap: 3px;
+    padding: 6px;
   }
 
-  .upload-icon {
-    font-size: 36px;
+  .toolbar-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .toolbar-select {
+    min-width: 70px;
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .toolbar-color {
+    width: 30px;
+    height: 28px;
+  }
+
+  .toolbar-label {
+    font-size: 10px;
+    padding: 2px 4px;
   }
 
   .modal-content {
@@ -891,15 +862,5 @@
 
   .preview-image-gallery {
     grid-template-columns: 1fr;
-  }
-
-  .toolbar-btn {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-
-  .toolbar-select {
-    min-width: 80px;
-    font-size: 13px;
   }
 }
