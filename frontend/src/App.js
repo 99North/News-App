@@ -20,6 +20,7 @@ import PostEditor from "./pages/PostEditor.jsx";
 import Section from "./components/Section";
 import Article from "./components/Article.jsx";
 
+
 const MAIN_ROUTES = [
   "odisha",
   "national",
@@ -81,6 +82,7 @@ function AppContent({ theme, toggleTheme }) {
           {/* <Route path="/signup" element={<ProtectedRoute><SignUpPage theme={theme} /></ProtectedRoute>} /> */}
           <Route path="/login" element={<LoginPage theme={theme} />} />
           <Route path="/post-editor" element={<PostEditor theme={theme} />} />
+
 
           {/* 404 Route - Must be LAST */}
           <Route path="*" element={<NotFoundPage theme={theme} />} />
