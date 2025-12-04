@@ -1,5 +1,6 @@
 name: Versioned Docker Build (Always Build After Version Bump)
 
+
 on:
   push:
     branches:
