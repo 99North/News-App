@@ -17,7 +17,7 @@ jobs:
 
     steps:
 
-      # 0️⃣ Record Workflow Start Time (for duration tracking)
+      # 0️⃣ Record Workflow Start Time
       - name: Record workflow start time
         run: echo "GITHUB_WORKFLOW_STARTED_AT=$(date +%s)" >> $GITHUB_ENV
 
@@ -41,11 +41,11 @@ jobs:
       # 3️⃣ Get latest tag
       - name: Get tag
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "LATEST_TAG=$TAG" >> $GITHUB_ENV
           echo "Latest Tag: $TAG"
 
-      # 4️⃣ Extract version
+      # 4️⃣ Extract version components
       - name: Extract version
         run: |
           CLEAN=${LATEST_TAG#v}
@@ -54,7 +54,7 @@ jobs:
           echo "MINOR=$MINOR" >> $GITHUB_ENV
           echo "PATCH=$PATCH" >> $GITHUB_ENV
 
-      # 5️⃣ Detect bump
+      # 5️⃣ Detect bump type
       - name: Detect bump
         run: |
           MSG=$(git log -1 --pretty=%s)
@@ -86,21 +86,19 @@ jobs:
           fi
 
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "Calculated Version: $NEW_VERSION"
 
-      # 7️⃣ Push tag (if new bump)
+      # 7️⃣ Create tag if needed
       - name: Push tag
         if: env.BUMP != 'none'
         run: |
-          git config user.name github-actions
-          git config user.email actions@github.com
-          
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
           git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
           git push origin "$NEW_VERSION"
 
       # 8️⃣ Setup Docker
       - name: Setup Docker
-        run: echo "Initializing Docker builder..."
+        run: echo "Initializing Docker build system..."
 
       - name: QEMU
         uses: docker/setup-qemu-action@v3
@@ -114,26 +112,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 9️⃣ Build Backend (only if changed)
+      # 9️⃣ Build Backend Image
       - name: Build Backend
         if: env.BACKEND_CHANGED == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: backend
-          file: backend/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ env.IMAGE_NAMESPACE }}/backend:${{ env.NEW_VERSION }}
             ${{ env.IMAGE_NAMESPACE }}/backend:latest
 
-      # 🔟 Build Frontend (only if changed)
+      # 🔟 Build Frontend Image
       - name: Build Frontend
         if: env.FRONTEND_CHANGED == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: frontend
-          file: frontend/Dockerfile
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
@@ -144,11 +142,9 @@ jobs:
       - name: Final output (Advanced)
         run: |
           echo ""
-          echo "==================================="
-          echo "==================================="
-          echo "   🚀 BUILD SUMMARY REPORT 🚀     "
-          echo "==================================="
-          echo "==================================="
+          echo "==============================="
+          echo   " 🚀BUILD SUMMARY REPORT🚀 "
+          echo "==============================="
           echo ""
           echo -e "🎯 \033[1;34mCurrent Version:\033[0m    ${LATEST_TAG}"
           echo -e "🎯 \033[1;32mNew Version:\033[0m        ${NEW_VERSION}"
@@ -156,31 +152,27 @@ jobs:
           echo ""
 
           if [[ "${BACKEND_CHANGED}" == "true" ]]; then
-            echo -e "🛠️  \033[1;32mBackend Built:\033[0m      YES"
+            echo -e "🛠️  \033[1;32mBackend Built:\033[0m YES"
             echo -e "      → Image: $IMAGE_NAMESPACE/backend:${NEW_VERSION}"
             echo -e "      → Image: $IMAGE_NAMESPACE/backend:latest"
           else
-            echo -e "🛠️  \033[1;31mBackend Built:\033[0m      NO (no changes detected)"
+            echo -e "🛠️  \033[1;31mBackend Built:\033[0m NO (no changes detected)"
           fi
           echo ""
 
           if [[ "${FRONTEND_CHANGED}" == "true" ]]; then
-            echo -e "🛠️  \033[1;32mFrontend Built:\033[0m     YES"
+            echo -e "🛠️  \033[1;32mFrontend Built:\033[0m YES"
             echo -e "      → Image: $IMAGE_NAMESPACE/frontend:${NEW_VERSION}"
             echo -e "      → Image: $IMAGE_NAMESPACE/frontend:latest"
           else
-            echo -e "🛠️  \033[1;31mFrontend Built:\033[0m     NO (no changes detected)"
+            echo -e "🛠️  \033[1;31mFrontend Built:\033[0m NO (no changes detected)"
           fi
           echo ""
 
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - GITHUB_WORKFLOW_STARTED_AT))
-
-          echo -e "⏱️  \033[1;36mTotal Build Time:\033[0m  ${DURATION} seconds"
-          echo ""
+          echo -e "⏱️  \033[1;36mTotal Build Time:\033[0m ${DURATION} seconds"
           echo "======================================="
-          echo "======================================="
-          echo "  🚀 BUILD COMPLETED SUCCESSFULLY 🚀  "
-          echo "======================================="
+          echo   " 🚀BUILD COMPLETED SUCCESSFULLY🚀"
           echo "======================================="
           echo ""
