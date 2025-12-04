@@ -41,11 +41,11 @@ jobs:
       # 3️⃣ Get latest tag
       - name: Get tag
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
           echo "LATEST_TAG=$TAG" >> $GITHUB_ENV
           echo "Latest Tag: $TAG"
 
-      # 4️⃣ Extract version components
+      # 4️⃣ Extract version
       - name: Extract version
         run: |
           CLEAN=${LATEST_TAG#v}
@@ -54,7 +54,7 @@ jobs:
           echo "MINOR=$MINOR" >> $GITHUB_ENV
           echo "PATCH=$PATCH" >> $GITHUB_ENV
 
-      # 5️⃣ Detect bump type
+      # 5️⃣ Detect bump
       - name: Detect bump
         run: |
           MSG=$(git log -1 --pretty=%s)
@@ -89,7 +89,7 @@ jobs:
 
       # 7️⃣ Create tag if needed
       - name: Push tag
-        if: env.BUMP != 'none'
+        if: ${{ env.BUMP != 'none' }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
@@ -114,7 +114,7 @@ jobs:
 
       # 9️⃣ Build Backend Image
       - name: Build Backend
-        if: env.BACKEND_CHANGED == 'true'
+        if: ${{ env.BACKEND_CHANGED == 'true' }}
         uses: docker/build-push-action@v5
         with:
           context: ./backend
@@ -127,7 +127,7 @@ jobs:
 
       # 🔟 Build Frontend Image
       - name: Build Frontend
-        if: env.FRONTEND_CHANGED == 'true'
+        if: ${{ env.FRONTEND_CHANGED == 'true' }}
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -142,9 +142,9 @@ jobs:
       - name: Final output (Advanced)
         run: |
           echo ""
-          echo "==============================="
-          echo   " 🚀BUILD SUMMARY REPORT🚀 "
-          echo "==============================="
+          echo "=============================="
+          echo "  🚀 BUILD SUMMARY REPORT"
+          echo "=============================="
           echo ""
           echo -e "🎯 \033[1;34mCurrent Version:\033[0m    ${LATEST_TAG}"
           echo -e "🎯 \033[1;32mNew Version:\033[0m        ${NEW_VERSION}"
@@ -172,7 +172,7 @@ jobs:
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - GITHUB_WORKFLOW_STARTED_AT))
           echo -e "⏱️  \033[1;36mTotal Build Time:\033[0m ${DURATION} seconds"
-          echo "======================================="
-          echo   " 🚀BUILD COMPLETED SUCCESSFULLY🚀"
-          echo "======================================="
           echo ""
+          echo "=============================="
+          echo "🎉 BUILD COMPLETED SUCCESSFULLY"
+          echo "=============================="
