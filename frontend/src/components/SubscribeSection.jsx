@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SubscribeSection.css';
 import SuccessModal from './SuccessModal';
+import { Link } from "react-router-dom";
 
 const SubscribeSection = ({ theme }) => {
   const [email, setEmail] = useState('');
@@ -57,7 +58,7 @@ const SubscribeSection = ({ theme }) => {
             Subscribe to our latest newsletter and never miss the latest news!
           </p>
           <p className="subscribe-subdescription">
-            Our newsletter is sent once a week, every Monday.
+            {/* Our newsletter is sent once a week, every Monday. */}
           </p>
 
           {/* Subscribe Form */}
@@ -65,7 +66,7 @@ const SubscribeSection = ({ theme }) => {
             <div className="input-container">
               <input
                 type="email"
-                placeholder="Your email address"
+                placeholder="Drop your email address..."
                 className="subscribe-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -83,9 +84,19 @@ const SubscribeSection = ({ theme }) => {
                 checked={isChecked}
                 onChange={(e) => setIsChecked(e.target.checked)}
               />
+
+
               <label htmlFor="privacy-policy">
-                I've read and accept the <span className="privacy-link">Privacy Policy</span>
-              </label>
+                I've read and accept the{" "}
+                
+                {/* ----------- REACT ROUTER LINK VERSION ----------- */}
+                <Link to="/privacy-policy" className="privacy-link">
+                  Privacy Policy
+                </Link>
+                </label>
+
+
+
             </div>
 
             {/* Error Message */}

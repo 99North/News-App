@@ -8,7 +8,8 @@
 
 /* Dark Theme */
 .footer.dark {
-  background-color: #1a1a1a;
+  background-color: #000000;
+  /* background-color: #1a1a1a; */
 }
 
 /* Light Theme */
@@ -55,20 +56,36 @@
 
 /* Footer Links */
 .footer-link {
+  font-family: 'poppins';
   font-size: 14px;
   text-decoration: none;
   transition: all 0.3s ease;
   padding: 5px 0;
   width: fit-content;
+  
 }
 
-.footer.dark .footer-link {
-  color: #ffffff;
+/* 2nd colomn */
+.footer.dark .footer-link-1 {
+  /* color: #07dec9; */
+  /* color: #8a023b; */
+  color: #bdbbbc;
 }
 
-.footer.light .footer-link {
-  color: #333333;
+.footer.light .footer-link-1 {
+  color: #f49907;
 }
+
+/* 3rd colomn */
+.footer.dark .footer-link-2 {
+  color: #f30505;
+}
+
+.footer.light .footer-link-2 {
+  color: #da2902;
+}
+
+
 
 .footer-link:hover {
   color: #dc143c;
@@ -216,11 +233,13 @@
 }
 
 .footer-copyright {
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: sans-serif;
 }
 
 .footer.dark .footer-copyright {
-  color: #999999;
+  color: #6e0202;
 }
 
 .footer.light .footer-copyright {
@@ -368,7 +387,7 @@
   }
 
   .footer-copyright {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   /* About links smaller */
