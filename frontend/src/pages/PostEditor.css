@@ -151,7 +151,7 @@
   box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1);
 }
 
-/* Select Dropdown - FIXED FOR DARK/LIGHT THEME */
+/* Select Dropdown */
 .form-select {
   width: 100%;
   padding: 14px 16px;
@@ -188,13 +188,11 @@
   box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.1);
 }
 
-/* Dropdown options - Dark theme */
 .post-editor-page.dark .form-select option {
   background-color: #1a1a1a;
   color: #ffffff;
 }
 
-/* Dropdown options - Light theme */
 .post-editor-page.light .form-select option {
   background-color: #ffffff;
   color: #1a1a1a;
@@ -218,12 +216,22 @@
 /* ========== CUSTOM RICH TEXT EDITOR ========== */
 
 .editor-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: block; /* CHANGED: Important for sticky to work */
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Custom Toolbar - FIXED FOR MOBILE (NO HORIZONTAL SCROLLBAR) */
+.post-editor-page.dark .editor-section {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.post-editor-page.light .editor-section {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Toolbar - NORMAL STATE */
 .custom-toolbar {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -232,20 +240,8 @@
   border-radius: 8px 8px 0 0;
   border: 2px solid;
   border-bottom: none;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.custom-editor {
-  min-height: 400px;
-  padding: 20px;
-  border: 2px solid;
-  border-radius: 0 0 8px 8px;
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-y: auto;
-  transition: all 0.3s ease;
+  background-color: inherit;
+  transition: all 0.2s ease;
 }
 
 .post-editor-page.dark .custom-toolbar {
@@ -258,6 +254,33 @@
   border-color: #cccccc;
 }
 
+/* Toolbar - STICKY STATE (when editor focused) */
+.custom-toolbar.toolbar-sticky {
+  position: fixed !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 90vw !important;
+  max-width: 950px !important;
+  z-index: 10000 !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 12px !important;
+  margin: 0 !important;
+  animation: slideDown 0.2s ease !important;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Toolbar groups */
 .toolbar-group {
   display: flex;
   gap: 5px;
@@ -333,7 +356,7 @@
   color: #1a1a1a;
 }
 
-/* NEW: Toolbar Labels for FC/BC */
+/* Toolbar Labels for FC/BC */
 .toolbar-label {
   font-size: 12px;
   font-weight: 600;
@@ -377,7 +400,21 @@
   box-shadow: 0 2px 8px rgba(220, 20, 60, 0.3);
 }
 
-/* Custom Editor (ContentEditable) */
+/* Custom Editor */
+.custom-editor {
+  min-height: 400px;
+  padding: 20px;
+  border: 2px solid;
+  border-radius: 0 0 8px 8px;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+  margin-top: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
 .post-editor-page.dark .custom-editor {
   background-color: #0f0f0f;
   border-color: #333333;
@@ -400,6 +437,7 @@
   content: attr(data-placeholder);
   opacity: 0.5;
   pointer-events: none;
+  color: inherit;
 }
 
 .custom-editor img {
@@ -552,7 +590,6 @@
 }
 
 /* ========== PREVIEW MODAL ========== */
-
 .preview-modal-overlay {
   position: fixed;
   top: 0;
@@ -664,7 +701,6 @@
   color: #1a1a1a;
 }
 
-/* Preview Badges */
 .preview-badges {
   display: flex;
   gap: 10px;
@@ -694,7 +730,6 @@
   text-transform: uppercase;
 }
 
-/* Preview Article */
 .preview-article {
   display: flex;
   flex-direction: column;
@@ -806,10 +841,9 @@
 }
 
 /* ========== RESPONSIVE DESIGN ========== */
-
 @media screen and (max-width: 480px) {
   .post-editor-page {
-    padding: 20px 10px;
+    padding: 10px 10px;
   }
 
   .editor-container {
@@ -824,6 +858,14 @@
   .form-textarea,
   .form-select {
     font-size: 14px;
+  }
+
+  /* MOBILE STICKY TOOLBAR */
+  .custom-toolbar.toolbar-sticky {
+    top: 10px !important;
+    width: 95vw !important;
+    max-width: none !important;
+    padding: 12px !important;
   }
 
   .toolbar-group {

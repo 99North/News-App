@@ -4,7 +4,7 @@ import {
   FaBold, FaItalic, FaUnderline, FaStrikethrough,
   FaListUl, FaListOl, FaAlignLeft, FaAlignCenter,
   FaAlignRight, FaLink, FaImage, FaTimes, FaEye,
-  FaPaperPlane, FaQuoteLeft, FaCode, FaAlignJustify, FaPalette
+  FaPaperPlane, FaQuoteLeft, FaCode, FaPalette
 } from 'react-icons/fa';
 
 import { createArticle, updateArticle } from '../services/articleServices';
@@ -28,6 +28,7 @@ function PostEditor({ theme }){
   const [selectedFontFamily, setSelectedFontFamily] = useState('');
 
   const editorRef = useRef(null);
+  const toolbarRef = useRef(null); // Added ref for toolbar
 
   // Available sections from navbar
   const sections = [
@@ -48,7 +49,6 @@ function PostEditor({ theme }){
     // !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
   }, [isAuthenticated, isAdmin, loading]);
 
-  // Prefill the editor with article content when component mounts or article changes
   useEffect(() => {
     if (editorRef.current) {
       if (article.content) {
@@ -138,7 +138,6 @@ function PostEditor({ theme }){
       if (response.success) {
         alert(`Post ${article.id ? 'updated' : 'submitted'} successfully to ${postSection} section!`);
 
-        // Only reset form if creating new article
         if (!article.id) {
           setPostTitle('');
           setPostDescription('');
@@ -175,13 +174,28 @@ function PostEditor({ theme }){
     executeCommand("fontName", family);
   };
 
-  // Color picker handlers
   const handleFontColorChange = (color) => {
     executeCommand('foreColor', color);
   };
 
   const handleBackgroundColorChange = (color) => {
     executeCommand('backColor', color);
+  };
+
+  // New handlers to add/remove sticky class on focus/blur
+  const handleEditorFocus = () => {
+    if (toolbarRef.current) {
+      toolbarRef.current.classList.add('toolbar-sticky');
+      // Optional: prevent page scroll on mobile to avoid jump
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const handleEditorBlur = () => {
+    if (toolbarRef.current) {
+      toolbarRef.current.classList.remove('toolbar-sticky');
+      document.body.style.overflow = '';
+    }
   };
 
   return (
@@ -272,7 +286,7 @@ function PostEditor({ theme }){
             </label>
 
             {/* Toolbar */}
-            <div className="custom-toolbar">
+            <div ref={toolbarRef} className="custom-toolbar">
               {/* Text Formatting */}
               <div className="toolbar-group">
                 <button
@@ -309,7 +323,7 @@ function PostEditor({ theme }){
                 </button>
               </div>
 
-              {/* Font Size Dropdown (8-30) */}
+              {/* Font Size Dropdown */}
               <div className="toolbar-group">
                 <select
                   className="toolbar-select"
@@ -348,7 +362,7 @@ function PostEditor({ theme }){
                 </select>
               </div>
 
-              {/* Color Controls - FC & BC */}
+              {/* Color Pickers FC & BC */}
               <div className="toolbar-group">
                 <label className="toolbar-label">FC</label>
                 <input
@@ -418,8 +432,7 @@ function PostEditor({ theme }){
                   className="toolbar-btn"
                   title="Justify"
                 >
-                  <FaAlignJustify/>
-                 
+                  <FaPalette />
                 </button>
               </div>
 
@@ -470,13 +483,14 @@ function PostEditor({ theme }){
               className="custom-editor"
               contentEditable
               onInput={handleEditorInput}
+              onFocus={handleEditorFocus}  // Added onFocus
+              onBlur={handleEditorBlur}    // Added onBlur
               data-placeholder="Write your content here..."
             />
           </div>
 
           {/* Image Upload Section */}
           <div className="form-section">
-            {/* Preview Uploaded Images */}
             {selectedImages.length > 0 && (
               <div className="image-preview-grid">
                 {selectedImages.map((img, index) => (
