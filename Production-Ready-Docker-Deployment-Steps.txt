@@ -1,4 +1,16 @@
 =>Run AkrutiMedia app inside docker steps
+=>First run postgres-db container then backend then frontend container
+
+=>Change the eslint version in /frontend/package.json to  
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.5.0"
+  }
+
 
 =>Go inside frontend/src/context/AuthContenxt.jsx and check this line is exist or not  if not then update it as bellow
 const API_BASE_URL =
@@ -13,14 +25,49 @@ const API_BASE_URL =
   '/api';
 
 
-=>Update the .env-prod file inside /frontend folder as this bellow
-#REACT_APP_API_URL=65.2.150.166:3001
-#use this ip address for internal communication
+=>Now create a nginx.conf file in /frontend folder & paste this code
+server {
+    listen 80;
+    server_name akrutimedia.com www.akrutimedia.com;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # React Router support
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # API proxy
+    location /api/ {
+        proxy_pass http://backend:3001/;  # <-- backend container name
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Cache static assets
+    location /static/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Error pages fallback
+    error_page 404 /index.html;
+}
+
+
+=>Now create a .env file inside /frontend folder & past the code
 #REACT_APP_API_URL=/api
 REACT_APP_API_URL=https://akrutimedia.com/api
 
 
-=>Update the .env-prod file inside /backend folder as this bellow
+
+
+
+=>Now update the .env-prod file inside /backend folder as this bellow
 # Database Configuration for development environment, make sure to update these values as per your local setup -RKS
 DB_USER=debi
 DB_PASSWORD=9090
@@ -39,7 +86,30 @@ PORT=3001
 FRONTEND_URL=https://akrutimedia.com
 
 
-=>create a Dockerfile inside /frontend folder and paste this code
+
+=>Now create a Dockerfile in /backend folder and paste this code
+# server/Dockerfile
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
+
+EXPOSE 3001
+CMD ["node", "app.js"]
+
+=>run this command inside /backend folder:  docker build -t backend-app .
+=>run this command to create a container:  docker run -d  -p 3001:3001 --network akruti-network --env-file .env-prod  --name backend backend-app
+
+
+
+
+
+=>Now create a Dockerfile inside /frontend folder and paste this code
 # ==========================
 # Stage 1: Build React App
 # ==========================
@@ -83,89 +153,47 @@ CMD ["/bin/sh", "-c", "\
 
 
 =>run this command inside /frontend folder: docker build -t frontend-app .
-=>run this command: docker run -d --name frontend --network akruti-network -p 80:80 frontend-app
+=>run this command to create a container: docker run -d --name frontend --network akruti-network -p 80:80 frontend-app
 
 
 
 
 
-=>create a Dockerfile in /backend folder and paste this code
-# server/Dockerfile
-FROM node:20-slim
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci --only=production
-
-COPY . .
-
-
-EXPOSE 3001
-CMD ["node", "app.js"]
-
-=>run this command inside /backend folder:  docker build -t backend-app .
-=>docker run -d  -p 3001:3001 --network akruti-network --env-file .env-prod  --name backend backend-app
 
 
 
 
 
-=>create a nginx.conf file in /frontend folder & paste this code
-server {
-    listen 80;
-    server_name akrutimedia.com www.akrutimedia.com;
 
-    root /usr/share/nginx/html;
-    index index.html;
-
-    # React Router support
-    location / {
-        try_files $uri /index.html;
-    }
-
-    # API proxy
-    location /api/ {
-        proxy_pass http://backend:3001/;  # <-- backend container name
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Cache static assets
-    location /static/ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-
-    # Error pages fallback
-    error_page 404 /index.html;
-}
-
-
-=>create a .env file inside /frontend folder & past the code
-REACT_APP_API_URL=/api
-
-
-=>run:   docker network create akruti-network
-=>run:  docker volume create pgdb
+=>run this to create a docker network:   docker network create akruti-network
 =>run this command inside /backend folder
-docker run -d   --name postgres-db   --network akruti-network   --env-file ./pg-cred   -v pgdata:/var/lib/postgresql/data   -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql"   -p 5432:5432   postgres:16
+docker run -d   --name postgres-db   --network akruti-network   --env-file ./pg-cred   -v pgdb-data:/var/lib/postgresql/data   -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql"   -p 5432:5432   postgres:16
 
 
-=>run this inside /backend folder
+=>Now run this commands one by one inside /backend folder to create two admins
 curl -X POST http://localhost:3001/auth/register   -H "Content-Type: application/json"   -d '{
- "username": "test",
- "email": "test@gmail.com",
- "password": "testpass",
- "firstName": "Test",
- "lastName": "User"
+ "username": "admin",
+ "email": "admin@akrutimedia.com",
+ "password": "admin@akruti",
+ "firstName": "Akruti",
+ "lastName": "Media",
+ "role": "admin"
  }'
 
 
-=>to check what inside the postgres-db container run these commands
+curl -X POST http://localhost:3001/auth/register   -H "Content-Type: application/json"   -d '{
+ "username": "debi",
+ "email": "debi@akrutimedia.com",
+ "password": "debi@akruti",
+ "firstName": "Debi",
+ "lastName": "Prasad",
+ "role": "admin"
+ }'
+
+
+==========================================================================================================================================================================================================================================
+
+=>To check what inside the postgres-db container run these commands
 docker exec -it postgres-db bash
 
 psql -U debi -d akrutidev
@@ -189,7 +217,7 @@ pg_dump -U debi akrutidev > pg_backup.sql
 docker exec -i postgres-db 
 psql -U debi -d akrutidev < pg_backup.sql
 
-
+==========================================================================================================================================================================================================================================
 
 =>To create a crontab for taking auto backup with 7 days roation do these steps:
 -create a folder here:   mkdir -p /home/ubuntu/News-App-Backup
@@ -223,3 +251,445 @@ ls -t | sed -e "1,${RETENTION_DAYS}d" | xargs -r rm --
 -run it to restore the latest backup:   psql -U debi -d akrutidev < /home/ubuntu/News-App-Backup/db_backup_2025-11-30.sql
 
 
+
+
+
+
+
+
+
+
+
+==========================================================================================================================================================================================================================================
+===============================================docker-build-versioning.yml====================================================
+
+👉 Build ONLY if corresponding folder changed.
+👉 No build if no code changed.
+👉 This includes:
+
+✔ Always build after version bump
+✔ Semantic versioning (major/minor/patch)
+✔ Start from v1.0.0
+✔ Smart folder change detection
+✔ Docker multi-arch builds
+✔ Advanced Color Output
+✔ Backend/Frontend build status
+✔ Build duration tracking
+✔ Everything production perfect
+
+File: .github/workflows/docker-build-SMART.yml
+
+
+name: Versioned Docker Build (Always Build After Version Bump)
+
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  IMAGE_NAMESPACE: ${{ secrets.DOCKERHUB_USERNAME }}
+
+jobs:
+  version-and-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+
+      # 0️⃣ Record Workflow Start Time
+      - name: Record workflow start time
+        run: echo "GITHUB_WORKFLOW_STARTED_AT=$(date +%s)" >> $GITHUB_ENV
+
+      # 1️⃣ Checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2️⃣ Bulletproof Folder Change Detection
+      - name: Detect changed folders
+        run: |
+          echo "Comparing commits:"
+          echo "Before: ${{ github.event.before }}"
+          echo "After:  ${{ github.sha }}"
+
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "Changed files:"
+          echo "$CHANGED"
+
+          if echo "$CHANGED" | grep -q "^frontend/"; then
+            echo "FRONTEND_CHANGED=true" >> $GITHUB_ENV
+          else
+            echo "FRONTEND_CHANGED=false" >> $GITHUB_ENV
+          fi
+
+          if echo "$CHANGED" | grep -q "^backend/"; then
+            echo "BACKEND_CHANGED=true" >> $GITHUB_ENV
+          else
+            echo "BACKEND_CHANGED=false" >> $GITHUB_ENV
+          fi
+
+      # 3️⃣ Get latest tag
+      - name: Get tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          echo "LATEST_TAG=$TAG" >> $GITHUB_ENV
+          echo "Latest Tag: $TAG"
+
+      # 4️⃣ Extract version parts
+      - name: Extract version
+        run: |
+          CLEAN=${LATEST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CLEAN"
+          echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+          echo "MINOR=$MINOR" >> $GITHUB_ENV
+          echo "PATCH=$PATCH" >> $GITHUB_ENV
+
+      # 5️⃣ Detect bump type
+      - name: Detect bump
+        run: |
+          MSG=$(git log -1 --pretty=%s)
+          echo "Commit Message: $MSG"
+
+          if echo "$MSG" | grep -q major; then 
+            echo "BUMP=major" >> $GITHUB_ENV
+          elif echo "$MSG" | grep -q minor; then 
+            echo "BUMP=minor" >> $GITHUB_ENV
+          elif echo "$MSG" | grep -q patch; then 
+            echo "BUMP=patch" >> $GITHUB_ENV
+          else 
+            echo "BUMP=none" >> $GITHUB_ENV
+          fi
+
+      # 6️⃣ Calculate new version
+      - name: Calculate new version
+        run: |
+          if [[ "$BUMP" == "major" ]]; then 
+            NEW_VERSION="v$((MAJOR+1)).0.0"
+          elif [[ "$BUMP" == "minor" ]]; then 
+            NEW_VERSION="v$MAJOR.$((MINOR+1)).0"
+          elif [[ "$BUMP" == "patch" ]]; then 
+            NEW_VERSION="v$MAJOR.$MINOR.$((PATCH+1))"
+          else 
+            NEW_VERSION="$LATEST_TAG"
+          fi
+
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      # 7️⃣ Create tag (only if bump)
+      - name: Push tag
+        if: ${{ env.BUMP != 'none' }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
+          git push origin "$NEW_VERSION"
+
+      # 8️⃣ Setup Docker
+      - name: Setup Docker
+        run: echo "Initializing Docker build system..."
+
+      - name: QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 9️⃣ Build Backend Image (only if backend changed)
+      - name: Build Backend
+        if: ${{ env.BACKEND_CHANGED == 'true' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAMESPACE }}/backend:${{ env.NEW_VERSION }}
+            ${{ env.IMAGE_NAMESPACE }}/backend:latest
+
+      # 🔟 Build Frontend Image (only if frontend changed)
+      - name: Build Frontend
+        if: ${{ env.FRONTEND_CHANGED == 'true' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAMESPACE }}/frontend:${{ env.NEW_VERSION }}
+            ${{ env.IMAGE_NAMESPACE }}/frontend:latest
+
+      # 1️⃣1️⃣ Advanced Final Output Summary
+      - name: Final output (Advanced)
+        run: |
+          echo ""
+          echo "=============================="
+          echo "  🚀 BUILD SUMMARY REPORT"
+          echo "=============================="
+          echo ""
+          echo -e "🎯 Current Version:    ${LATEST_TAG}"
+          echo -e "🎯 New Version:        ${NEW_VERSION}"
+          echo -e "🎯 Bump Type:          ${BUMP}"
+          echo ""
+
+          if [[ "${BACKEND_CHANGED}" == "true" ]]; then
+            echo -e "🛠️ Backend Built: YES"
+            echo -e "     → backend:${NEW_VERSION}"
+            echo -e "     → backend:latest"
+          else
+            echo -e "🛠️ Backend Built: NO (no changes)"
+          fi
+          echo ""
+
+          if [[ "${FRONTEND_CHANGED}" == "true" ]]; then
+            echo -e "🛠️ Frontend Built: YES"
+            echo -e "     → frontend:${NEW_VERSION}"
+            echo -e "     → frontend:latest"
+          else
+            echo -e "🛠️ Frontend Built: NO (no changes)"
+          fi
+          echo ""
+
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - GITHUB_WORKFLOW_STARTED_AT))
+          echo -e "⏱️ Total Build Time: ${DURATION} seconds"
+          echo ""
+          echo "=============================="
+          echo "🎉 BUILD COMPLETED SUCCESSFULLY"
+          echo "=============================="
+
+
+
+
+
+
+=====================================================================================================================================================================================================================================================================================TAKE BACKUP AND PUSH TO GITHUB===================================================
+
+=>Create a github repo named AkrutiMediaBackup
+=>Now run git clone <you_github_repo_link>  inside /home/ubuntu/    so that it will pull that empty repo inside your ubuntu machine
+=>Setup git credential in ubuntu machine to work backup push
+=>Now create all these 4 backup-script inside your ubuntu machine here:  /home/ubuntu/AkrutiMediaBackup  and MAKE SURE YOU HAVE GIVEN FULL PERMISSION TO ALL THESE 4 SCRIPTS i.e   chmod 777 <backup-script-name>
+
+=>Create a backup script named daily-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# DAILY BACKUP SCRIPT
+# - Takes daily backup at 1 AM
+# - Stores inside Daily-Backup folder
+# - Keeps latest 3 backups only
+# - Pushes changes to GitHub repository
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Daily-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=3
+# ================
+
+# Ensure folder exists
+mkdir -p "$BACKUP_DIR"
+
+# Timestamp for filename
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+BACKUP_FILE="$BACKUP_DIR/daily_backup_$TIMESTAMP.sql"
+
+# Take PostgreSQL backup from Docker container
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+# Move into backup directory for rotation
+cd "$BACKUP_DIR"
+
+# Delete files except the latest 3
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Daily backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script at everyday at 1AM
+0 1 * * * /home/ubuntu/News-App-Backup/daily-backup.sh >> /home/ubuntu/News-App-Backup/daily.log 2>&1
+
+
+=>Now Create a backup script named weekly-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# WEEKLY BACKUP SCRIPT
+# - Runs every Monday at 1 AM
+# - Stores inside Weekly-Backup folder
+# - Keeps only latest 1 weekly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Weekly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Year + Week number
+TIMESTAMP=$(date +"%Y-W%U")
+BACKUP_FILE="$BACKUP_DIR/weekly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep only 1 file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Weekly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script every week
+0 1 * * 1 /home/ubuntu/News-App-Backup/weekly-backup.sh >> /home/ubuntu/News-App-Backup/weekly.log 2>&1
+
+
+
+=>Now Create a backup script named monthly-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# MONTHLY BACKUP SCRIPT
+# - Runs on 1st of each month at 1 AM
+# - Stores inside Monthly-Backup
+# - Keeps only latest 1 monthly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Monthly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Year-Month format
+TIMESTAMP=$(date +"%Y-%m")
+BACKUP_FILE="$BACKUP_DIR/monthly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep only latest file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Monthly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+
+=>Set cronjob by adding this command to run this script every month
+0 1 1 * * /home/ubuntu/News-App-Backup/monthly-backup.sh >> /home/ubuntu/News-App-Backup/monthly.log 2>&1
+
+
+
+=>Now Create a backup script named quaterlybackup.sh and past this code
+#!/bin/bash
+
+##############################################
+# QUARTERLY BACKUP SCRIPT
+# - Runs every 3 months at 1 AM
+# - Stores inside Quaterly-Backup folder
+# - Keeps only latest 1 quarterly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Quaterly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Determine quarter number (1–4)
+MONTH=$(date +"%m")
+QUARTER=$(( ( (MONTH - 1) / 3 ) + 1 ))
+TIMESTAMP=$(date +"%Y-Q$QUARTER")
+
+BACKUP_FILE="$BACKUP_DIR/quaterly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep latest 1 quarterly file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Quarterly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script every quater
+0 1 1 */3 * /home/ubuntu/News-App-Backup/quaterly-backup.sh >> /home/ubuntu/News-App-Backup/quaterly.log 2>&1
+
+
+
+
+=>Now configure Git to Push Without Password so Generate SSH Key on Server
+ssh-keygen -t backup_script_id
+
+This creates:
+~/.ssh/backup_script_id
+~/.ssh/backup_script_id.pub
+
+=>Show the public key
+cat ~/.ssh/id_ed25519.pub
+
+=>Copy that entire key & Add it to GitHub
+Go to:
+GitHub → Settings → SSH Keys → Add New Key
+Paste the key → Save.
+
+=>Test connection:
+ssh -T git@github.com
+
+If it says:
+Hi your-username! You've successfully authenticated.
+Then git push will work automatically.
+
+=>Now Set Git User Details on Server
+git config --global user.name "your-name"
+git config --global user.email "your-email@example.com"
+
+
+=>Now one time run this script manually to test it is creating the respective backup folder with backup file or not & pushing it to github repo or not
