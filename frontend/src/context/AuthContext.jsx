@@ -147,14 +147,6 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [token]);
 
-
-
-
-
-
-
-
-	
   // Helper functions
   const isAuthenticated = () => !!user && !!token;
   const hasRole = (role) => user?.role === role;
@@ -173,9 +165,6 @@ export const AuthProvider = ({ children }) => {
     isAdmin: isAdmin(),
     apiRequest,
   };
-
-
-
 
   return (
     <AuthContext.Provider value={value}>
