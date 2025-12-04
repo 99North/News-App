@@ -41,7 +41,7 @@ jobs:
       # 3️⃣ Get latest tag
       - name: Get tag
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "LATEST_TAG=$TAG" >> $GITHUB_ENV
           echo "Latest Tag: $TAG"
 
