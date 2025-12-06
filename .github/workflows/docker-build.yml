@@ -1,3 +1,4 @@
+#This new script is used with tagging/versioning enabled with docker build
 name: Versioned Docker Build (Always Build After Version Bump)
 
 

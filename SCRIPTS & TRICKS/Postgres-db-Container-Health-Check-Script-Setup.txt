@@ -1,0 +1,138 @@
+=>Create script name postgres-watchdog.sh inside /home/ubuntu/  (or as per your choice location) and paste the bellow codes and make it executable
+
+
+#!/bin/bash
+
+# ================================
+# CONFIGURATION
+# ================================
+CONTAINER_NAME="postgres-db"
+IMAGE_NAME="postgres:16"
+DOCKER_NETWORK="akruti"
+PORT_MAPPING="-p 5432:5432"
+
+PG_CRED="/home/ubuntu/News-App/backend/pg-cred"
+INIT_SQL="/home/ubuntu/News-App/backend/init.sql"
+VOLUME_NAME="pgdb-data"
+
+LOG_FILE="/var/log/postgres-container.log"
+LAST_LOGS_FILE="/var/log/postgres-container-last.log"
+CRASH_COUNTER_FILE="/tmp/postgres-container-crashcount.txt"
+MAX_LOG_SIZE=$((10 * 1024 * 1024))  # 10 MB
+
+# ================================
+# ROTATE LOGS
+# ================================
+rotate_logs() {
+    if [ -f "$LOG_FILE" ]; then
+        FILE_SIZE=$(stat -c%s "$LOG_FILE" 2>/dev/null)
+        if [[ "$FILE_SIZE" -gt "$MAX_LOG_SIZE" ]]; then
+            mv "$LOG_FILE" "${LOG_FILE}.1"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Log rotated." > "$LOG_FILE"
+        fi
+    fi
+}
+
+# ================================
+# LOG FUNCTION
+# ================================
+log() {
+    rotate_logs
+    echo "$(date '+%Y-%m-%d %H:%M:%S')  $1" | tee -a "$LOG_FILE" >/dev/null
+}
+
+# ================================
+# CRASH COUNTER
+# ================================
+update_crash_counter() {
+    TODAY=$(date +%F)
+    COUNT=0
+
+    if [ -f "$CRASH_COUNTER_FILE" ]; then
+        read LAST_DATE LAST_COUNT < "$CRASH_COUNTER_FILE"
+        if [[ "$LAST_DATE" == "$TODAY" ]]; then
+            COUNT=$LAST_COUNT
+        fi
+    fi
+
+    COUNT=$((COUNT + 1))
+    echo "$TODAY $COUNT" > "$CRASH_COUNTER_FILE"
+    log "[INFO] Restart count for $TODAY: $COUNT"
+
+    if [[ "$COUNT" -gt 10 ]]; then
+        log "[WARN] Container '$CONTAINER_NAME' has restarted more than 10 times today (CRASH LOOP)"
+    fi
+}
+
+# ================================
+# MAIN LOGIC
+# ================================
+log "-----------------------------"
+log "[INFO] Checking container: $CONTAINER_NAME"
+
+# Check running
+IS_RUNNING=$(docker ps --filter "name=^${CONTAINER_NAME}$" --filter "status=running" -q)
+
+if [[ -n "$IS_RUNNING" ]]; then
+    log "[OK] Container '$CONTAINER_NAME' is running. No action needed."
+    exit 0
+fi
+
+log "[WARN] Container '$CONTAINER_NAME' is NOT running."
+
+# Check if stopped container exists
+EXISTS=$(docker ps -a --filter "name=^${CONTAINER_NAME}$" -q)
+
+if [[ -n "$EXISTS" ]]; then
+    EXIT_CODE=$(docker inspect --format='{{.State.ExitCode}}' "$CONTAINER_NAME" 2>/dev/null || echo "unknown")
+    EXIT_REASON=$(docker inspect --format='{{.State.Error}}' "$CONTAINER_NAME" 2>/dev/null || echo "unknown")
+
+    log "[INFO] Stopped container detected."
+    log "[INFO] Exit Code   : $EXIT_CODE"
+    log "[INFO] Exit Reason : ${EXIT_REASON:-N/A}"
+
+    log "[INFO] Saving last 50 logs..."
+    docker logs --tail 50 "$CONTAINER_NAME" > "$LAST_LOGS_FILE" 2>&1
+
+    log "[INFO] Removing old container..."
+    docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1
+    log "[OK] Old container removed."
+
+    update_crash_counter
+else
+    log "[INFO] Container does not exist — creating new one..."
+fi
+
+# ================================
+# RECREATE CONTAINER
+# ================================
+log "[INFO] Starting new container '$CONTAINER_NAME'..."
+
+docker run -d \
+  --name "$CONTAINER_NAME" \
+  --network "$DOCKER_NETWORK" \
+  --env-file "$PG_CRED" \
+  -v "$VOLUME_NAME":/var/lib/postgresql/data \
+  -v "$INIT_SQL":/docker-entrypoint-initdb.d/init.sql \
+  $PORT_MAPPING \
+  "$IMAGE_NAME" >/dev/null 2>&1
+
+if [[ $? -eq 0 ]]; then
+    log "[OK] Container '$CONTAINER_NAME' started successfully."
+else
+    log "[ERROR] Failed to start container '$CONTAINER_NAME'."
+fi
+
+log "-----------------------------"
+
+
+
+=>Now test the script once manually that it is working or not by running: sudo /home/ubuntu/postgres-watchdog.sh
+=>Then check logs by running:    sudo tail -n 50 /var/log/postgres-container.log
+
+
+=>Setup cron to run every 3 minutee by rinning:  sudo crontab -e    and add this line bellow
+*/3 * * * * /home/ubuntu/postgres-watchdog.sh >/dev/null 2>&1
+
+=>Now go inside /var/logs folder and you can check two file :  frontend-log.log and postgres-container-last.log
+=>Also if you want to check how many time it restarted then check here:   cat /tmp/postgres-crash-count.txt

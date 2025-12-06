@@ -411,10 +411,29 @@ kubectl apply -f postgres-deployment.yaml
 =>To check everything is working or not run this command
 kubectl get all --all-namespaces
 
-=>Now run this in kubernetes ec2 container to add a user to the users table
-curl -X POST http://52.66.27.150:32001/auth/register \
--H "Content-Type: application/json" \
--d '{ "username": "debi", "email": "debi@gmail.com", "password": "debipass", "firstName": "Debi", "lastName": "Prasad" }'
+
+=>Now run these commands one by one in kubernetes ec2 container to add a user to the admin users table
+curl -X POST http://localhost:3001/auth/register   -H "Content-Type: application/json"   -d '{
+ "username": "admin",
+ "email": "admin@akrutimedia.com",
+ "password": "admin@akruti",
+ "firstName": "Akruti",
+ "lastName": "Media",
+ "role": "admin"
+ }'
+
+
+curl -X POST http://localhost:3001/auth/register   -H "Content-Type: application/json"   -d '{
+ "username": "debi",
+ "email": "debi@akrutimedia.com",
+ "password": "debi@akruti",
+ "firstName": "Debi",
+ "lastName": "Prasad",
+ "role": "admin"
+ }'
+
+
+
 
 =>To enter inside the postgres pod to check users table is created or not & data is inside or not 
 kubectl exec -it   <postegres-pod-name>  -- bash

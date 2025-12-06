@@ -4,7 +4,7 @@ import {
   FaBold, FaItalic, FaUnderline, FaStrikethrough,
   FaListUl, FaListOl, FaAlignLeft, FaAlignCenter,
   FaAlignRight, FaLink, FaImage, FaTimes, FaEye,
-  FaPaperPlane, FaQuoteLeft, FaCode
+  FaPaperPlane, FaQuoteLeft, FaCode, FaPalette
 } from 'react-icons/fa';
 
 import { createArticle, updateArticle } from '../services/articleServices';
@@ -28,16 +28,17 @@ function PostEditor({ theme }){
   const [selectedFontFamily, setSelectedFontFamily] = useState('');
 
   const editorRef = useRef(null);
+  const toolbarRef = useRef(null); // Added ref for toolbar
 
   // Available sections from navbar
   const sections = [
     'Odisha',
     'National',
     'International',
-    'Entertainment',
-    'Jobs',
-    'Education',
-    'Astrospeak',
+    // 'Entertainment',
+    // 'Jobs',
+    // 'Education',
+    // 'Astrospeak',
     'Health',
     'Environment'
   ];
@@ -48,7 +49,6 @@ function PostEditor({ theme }){
     !loading && (!isAuthenticated || !isAdmin) && navigate('/login');
   }, [isAuthenticated, isAdmin, loading]);
 
-  // Prefill the editor with article content when component mounts or article changes
   useEffect(() => {
     if (editorRef.current) {
       if (article.content) {
@@ -121,7 +121,7 @@ function PostEditor({ theme }){
       description: postDescription,
       section: postSection,
       content: editorContent,
-      tag: selectedTag || 'None',
+      tag: selectedTag || '',
       images: selectedImages,
       date: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
@@ -138,7 +138,6 @@ function PostEditor({ theme }){
       if (response.success) {
         alert(`Post ${article.id ? 'updated' : 'submitted'} successfully to ${postSection} section!`);
 
-        // Only reset form if creating new article
         if (!article.id) {
           setPostTitle('');
           setPostDescription('');
@@ -173,6 +172,30 @@ function PostEditor({ theme }){
   const handleFontFamily = (family) => {
     setSelectedFontFamily(family);
     executeCommand("fontName", family);
+  };
+
+  const handleFontColorChange = (color) => {
+    executeCommand('foreColor', color);
+  };
+
+  const handleBackgroundColorChange = (color) => {
+    executeCommand('backColor', color);
+  };
+
+  // New handlers to add/remove sticky class on focus/blur
+  const handleEditorFocus = () => {
+    if (toolbarRef.current) {
+      toolbarRef.current.classList.add('toolbar-sticky');
+      // Optional: prevent page scroll on mobile to avoid jump
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const handleEditorBlur = () => {
+    if (toolbarRef.current) {
+      toolbarRef.current.classList.remove('toolbar-sticky');
+      document.body.style.overflow = '';
+    }
   };
 
   return (
@@ -263,7 +286,7 @@ function PostEditor({ theme }){
             </label>
 
             {/* Toolbar */}
-            <div className="custom-toolbar">
+            <div ref={toolbarRef} className="custom-toolbar">
               {/* Text Formatting */}
               <div className="toolbar-group">
                 <button
@@ -300,44 +323,62 @@ function PostEditor({ theme }){
                 </button>
               </div>
 
-                {/* Font Size Dropdown (8-30) */}
-                <div className="toolbar-group">
-                  <select
-                    className="toolbar-select"
-                    onChange={(e) => handleFontSizeChange(e.target.value)}
-                    defaultValue=""
-                  >
-                    <option value="">Font Size</option>
-                    <option value="8">8px</option>
-                    <option value="10">10px</option>
-                    <option value="12">12px</option>
-                    <option value="14">14px</option>
-                    <option value="16">16px</option>
-                    <option value="18">18px</option>
-                    <option value="20">20px</option>
-                    <option value="22">22px</option>
-                    <option value="24">24px</option>
-                    <option value="26">26px</option>
-                    <option value="28">28px</option>
-                    <option value="30">30px</option>
-                  </select>
-                </div>
+              {/* Font Size Dropdown */}
+              <div className="toolbar-group">
+                <select
+                  className="toolbar-select"
+                  onChange={(e) => handleFontSizeChange(e.target.value)}
+                  defaultValue=""
+                >
+                  <option value="">Font Size</option>
+                  <option value="8">8px</option>
+                  <option value="10">10px</option>
+                  <option value="12">12px</option>
+                  <option value="14">14px</option>
+                  <option value="16">16px</option>
+                  <option value="18">18px</option>
+                  <option value="20">20px</option>
+                  <option value="22">22px</option>
+                  <option value="24">24px</option>
+                  <option value="26">26px</option>
+                  <option value="28">28px</option>
+                  <option value="30">30px</option>
+                </select>
+              </div>
 
-                {/* Font Family */}
-                <div className="toolbar-group">
-                  <select
-                    className="toolbar-select"
-                    value={selectedFontFamily}
-                    onChange={(e) => handleFontFamily(e.target.value)}
-                  >
-                    <option value="">Font Family</option>
-                    <option value="Arial">Arial</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Courier New">Courier New</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Verdana">Verdana</option>
-                  </select>
-                </div>
+              {/* Font Family */}
+              <div className="toolbar-group">
+                <select
+                  className="toolbar-select"
+                  value={selectedFontFamily}
+                  onChange={(e) => handleFontFamily(e.target.value)}
+                >
+                  <option value="">Font Family</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+              </div>
+
+              {/* Color Pickers FC & BC */}
+              <div className="toolbar-group">
+                <label className="toolbar-label">FC</label>
+                <input
+                  type="color"
+                  className="toolbar-color"
+                  onChange={(e) => handleFontColorChange(e.target.value)}
+                  title="Font Color"
+                />
+                <label className="toolbar-label">BC</label>
+                <input
+                  type="color"
+                  className="toolbar-color"
+                  onChange={(e) => handleBackgroundColorChange(e.target.value)}
+                  title="Background Color"
+                />
+              </div>
 
               {/* Lists */}
               <div className="toolbar-group">
@@ -359,7 +400,7 @@ function PostEditor({ theme }){
                 </button>
               </div>
 
-              {/* Alignment */}
+              {/* Alignment + Justify */}
               <div className="toolbar-group">
                 <button
                   type="button"
@@ -384,6 +425,14 @@ function PostEditor({ theme }){
                   title="Align Right"
                 >
                   <FaAlignRight />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => executeCommand('justifyFull')}
+                  className="toolbar-btn"
+                  title="Justify"
+                >
+                  <FaPalette />
                 </button>
               </div>
 
@@ -434,29 +483,14 @@ function PostEditor({ theme }){
               className="custom-editor"
               contentEditable
               onInput={handleEditorInput}
+              onFocus={handleEditorFocus}  // Added onFocus
+              onBlur={handleEditorBlur}    // Added onBlur
               data-placeholder="Write your content here..."
             />
           </div>
 
           {/* Image Upload Section */}
           <div className="form-section">
-            {/* <label className="form-label">Upload Images</label>
-            <div className="image-upload-area">
-              <input
-                type="file"
-                id="image-upload"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="image-input"
-              />
-              <label htmlFor="image-upload" className="upload-label">
-                <FaImage className="upload-icon" />
-                <span>Click to upload images</span>
-              </label>
-            </div> */}
-
-            {/* Preview Uploaded Images */}
             {selectedImages.length > 0 && (
               <div className="image-preview-grid">
                 {selectedImages.map((img, index) => (

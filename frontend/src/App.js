@@ -19,6 +19,11 @@ import LoginPage from "./pages/LogInPage.jsx";
 import PostEditor from "./pages/PostEditor.jsx";
 import Section from "./components/Section";
 import Article from "./components/Article.jsx";
+import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
+import AboutUsPage from "./components/AboutUsPage.jsx";
+import ContactUsPage from "./components/ContactUsPage.jsx";
+import isPresent from "./lib/is_present.js";
+
 
 const MAIN_ROUTES = [
   "odisha",
@@ -44,7 +49,10 @@ function AppContent({ theme, toggleTheme }) {
     location.pathname.startsWith("/education") ||
     location.pathname.startsWith("/health") ||
     location.pathname.startsWith("/environment") ||
-    location.pathname.startsWith("/article");
+    location.pathname.startsWith("/article") ||
+    location.pathname.startsWith("/about") ||
+    location.pathname.startsWith("/privacy-policy") ||
+    location.pathname.startsWith("/contact");
 
   return (
     <div className={`App ${theme}`}>
@@ -81,6 +89,11 @@ function AppContent({ theme, toggleTheme }) {
           {/* <Route path="/signup" element={<ProtectedRoute><SignUpPage theme={theme} /></ProtectedRoute>} /> */}
           <Route path="/login" element={<LoginPage theme={theme} />} />
           <Route path="/post-editor" element={<PostEditor theme={theme} />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy theme={theme} />} />
+          <Route path="/about" element={<AboutUsPage theme={theme} />} />
+          <Route path="/contact" element={<ContactUsPage theme={theme} />} />
+
+
 
           {/* 404 Route - Must be LAST */}
           <Route path="*" element={<NotFoundPage theme={theme} />} />
@@ -106,8 +119,27 @@ function ScrollToTop() {
 function App() {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
-    return savedTheme || "dark";
+    return savedTheme || "light";
   });
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    // Check initial system theme
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    !isPresent(savedTheme) && setTheme(prefersDark.matches ? 'dark' : 'light');
+
+    // Add a listener to detect changes to the system theme
+    const handler = (event) => {
+      !isPresent(savedTheme) && setTheme(event.matches ? 'dark' : 'light');
+    };
+
+    prefersDark.addEventListener('change', handler);
+
+    // Clean up the event listener on unmount
+    return () => {
+      prefersDark.removeEventListener('change', handler);
+    };
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
