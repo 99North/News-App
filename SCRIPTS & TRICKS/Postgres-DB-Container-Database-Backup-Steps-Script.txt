@@ -1,0 +1,216 @@
+=>Create a github repo named AkrutiMediaBackup
+=>Now run git clone <you_github_repo_link>  inside /home/ubuntu/    so that it will pull that empty repo inside your ubuntu machine
+=>Setup git credential in ubuntu machine to work backup push
+=>Now create all these 4 backup-script inside your ubuntu machine here:  /home/ubuntu/AkrutiMediaBackup  and MAKE SURE YOU HAVE GIVEN FULL PERMISSION TO ALL THESE 4 SCRIPTS i.e   chmod 777 <backup-script-name>
+
+=>Create a backup script named daily-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# DAILY BACKUP SCRIPT
+# - Takes daily backup at 1 AM
+# - Stores inside Daily-Backup folder
+# - Keeps latest 3 backups only
+# - Pushes changes to GitHub repository
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Daily-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=3
+# ================
+
+# Ensure folder exists
+mkdir -p "$BACKUP_DIR"
+
+# Timestamp for filename
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+BACKUP_FILE="$BACKUP_DIR/daily_backup_$TIMESTAMP.sql"
+
+# Take PostgreSQL backup from Docker container
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+# Move into backup directory for rotation
+cd "$BACKUP_DIR"
+
+# Delete files except the latest 3
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Daily backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script at everyday at 1AM
+0 1 * * * /home/ubuntu/News-App-Backup/daily-backup.sh >> /home/ubuntu/News-App-Backup/daily.log 2>&1
+
+
+=>Now Create a backup script named weekly-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# WEEKLY BACKUP SCRIPT
+# - Runs every Monday at 1 AM
+# - Stores inside Weekly-Backup folder
+# - Keeps only latest 1 weekly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Weekly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Year + Week number
+TIMESTAMP=$(date +"%Y-W%U")
+BACKUP_FILE="$BACKUP_DIR/weekly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep only 1 file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Weekly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script every week
+0 1 * * 1 /home/ubuntu/News-App-Backup/weekly-backup.sh >> /home/ubuntu/News-App-Backup/weekly.log 2>&1
+
+
+
+=>Now Create a backup script named monthly-backup.sh and past this code
+#!/bin/bash
+
+##############################################
+# MONTHLY BACKUP SCRIPT
+# - Runs on 1st of each month at 1 AM
+# - Stores inside Monthly-Backup
+# - Keeps only latest 1 monthly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Monthly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Year-Month format
+TIMESTAMP=$(date +"%Y-%m")
+BACKUP_FILE="$BACKUP_DIR/monthly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep only latest file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Monthly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+
+=>Set cronjob by adding this command to run this script every month
+0 1 1 * * /home/ubuntu/News-App-Backup/monthly-backup.sh >> /home/ubuntu/News-App-Backup/monthly.log 2>&1
+
+
+
+=>Now Create a backup script named quaterlybackup.sh and past this code
+#!/bin/bash
+
+##############################################
+# QUARTERLY BACKUP SCRIPT
+# - Runs every 3 months at 1 AM
+# - Stores inside Quaterly-Backup folder
+# - Keeps only latest 1 quarterly backup
+# - Pushes updated folder to GitHub
+##############################################
+
+# ==== CONFIG ====
+BASE_DIR="/home/ubuntu/News-App-Backup"
+BACKUP_DIR="$BASE_DIR/Quaterly-Backup"
+CONTAINER_NAME="postgres-db"
+DB_USER="debi"
+DB_NAME="akrutidev"
+RETENTION_COUNT=1
+# ================
+
+mkdir -p "$BACKUP_DIR"
+
+# Determine quarter number (1–4)
+MONTH=$(date +"%m")
+QUARTER=$(( ( (MONTH - 1) / 3 ) + 1 ))
+TIMESTAMP=$(date +"%Y-Q$QUARTER")
+
+BACKUP_FILE="$BACKUP_DIR/quaterly_backup_$TIMESTAMP.sql"
+
+docker exec $CONTAINER_NAME pg_dump -U $DB_USER $DB_NAME > "$BACKUP_FILE"
+
+cd "$BACKUP_DIR"
+
+# Keep latest 1 quarterly file
+ls -t | sed -e "1,${RETENTION_COUNT}d" | xargs -r rm --
+
+# ==== PUSH TO GITHUB ====
+cd "$BASE_DIR"
+git add .
+git commit -m "Quarterly backup update: $TIMESTAMP" >/dev/null 2>&1
+git push origin main
+
+=>Set cronjob by adding this command to run this script every quater
+0 1 1 */3 * /home/ubuntu/News-App-Backup/quaterly-backup.sh >> /home/ubuntu/News-App-Backup/quaterly.log 2>&1
+
+
+
+
+=>Now configure Git to Push Without Password so Generate SSH Key on Server
+ssh-keygen -t backup_script_id
+
+This creates:
+~/.ssh/backup_script_id
+~/.ssh/backup_script_id.pub
+
+=>Show the public key
+cat ~/.ssh/id_ed25519.pub
+
+=>Copy that entire key & Add it to GitHub
+Go to:
+GitHub → Settings → SSH Keys → Add New Key
+Paste the key → Save.
+
+=>Test connection:
+ssh -T git@github.com
+
+If it says:
+Hi your-username! You've successfully authenticated.
+Then git push will work automatically.
+
+=>Now Set Git User Details on Server
+git config --global user.name "your-name"
+git config --global user.email "your-email@example.com"
+
+
+=>Now one time run this script manually to test it is creating the respective backup folder with backup file or not & pushing it to github repo or not

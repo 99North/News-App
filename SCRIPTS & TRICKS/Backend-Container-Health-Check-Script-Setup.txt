@@ -1,0 +1,134 @@
+=>Create script name backend-watchdog.sh inside /home/ubuntu/  (or as per your choice location) and paste the bellow codes and make it executable
+
+
+#!/bin/bash
+
+# ================================
+# CONFIGURATION (EDIT THESE)
+# ================================
+CONTAINER_NAME="backend"
+IMAGE_NAME="systemail150/backend-gh-build-arm64"
+DOCKER_NETWORK="akruti"
+PORT_MAPPING="-p 3001:3001"
+ENV_FILE="/home/ubuntu/News-App/backend/.env-prod"
+
+LOG_FILE="/var/log/backend-container.log"                 # Main watchdog log
+LAST_LOGS_FILE="/var/log/backend-container-last.log"      # Saved last container logs
+CRASH_COUNTER_FILE="/tmp/backend-container-crashcount.txt"
+MAX_LOG_SIZE=$((10 * 1024 * 1024))              # 10 MB log rotation
+
+# ================================
+# HELPER: ROTATE LOGS
+# ================================
+rotate_logs() {
+    if [ -f "$LOG_FILE" ]; then
+        FILE_SIZE=$(stat -c%s "$LOG_FILE" 2>/dev/null)
+        if [[ -n "$FILE_SIZE" && "$FILE_SIZE" -gt "$MAX_LOG_SIZE" ]]; then
+            mv "$LOG_FILE" "${LOG_FILE}.1"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Log rotated." > "$LOG_FILE"
+        fi
+    fi
+}
+
+# ================================
+# HELPER: LOG FUNCTION
+# ================================
+log() {
+    rotate_logs
+    echo "$(date '+%Y-%m-%d %H:%M:%S')  $1" | tee -a "$LOG_FILE" >/dev/null
+}
+
+# ================================
+# HELPER: CRASH COUNTER
+# ================================
+update_crash_counter() {
+    TODAY=$(date +%F)
+    COUNT=0
+
+    if [ -f "$CRASH_COUNTER_FILE" ]; then
+        read LAST_DATE LAST_COUNT < "$CRASH_COUNTER_FILE"
+        if [[ "$LAST_DATE" == "$TODAY" ]]; then
+            COUNT=$LAST_COUNT
+        fi
+    fi
+
+    COUNT=$((COUNT + 1))
+    echo "$TODAY $COUNT" > "$CRASH_COUNTER_FILE"
+    log "[INFO] Restart count for $TODAY: $COUNT"
+
+    if [ "$COUNT" -gt 10 ]; then
+        log "[WARN] Container '$CONTAINER_NAME' restarted more than 10 times today (potential crash loop)."
+    fi
+}
+
+# ================================
+# MAIN LOGIC: CHECK & RECREATE
+# ================================
+log "-----------------------------"
+log "[INFO] Checking container: $CONTAINER_NAME"
+
+IS_RUNNING=$(docker ps --filter "name=^${CONTAINER_NAME}$" --filter "status=running" -q)
+
+if [[ -n "$IS_RUNNING" ]]; then
+    log "[OK] Container '$CONTAINER_NAME' is running. No action needed."
+    exit 0
+fi
+
+log "[WARN] Container '$CONTAINER_NAME' is NOT running."
+
+EXISTS=$(docker ps -a --filter "name=^${CONTAINER_NAME}$" -q)
+
+if [[ -n "$EXISTS" ]]; then
+    EXIT_CODE=$(docker inspect --format='{{.State.ExitCode}}' "$CONTAINER_NAME" 2>/dev/null || echo "unknown")
+    EXIT_REASON=$(docker inspect --format='{{.State.Error}}' "$CONTAINER_NAME" 2>/dev/null || echo "unknown")
+
+    log "[INFO] Stopped container detected."
+    log "[INFO] Exit Code   : $EXIT_CODE"
+    log "[INFO] Exit Reason : ${EXIT_REASON:-N/A}"
+
+    log "[INFO] Saving last 50 logs to $LAST_LOGS_FILE..."
+    docker logs --tail 50 "$CONTAINER_NAME" > "$LAST_LOGS_FILE" 2>&1
+
+    log "[INFO] Removing old container..."
+    docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        log "[OK] Old container removed."
+    else
+        log "[ERROR] Failed to remove stopped container."
+    fi
+
+    update_crash_counter
+else
+    log "[INFO] No existing container found. Creating new container..."
+fi
+
+# ================================
+# RECREATE CONTAINER
+# ================================
+log "[INFO] Starting new container '$CONTAINER_NAME'..."
+
+docker run -d \
+  --name "$CONTAINER_NAME" \
+  $PORT_MAPPING \
+  --network "$DOCKER_NETWORK" \
+  --env-file "$ENV_FILE" \
+  "$IMAGE_NAME" >/dev/null 2>&1
+
+if [[ $? -eq 0 ]]; then
+    log "[OK] Container '$CONTAINER_NAME' started successfully."
+else
+    log "[ERROR] Failed to start container '$CONTAINER_NAME'."
+fi
+
+log "-----------------------------"
+
+
+=>Now test the script once manually that it is working or not by running: sudo /home/ubuntu/backend-watchdog.sh
+=>Then check logs by running:    sudo tail -n 50 /var/log/backend-container.log
+
+
+=>Setup cron to run every 3 minutee by rinning:  sudo crontab -e    and add this line bellow
+*/3 * * * * /home/ubuntu/backend-watchdog.sh >/dev/null 2>&1
+
+=>Now go inside /var/logs folder and you can check two file :  frontend-log.log and backend-container-last.log
+=>Also if you want to check how many time it restarted then check here:   cat /tmp/backend-container-crash-count.txt
