@@ -22,6 +22,7 @@ import Article from "./components/Article.jsx";
 import PrivacyPolicy from "./components/PrivacyPolicy.jsx";
 import AboutUsPage from "./components/AboutUsPage.jsx";
 import ContactUsPage from "./components/ContactUsPage.jsx";
+import isPresent from "./lib/is_present.js";
 
 
 const MAIN_ROUTES = [
@@ -118,8 +119,27 @@ function ScrollToTop() {
 function App() {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
-    return savedTheme || "dark";
+    return savedTheme || "light";
   });
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    // Check initial system theme
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    !isPresent(savedTheme) && setTheme(prefersDark.matches ? 'dark' : 'light');
+
+    // Add a listener to detect changes to the system theme
+    const handler = (event) => {
+      !isPresent(savedTheme) && setTheme(event.matches ? 'dark' : 'light');
+    };
+
+    prefersDark.addEventListener('change', handler);
+
+    // Clean up the event listener on unmount
+    return () => {
+      prefersDark.removeEventListener('change', handler);
+    };
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));

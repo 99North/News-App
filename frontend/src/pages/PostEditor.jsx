@@ -121,7 +121,7 @@ function PostEditor({ theme }){
       description: postDescription,
       section: postSection,
       content: editorContent,
-      tag: selectedTag || 'None',
+      tag: selectedTag || '',
       images: selectedImages,
       date: new Date().toLocaleDateString('en-US', {
         year: 'numeric',

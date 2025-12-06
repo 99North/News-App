@@ -9,6 +9,7 @@ import isPresent from '../lib/is_present';
 const MAX_ARTICLE_LIMIT = 15;
 const MAX_CAROUSEL_LIMIT = 7;
 const ITEMS_PER_PAGE = 3;
+const CAROUSEL_CHANGE_IN_MS = 5 * 1000;
 
 const Header = ({ theme }) => {
   const navigate = useNavigate();
@@ -52,10 +53,10 @@ const Header = ({ theme }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselArticles.length);
-    }, 5000); // Change slide every 5 seconds
+    }, CAROUSEL_CHANGE_IN_MS);
 
     return () => clearInterval(interval);
-  }, [carouselArticles.length]);
+  }, []);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -101,8 +102,6 @@ const Header = ({ theme }) => {
   };
 
   const handleNewsClick = (article) => {
-    console.log(article);
-
     navigate(
       isPresent(article.section) ? `/${article.section.toLowerCase()}/${article.id}` : `/${article.id}`,
       { state: { article } }
