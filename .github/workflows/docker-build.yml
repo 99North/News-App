@@ -1,7 +1,6 @@
 #This new script is used with tagging/versioning enabled with docker build
 name: Versioned Docker Build (Always Build After Version Bump)
 
-
 on:
   push:
     branches:
@@ -68,18 +67,21 @@ jobs:
           echo "MINOR=$MINOR" >> $GITHUB_ENV
           echo "PATCH=$PATCH" >> $GITHUB_ENV
 
-      # 5️⃣ Detect bump type
+      # 5️⃣ Detect bump type (new syntax major:, minor:, patch:)
       - name: Detect bump
         run: |
           MSG=$(git log -1 --pretty=%s)
           echo "Commit Message: $MSG"
 
-          if echo "$MSG" | grep -q major; then 
+          if echo "$MSG" | grep -iq "^major:"; then 
             echo "BUMP=major" >> $GITHUB_ENV
-          elif echo "$MSG" | grep -q minor; then 
+
+          elif echo "$MSG" | grep -iq "^minor:"; then 
             echo "BUMP=minor" >> $GITHUB_ENV
-          elif echo "$MSG" | grep -q patch; then 
+
+          elif echo "$MSG" | grep -iq "^patch:"; then 
             echo "BUMP=patch" >> $GITHUB_ENV
+
           else 
             echo "BUMP=none" >> $GITHUB_ENV
           fi
@@ -124,9 +126,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 9️⃣ Build Backend Image (only if backend changed)
+      # 9️⃣ Build Backend Image (always build if bump)
       - name: Build Backend
-        if: ${{ env.BACKEND_CHANGED == 'true' }}
+        if: ${{ env.BUMP != 'none' }}
         uses: docker/build-push-action@v5
         with:
           context: ./backend
@@ -137,9 +139,9 @@ jobs:
             ${{ env.IMAGE_NAMESPACE }}/backend:${{ env.NEW_VERSION }}
             ${{ env.IMAGE_NAMESPACE }}/backend:latest
 
-      # 🔟 Build Frontend Image (only if frontend changed)
+      # 🔟 Build Frontend Image (always build if bump)
       - name: Build Frontend
-        if: ${{ env.FRONTEND_CHANGED == 'true' }}
+        if: ${{ env.BUMP != 'none' }}
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -163,22 +165,14 @@ jobs:
           echo -e "🎯 Bump Type:          ${BUMP}"
           echo ""
 
-          if [[ "${BACKEND_CHANGED}" == "true" ]]; then
+          if [[ "${BUMP}" != "none" ]]; then
             echo -e "🛠️ Backend Built: YES"
-            echo -e "     → backend:${NEW_VERSION}"
-            echo -e "     → backend:latest"
-          else
-            echo -e "🛠️ Backend Built: NO (no changes)"
-          fi
-          echo ""
-
-          if [[ "${FRONTEND_CHANGED}" == "true" ]]; then
             echo -e "🛠️ Frontend Built: YES"
-            echo -e "     → frontend:${NEW_VERSION}"
-            echo -e "     → frontend:latest"
           else
-            echo -e "🛠️ Frontend Built: NO (no changes)"
+            echo -e "🛠️ Backend Built: NO"
+            echo -e "🛠️ Frontend Built: NO"
           fi
+
           echo ""
 
           END_TIME=$(date +%s)
@@ -188,4 +182,3 @@ jobs:
           echo "=============================="
           echo "🎉 BUILD COMPLETED SUCCESSFULLY"
           echo "=============================="
-          
